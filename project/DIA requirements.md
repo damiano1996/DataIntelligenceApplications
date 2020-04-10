@@ -3,7 +3,8 @@
 1.Imagine:
 
 * Per il prodotto ho pensato ad un capo di abbigliamento come le scarpe (se ne serve uno specifico le Stan Smith, sono scarpe versatili che un po’ chiunque potrebbe comprare). 
-  - Features (c’è scritto che devono essere binary)
+
+* Features (c’è scritto che devono essere binary)
   - Maschio/Femmina
   - Giovane/Adulto (10-20 anni / 20-30 anni)
   - Europeo/Americano
