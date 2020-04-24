@@ -2,17 +2,26 @@
 #             Configurations             #
 ##########################################
 
+# Seller wallet and ambitions
+seller_max_budget = 20000  # $
+max_n_clicks = 10000
 
 # one product to sell
-product_name = 'product_name'
+product_name = 'shoes'
 product_base_price = 100
 product_max_price = 500
 
-# three classes of users
-classes = ['class_1', 'class_2', 'class_3']
-
 # features space
 features_space = {
-    'feature_1': ['value_1', 'value_2', 'value_3'],
-    'feature_2': ['value_1', 'value_2', 'value_3']
+    'age': ['<30', '>30'],
+    'profession': ['student', 'worker']
 }
+
+# three classes of users
+classes = {
+    'elegant': [1, 1],  # >30, worker
+    'casual': [0, 0],  # <30, student
+    'sports': [0, 1]  # <30, worker
+}
+# number of abrupt phases
+n_abrupts = 3
