@@ -50,17 +50,17 @@ class Class:
             last_value = value
             last_step_idx = step_idx
 
-        demand_curve = polynomial(y, rank=polynomial_rank)
+        probabilities = polynomial(y, rank=polynomial_rank)
         # using the polynomial approximation sometime the curve can oscillate near zero
         # to avoid this problem we find the first zero and set all the next values equal to zero
-        first_zero = np.where(demand_curve <= 0)[0]
+        first_zero = np.where(probabilities <= 0)[0]
         if first_zero.shape[0] > 0:
-            demand_curve[first_zero[0]:] = 0
+            probabilities[first_zero[0]:] = 0
 
         # to rescale between 0 and 1
-        # demand_curve = demand_curve / np.max(demand_curve)
+        # probabilities = probabilities / np.max(probabilities)
 
-        return (prices, demand_curve)
+        return (np.asarray(prices), np.asarray(probabilities))
 
     def plot_conversion_rate(self):
         """
