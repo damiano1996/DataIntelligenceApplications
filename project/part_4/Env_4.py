@@ -74,7 +74,7 @@ class Env_4(Environment):
         probability = conv_rate[1][pulled_arm * self.arm_distance]
 
         reward = np.random.binomial(1, probability)
-        return reward  # * conv_rate[0][pulled_arm * self.arm_distance]
+        return reward
 
     def get_aggregate_curve(self):
         """

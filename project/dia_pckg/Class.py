@@ -29,7 +29,7 @@ class Class:
         if summary:
             self.print_summary()
 
-    def get_conversion_rate(self, product_base_price, product_max_price, n_steps=3, polynomial_rank=10):
+    def get_conversion_rate(self, product_base_price, product_max_price, n_steps=5, polynomial_rank=5):
         """
             Function to generate the conversion rate of the class
         :param product_base_price: minimum price of the product
@@ -41,7 +41,8 @@ class Class:
         prices = np.linspace(product_base_price, product_max_price, product_max_price - product_base_price)
         y = np.zeros(shape=prices.shape)
 
-        steps_idx = np.sort(np.random.randint(0, prices.shape[0], n_steps))
+        steps_idx = [int(i * prices.shape[0] / n_steps) for i in
+                     range(n_steps)]  # np.sort(np.random.randint(0, prices.shape[0], n_steps))
         last_step_idx = 0
         last_value = 0.90
         for step_idx in steps_idx:
