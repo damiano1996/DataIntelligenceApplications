@@ -1,5 +1,5 @@
 import sys
-sys.path.insert(0, 'D:\\usw-andreab\\Desktop\\DataIntelligenceApplications\\')
+#sys.path.insert(0, 'D:\\usw-andreab\\Desktop\\DataIntelligenceApplications\\')
 
 import matplotlib.pyplot as plt
 import numpy as np
