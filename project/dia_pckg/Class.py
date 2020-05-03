@@ -5,10 +5,11 @@ from matplotlib.figure import figaspect
 from project.dia_pckg.Config import features_space
 from project.dia_pckg.Utils import polynomial
 
+np.random.seed(12)
 
 class Class:
 
-    def __init__(self, class_name, class_features, product, n_abrupt_phases, seed, summary=True):
+    def __init__(self, class_name, class_features, product, n_abrupt_phases, summary=True):
         """
         :param class_name: name of the class
         :param class_features: binary features of the class
@@ -16,7 +17,7 @@ class Class:
         :param n_abrupt_phases: number of abrupt phases
         :param summary: boolean to print the summary of the informations of the class
         """
-        np.random.seed(seed)
+        
         self.name = class_name
         self.features = class_features
 

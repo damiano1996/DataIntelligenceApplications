@@ -30,7 +30,6 @@ class TS_Learner(Learner):
         """
         probabilities = np.random.beta(self.beta_parameters[:, 0],
                            self.beta_parameters[:, 1])
-        values = probabilities * arm_prices
         idx = np.argmax(probabilities * arm_prices)
         return idx
 

@@ -31,11 +31,11 @@ print('Classes:', class_names)
 
 # initialization of the three classes
 class_1 = Class(class_name=class_names[0], class_features=classes[class_names[0]], product=product,
-                n_abrupt_phases=n_abrupts, seed=5)
+                n_abrupt_phases=n_abrupts)
 class_2 = Class(class_name=class_names[1], class_features=classes[class_names[1]], product=product,
-                n_abrupt_phases=n_abrupts, seed=10)
+                n_abrupt_phases=n_abrupts)
 class_3 = Class(class_name=class_names[2], class_features=classes[class_names[2]], product=product,
-                n_abrupt_phases=n_abrupts, seed=15)
+                n_abrupt_phases=n_abrupts)
 
 env = Env_4(initial_date=initial_date,
             n_days=n_days,
