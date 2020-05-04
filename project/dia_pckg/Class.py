@@ -14,7 +14,7 @@ class Class:
         :param class_features: binary features of the class
         :param product: Product object
         :param n_abrupt_phases: number of abrupt phases
-        :param summary: boolean to print the summary of the informations of the class
+        :param summary: boolean to print the summary of the information of the class
         """
         self.name = class_name
         self.features = class_features
@@ -23,11 +23,21 @@ class Class:
         self.n_abrupt_phases = n_abrupt_phases
 
         # here we generate one conversion curve for each phase
-        self.conv_rates = [self.get_conversion_rate(self.product.base_price,
-                                                    self.product.max_price) for _ in range(self.n_abrupt_phases)]
+        self.conv_rate_phases()
 
         if summary:
             self.print_summary()
+
+    def conv_rate_phases(self):
+        """
+            Creating dictionary to store the abrupt phases
+        :return:
+        """
+        list_conv_rates = [self.get_conversion_rate(self.product.base_price, self.product.max_price) for _ in
+                           range(self.n_abrupt_phases)]
+        self.conv_rates = {}
+        for phase_i, conv_rate in enumerate(list_conv_rates):
+            self.conv_rates[f'phase_{phase_i}'] = conv_rate
 
     def get_conversion_rate(self, product_base_price, product_max_price, n_steps=5, polynomial_rank=5):
         """
@@ -61,7 +71,7 @@ class Class:
         # to rescale between 0 and 1
         # probabilities = probabilities / np.max(probabilities)
 
-        return (np.asarray(prices), np.asarray(probabilities))
+        return {'prices': np.asarray(prices), 'probabilities': np.asarray(probabilities)}
 
     def plot_conversion_rate(self):
         """
@@ -73,13 +83,13 @@ class Class:
         fig, axs = plt.subplots(1, self.n_abrupt_phases, figsize=(w, h))
         fig.suptitle(f'Conversion Curves - Class name: {self.name}', y=1.)
 
-        for n in range(self.n_abrupt_phases):
-            axs[n].set_title(f'Phase: {n + 1}')
-            axs[n].set_ylim(0, 1)
-            axs[n].plot(self.conv_rates[n][0],
-                        self.conv_rates[n][1])
-            axs[n].set_xlabel('Price')
-            axs[n].set_ylabel('Conversion Rate')
+        for phase_i, conv_rate in enumerate(self.conv_rates.values()):
+            axs[phase_i].set_title(f'Phase: {phase_i}')
+            axs[phase_i].set_ylim(0, 1)
+            axs[phase_i].plot(conv_rate['prices'],
+                              conv_rate['probabilities'])
+            axs[phase_i].set_xlabel('Price')
+            axs[phase_i].set_ylabel('Conversion Rate')
 
         fig.show()
 
