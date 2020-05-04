@@ -37,7 +37,7 @@ class Env_4(Environment):
         :param user: User object
         :return: (reward, current date, done) done is a boolean -> True if the "game" is finished
         """
-        reward = self.round(pulled_arm, user)
+        reward, opt_revenue = self.round(pulled_arm, user)
 
         current_date = self.get_current_date()
         done = False
@@ -47,7 +47,7 @@ class Env_4(Environment):
             self.count_rounds_today = 0
             current_date, done = self.step()
 
-        return (reward, current_date, done)
+        return (reward, current_date, done, opt_revenue)
 
     def round(self, pulled_arm, user):
         """
@@ -64,9 +64,11 @@ class Env_4(Environment):
 
         # taking the index of the pulled arm
         probability = conv_rate[1][pulled_arm * self.arm_distance]
+        optimals = self.get_optimal_price(conv_rate)
+        optimal_revenue = optimals['price'] * optimals['probability']
 
         reward = np.random.binomial(1, probability)
-        return reward
+        return (reward, optimal_revenue)
 
     def reset(self):
         """

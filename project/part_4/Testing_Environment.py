@@ -37,7 +37,7 @@ class_3 = Class(class_name=class_names[2], class_features=classes[class_names[2]
 
 env = Env_4(initial_date=initial_date,
             n_days=n_days,
-            # users_per_day=avg_users_per_day,
+            #users_per_day=avg_users_per_day,
             users_per_day=1,
             class_1=class_1,
             class_2=class_2,
@@ -65,23 +65,30 @@ plt.show()
 
 n_experiments = 200  # the number is small to do a raw test, otherwise set it to 1000
 rewards_per_experiment = [] #collect all the rewards achieved from the TS 
+optimals_per_experiment = [] #collect all the optimals of the users generated
 arm_prices = env.get_arm_price(np.arange(n_arms))
 
 for e in range(0, n_experiments):
     current_date, done = env.reset()
     ts_learner = TS_Learner(n_arms=n_arms, arm_prices=arm_prices)
+    optimal_revenues = np.array([])
 
     while not done:
         #pulled_arm = ts_learner.pull_arm() #optimize by demand
         pulled_arm = ts_learner.pull_arm_v2()  # optimize by revenue
 
         user = User(random=True)
-        reward, current_date, done = env.user_step(pulled_arm, user)
+        reward, current_date, done, opt_revenue = env.user_step(pulled_arm, user)
         
         ts_learner.update(pulled_arm, reward)
+        optimal_revenues = np.append(optimal_revenues, opt_revenue)
 
-    rewards = ts_learner.collected_rewards
-    rewards_per_experiment.append(rewards)
+    rewards_per_experiment.append(ts_learner.collected_rewards)
+    optimals_per_experiment.append(optimal_revenues)
+
+import sys
+np.set_printoptions(threshold=sys.maxsize)
+print (rewards_per_experiment[162])
 
 aggregate_opt = optimals['aggregate']['price'] * optimals['aggregate']['probability']  
 class1_opt = optimals[class_1.name]['price'] * optimals[class_1.name]['probability']  
@@ -92,6 +99,7 @@ plt.plot(np.cumsum(np.mean(class1_opt - rewards_per_experiment, axis=0)), label=
 plt.plot(np.cumsum(np.mean(class2_opt - rewards_per_experiment, axis=0)), label='Regret of the ' + class_2.name + ' model')
 plt.plot(np.cumsum(np.mean(class3_opt - rewards_per_experiment, axis=0)), label='Regret of the ' + class_3.name + ' model')
 plt.plot(np.cumsum(np.mean(aggregate_opt - rewards_per_experiment, axis=0)), label='Regret of the aggregate model')
+plt.plot(np.cumsum(np.mean(optimals_per_experiment, axis=0) - np.mean(rewards_per_experiment, axis=0)), label='Regret of the true evaluation')
 
 plt.xlabel('Time')
 plt.ylabel('Regret')
