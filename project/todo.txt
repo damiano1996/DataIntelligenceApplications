@@ -1,3 +1,0 @@
-1)sostituire indici interi con stringhe (con dizionari, es. conv_rate[0] -> conv_rate['class1'])
-2)aggiungere n_arms al Configuration.py
-3)ottimizzare il TS utilizzando i thread

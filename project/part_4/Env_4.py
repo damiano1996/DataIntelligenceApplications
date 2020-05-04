@@ -21,13 +21,11 @@ class Env_4(Environment):
         self.round_per_day = users_per_day
         self.count_rounds_today = 0
 
-        self.classes = [class_1, class_2, class_3]
+        self.classes = {'class_1': class_1, 'class_2': class_2, 'class_3': class_3}
         self.aggregate_demand_curve = self.get_aggregate_curve()
 
         self.n_arms = n_arms
-        # In the exercises of the prof there are fixed probabilities, but in our case
-        # we need to fix the position of the arms at a specific distance -> our candidates
-        self.arm_distance = int(self.aggregate_demand_curve[1].shape[0] / self.n_arms)
+        self.arm_prices = self.get_candidate_prices()
 
     def user_step(self, pulled_arm, user):
         """
@@ -58,12 +56,12 @@ class Env_4(Environment):
         """
         # class of the user
         conv_rate = None
-        for class_ in self.classes:
+        for class_ in self.classes.values():
             if user.class_name == class_.name:
-                conv_rate = class_.conv_rates[0]  # taking the first because no abrupt phases
+                conv_rate = class_.conv_rates['phase_0']  # taking the first because no abrupt phases
 
-        # taking the index of the pulled arm
-        probability = conv_rate[1][pulled_arm * self.arm_distance]
+        # taking the probability from the conversion curve, associated to the pulled_arm
+        probability = conv_rate['probabilities'][self.arm_prices['indices'][pulled_arm]]
 
         reward = np.random.binomial(1, probability)
         return reward
@@ -80,46 +78,43 @@ class Env_4(Environment):
         """
         :return: the aggregate curve
         """
-        prices = self.classes[0].conv_rates[0][0]
+        prices = self.classes['class_1'].conv_rates['phase_0']['prices']
 
         stack = np.stack(
-            [self.classes[0].conv_rates[0][1],
-             self.classes[1].conv_rates[0][1],
-             self.classes[2].conv_rates[0][1]], axis=1
+            [self.classes['class_1'].conv_rates['phase_0']['probabilities'],
+             self.classes['class_2'].conv_rates['phase_0']['probabilities'],
+             self.classes['class_3'].conv_rates['phase_0']['probabilities']], axis=1
         )
         aggr_proba = np.mean(stack, axis=-1)
-        return (prices, aggr_proba)
+        return {'prices': prices, 'probabilities': aggr_proba}
 
     def get_optimals(self):
         """
         :return: (aggregate_optimal, class_1_optimal, class_2_optimal, class_3_optimal)
         """
         return {'aggregate': self.get_optimal_price(self.aggregate_demand_curve),
-                self.classes[0].name: self.get_optimal_price(self.classes[0].conv_rates[0]),
-                self.classes[1].name: self.get_optimal_price(self.classes[1].conv_rates[0]),
-                self.classes[2].name: self.get_optimal_price(self.classes[2].conv_rates[0])}
+                'class_1': self.get_optimal_price(self.classes['class_1'].conv_rates['phase_0']),
+                'class_2': self.get_optimal_price(self.classes['class_2'].conv_rates['phase_0']),
+                'class_3': self.get_optimal_price(self.classes['class_3'].conv_rates['phase_0'])}
 
-    # [Disclaimer!]
-    # I don't know where is the best allocation for this function.
-    # I will leave it here for the moment.
     def get_optimal_price(self, conv_rate):
         """
             This method computes the max area
         :param conv_rate: (price, probability)
         :return:
         """
-        areas = conv_rate[0] * conv_rate[1]
+        areas = conv_rate['prices'] * conv_rate['probabilities']
         idx = np.argmax(areas)
-        return {'price': conv_rate[0][idx],
-                'probability': conv_rate[1][idx]}
+        return {'price': conv_rate['prices'][idx],
+                'probability': conv_rate['probabilities'][idx]}
 
-    def get_arm_price(self, arms):
-        prices = np.zeros(len(arms))
-        conv_rate = self.classes[0].conv_rates[0]
-
-        for i in range(len(arms)):
-            idx = int(arms[i] * self.arm_distance)
-            val = conv_rate[0][idx]
-            prices[i] = val
-
-        return prices
+    def get_candidate_prices(self):
+        """
+            This method return the candidate prices, one price for each arm.
+            The "indices" array contains the positions of the specified prices in the aggregate curve
+        :return:
+        """
+        arm_distance = int(self.aggregate_demand_curve['prices'].shape[0] / self.n_arms)
+        idx = [int(arm_distance * arm) for arm in range(self.n_arms)]
+        prices = self.aggregate_demand_curve['prices'][idx]
+        return {'indices': idx, 'prices': prices}

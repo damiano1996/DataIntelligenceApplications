@@ -1,0 +1,2 @@
+2)aggiungere n_arms al Configuration.py
+3)ottimizzare il TS utilizzando i thread
