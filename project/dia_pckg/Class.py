@@ -5,7 +5,6 @@ from matplotlib.figure import figaspect
 from project.dia_pckg.Config import features_space
 from project.dia_pckg.Utils import polynomial
 
-np.random.seed(12)
 
 class Class:
 
@@ -17,7 +16,7 @@ class Class:
         :param n_abrupt_phases: number of abrupt phases
         :param summary: boolean to print the summary of the informations of the class
         """
-        
+
         self.name = class_name
         self.features = class_features
 
@@ -43,7 +42,7 @@ class Class:
         prices = np.linspace(product_base_price, product_max_price, product_max_price - product_base_price)
         y = np.zeros(shape=prices.shape)
 
-        steps_idx = np.sort(np.random.randint(0, prices.shape[0], n_steps)) # pylint: disable=E1136
+        steps_idx = np.sort(np.random.randint(0, prices.shape[0], n_steps))  # pylint: disable=E1136
         last_step_idx = 0
         last_value = 0.90
         for step_idx in steps_idx:

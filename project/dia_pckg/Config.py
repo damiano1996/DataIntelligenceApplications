@@ -31,4 +31,3 @@ classes = {
 }
 # number of abrupt phases
 n_abrupts = 3
-

@@ -66,9 +66,7 @@ class Env_4(Environment):
         probability = conv_rate[1][pulled_arm * self.arm_distance]
 
         reward = np.random.binomial(1, probability)
-        return reward 
-
-
+        return reward
 
     def reset(self):
         """
@@ -96,12 +94,10 @@ class Env_4(Environment):
         """
         :return: (aggregate_optimal, class_1_optimal, class_2_optimal, class_3_optimal)
         """
-        return (
-            self.get_optimal_price(self.aggregate_demand_curve),
-            self.get_optimal_price(self.classes[0].conv_rates[0]),
-            self.get_optimal_price(self.classes[1].conv_rates[0]),
-            self.get_optimal_price(self.classes[2].conv_rates[0]),
-        )
+        return {'aggregate': self.get_optimal_price(self.aggregate_demand_curve),
+                self.classes[0].name: self.get_optimal_price(self.classes[0].conv_rates[0]),
+                self.classes[1].name: self.get_optimal_price(self.classes[1].conv_rates[0]),
+                self.classes[2].name: self.get_optimal_price(self.classes[2].conv_rates[0])}
 
     # [Disclaimer!]
     # I don't know where is the best allocation for this function.
@@ -114,14 +110,14 @@ class Env_4(Environment):
         """
         areas = conv_rate[0] * conv_rate[1]
         idx = np.argmax(areas)
-        return (conv_rate[0][idx], conv_rate[1][idx])
+        return {'price': conv_rate[0][idx],
+                'probability': conv_rate[1][idx]}
 
-
-    def get_arm_price (self, arms):
+    def get_arm_price(self, arms):
         prices = np.zeros(len(arms))
         conv_rate = self.classes[0].conv_rates[0]
-        
-        for i in range (len(arms)):
+
+        for i in range(len(arms)):
             idx = int(arms[i] * self.arm_distance)
             val = conv_rate[0][idx]
             prices[i] = val

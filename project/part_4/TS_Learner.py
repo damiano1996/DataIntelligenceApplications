@@ -29,7 +29,7 @@ class TS_Learner(Learner):
         :return: index of the most interesting arm from the revenue point of view
         """
         probabilities = np.random.beta(self.beta_parameters[:, 0],
-                           self.beta_parameters[:, 1])
+                                       self.beta_parameters[:, 1])
         idx = np.argmax(probabilities * arm_prices)
         return idx
 

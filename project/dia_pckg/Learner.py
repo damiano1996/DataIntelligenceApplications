@@ -13,7 +13,7 @@ class Learner():
         self.n_arms = n_arms
 
         self.t = 0
-        self.rewards_per_arm = x = [[] for _ in range(n_arms)]      
+        self.rewards_per_arm = x = [[] for _ in range(n_arms)]
         self.collected_rewards = np.array([])
         self.collected_arms = np.array([])
 
