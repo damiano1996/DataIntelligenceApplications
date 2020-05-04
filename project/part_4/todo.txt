@@ -1,0 +1,3 @@
+2)aggiungere n_arms al Configuration.py
+3)ottimizzare il TS utilizzando i thread
+4)parametrizzare la creazione delle conv_rate (impostare max demand_curve), cercare un set di curve con un comportamento reale

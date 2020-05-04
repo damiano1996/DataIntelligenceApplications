@@ -15,7 +15,7 @@ class TS_Learner(Learner):
         self.beta_parameters = np.ones((n_arms, 2))
         self.arm_prices = arm_prices
 
-    def pull_arm(self):
+    def pull_arm_demand(self):
         """
         :return: index of the most interesting arm from the demand point of view
         """
@@ -25,7 +25,7 @@ class TS_Learner(Learner):
         )
         return idx
 
-    def pull_arm_v2(self):
+    def pull_arm_revenue(self):
         """
         :return: index of the most interesting arm from the revenue point of view
         """
@@ -41,8 +41,8 @@ class TS_Learner(Learner):
         :return:
         """
         self.t += 1
-        real_reward = reward * self.arm_prices[pulled_arm] #calculate the real reward (isBought*price)
-        
+        real_reward = reward * self.arm_prices[pulled_arm]  # calculate the real reward (isBought*price)
+
         self.update_observations(pulled_arm, real_reward)
         self.beta_parameters[pulled_arm, 0] = self.beta_parameters[pulled_arm, 0] + reward
         self.beta_parameters[pulled_arm, 1] = self.beta_parameters[pulled_arm, 1] + 1.0 - reward
