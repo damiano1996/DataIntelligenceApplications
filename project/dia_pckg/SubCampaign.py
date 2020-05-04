@@ -45,7 +45,7 @@ class SubCampaign:
         if first_n_clicks.shape[0] > 0:
             clicks[first_n_clicks[0]:] = max_n_clicks
 
-        return (np.asarray(budget), np.asarray(clicks))
+        return {'budget': np.asarray(budget), 'clicks': np.asarray(clicks)}
 
     def plot_cob_curve(self):
         """
@@ -58,8 +58,8 @@ class SubCampaign:
         fig.suptitle(f'Clicks over Budget Curve - Class name: {self.my_class.name}', y=1.)
 
         # ax.set_ylim(0, 1)
-        ax.plot(self.cob_curve[0],
-                self.cob_curve[1])
+        ax.plot(self.cob_curve['budget'],
+                self.cob_curve['clicks'])
         ax.set_xlabel('Budget')
         ax.set_ylabel('Number of Clicks')
 
