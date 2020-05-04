@@ -64,46 +64,35 @@ plt.legend()
 plt.show()
 
 n_experiments = 200  # the number is small to do a raw test, otherwise set it to 1000
-rewards_per_experiment = []
+rewards_per_experiment = [] #collect all the rewards achieved from the TS 
 arm_prices = env.get_arm_price(np.arange(n_arms))
-# print('one', arm_prices)
 
 for e in range(0, n_experiments):
     current_date, done = env.reset()
-    ts_learner = TS_Learner(n_arms=n_arms)
+    ts_learner = TS_Learner(n_arms=n_arms, arm_prices=arm_prices)
 
     while not done:
-        # pulled_arm = ts_learner.pull_arm() #optimize by demand
-        pulled_arm = ts_learner.pull_arm_v2(arm_prices)  # optimize by revenue
+        #pulled_arm = ts_learner.pull_arm() #optimize by demand
+        pulled_arm = ts_learner.pull_arm_v2()  # optimize by revenue
 
         user = User(random=True)
         reward, current_date, done = env.user_step(pulled_arm, user)
+        
         ts_learner.update(pulled_arm, reward)
 
-    probabilities = ts_learner.collected_rewards
-    arms = ts_learner.collected_arms
-    prices = env.get_arm_price(arms)
-    # print('two', prices)
-
-    rewards = prices * probabilities
+    rewards = ts_learner.collected_rewards
     rewards_per_experiment.append(rewards)
 
-aggregate_opt = optimals['aggregate']['price'] * optimals['aggregate'][
-    'probability']  # the optimal value is the area under demand-price
-class1_opt = optimals[class_1.name]['price'] * optimals[class_1.name][
-    'probability']  # the optimal value is the area under demand-price
-class2_opt = optimals[class_2.name]['price'] * optimals[class_2.name][
-    'probability']  # the optimal value is the area under demand-price
-class3_opt = optimals[class_3.name]['price'] * optimals[class_3.name][
-    'probability']  # the optimal value is the area under demand-price
+aggregate_opt = optimals['aggregate']['price'] * optimals['aggregate']['probability']  
+class1_opt = optimals[class_1.name]['price'] * optimals[class_1.name]['probability']  
+class2_opt = optimals[class_2.name]['price'] * optimals[class_2.name]['probability'] 
+class3_opt = optimals[class_3.name]['price'] * optimals[class_3.name]['probability'] 
 
-plt.plot(np.cumsum(np.mean(class1_opt - rewards_per_experiment, axis=0)),
-         label='Regret of the ' + class_1.name + ' model')
-plt.plot(np.cumsum(np.mean(class2_opt - rewards_per_experiment, axis=0)),
-         label='Regret of the ' + class_2.name + ' model')
-plt.plot(np.cumsum(np.mean(class3_opt - rewards_per_experiment, axis=0)),
-         label='Regret of the ' + class_3.name + ' model')
+plt.plot(np.cumsum(np.mean(class1_opt - rewards_per_experiment, axis=0)), label='Regret of the ' + class_1.name + ' model')
+plt.plot(np.cumsum(np.mean(class2_opt - rewards_per_experiment, axis=0)), label='Regret of the ' + class_2.name + ' model')
+plt.plot(np.cumsum(np.mean(class3_opt - rewards_per_experiment, axis=0)), label='Regret of the ' + class_3.name + ' model')
 plt.plot(np.cumsum(np.mean(aggregate_opt - rewards_per_experiment, axis=0)), label='Regret of the aggregate model')
+
 plt.xlabel('Time')
 plt.ylabel('Regret')
 plt.legend()
