@@ -40,26 +40,15 @@ def excecute_experiment(args):
 
 
 if __name__ == '__main__':
-    campaign = Campaign(max_budget=seller_max_budget,
-                    max_n_clicks=max_n_clicks)
+    campaign = Campaign(max_budget=seller_max_budget, max_n_clicks=max_n_clicks)
 
     # one product to sell
-    product = Product(name=product_name,
-                    base_price=product_base_price,
-                    max_price=product_max_price,
-                    production_cost=product_production_cost)
-
-    # three classes of users:
-    class_names = list(classes.keys())
-    print('Classes:', class_names)
+    product = Product(product_config=product_config)
 
     # initialization of the three classes
-    class_1 = Class(class_name=class_names[0], class_features=classes[class_names[0]], product=product,
-                    n_abrupt_phases=n_abrupts)
-    class_2 = Class(class_name=class_names[1], class_features=classes[class_names[1]], product=product,
-                    n_abrupt_phases=n_abrupts)
-    class_3 = Class(class_name=class_names[2], class_features=classes[class_names[2]], product=product,
-                    n_abrupt_phases=n_abrupts)
+    class_1 = Class(class_config=classes_config['elegant'], product=product, n_abrupt_phases=n_abrupts)
+    class_2 = Class(class_config=classes_config['casual'], product=product, n_abrupt_phases=n_abrupts)
+    class_3 = Class(class_config=classes_config['sports'], product=product, n_abrupt_phases=n_abrupts)
 
     env = Env_4(initial_date=initial_date,
             n_days=n_days,

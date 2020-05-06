@@ -1,6 +1,6 @@
 import numpy as np
 
-from project.dia_pckg.Config import features_space, classes
+from project.dia_pckg.Config import features_space, classes_config
 
 
 # for each user we can observe the value of two binary features
@@ -24,7 +24,9 @@ class User():
         :return:
         """
         self.features = self.features  # to be implemented
-        self.class_name = np.random.choice(list(classes.keys()))
+
+        class_names = [classes_config['elegant']['name'], classes_config['casual']['name'], classes_config['sports']['name']]
+        self.class_name = np.random.choice(class_names)
 
     def get_features_meaning(self):
         """
