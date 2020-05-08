@@ -5,6 +5,7 @@ from matplotlib.figure import figaspect
 from project.dia_pckg.Config import features_space
 from project.dia_pckg.Utils import polynomial
 
+
 class Class:
 
     def __init__(self, class_config, product, n_abrupt_phases, summary=True):
@@ -39,7 +40,7 @@ class Class:
         for phase_i, conv_rate in enumerate(list_conv_rates):
             self.conv_rates[f'phase_{phase_i}'] = conv_rate
 
-    def get_conversion_rate(self, product_base_price, product_max_price, n_steps=5, polynomial_rank=10):#3,10
+    def get_conversion_rate(self, product_base_price, product_max_price, n_steps=5, polynomial_rank=10):  # 3,10
         """
             Function to generate the conversion rate of the class
         :param product_base_price: minimum price of the product
@@ -51,8 +52,8 @@ class Class:
         prices = np.linspace(product_base_price, product_max_price, product_max_price - product_base_price)
         y = np.zeros(shape=prices.shape)
 
-        steps_idx = [int(i * prices.shape[0] / n_steps) for i in range(n_steps)]   # pylint: disable=E1136
-        #steps_idx = np.sort(np.random.randint(0, prices.shape[0], n_steps)) # pylint: disable=E1136
+        steps_idx = [int(i * prices.shape[0] / n_steps) for i in range(n_steps)]  # pylint: disable=E1136
+        # steps_idx = np.sort(np.random.randint(0, prices.shape[0], n_steps)) # pylint: disable=E1136
         last_step_idx = 0
         last_value = 0.90
         for step_idx in steps_idx:

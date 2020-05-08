@@ -25,7 +25,8 @@ class User():
         """
         self.features = self.features  # to be implemented
 
-        class_names = [classes_config['elegant']['name'], classes_config['casual']['name'], classes_config['sports']['name']]
+        class_names = [classes_config['elegant']['name'], classes_config['casual']['name'],
+                       classes_config['sports']['name']]
         self.class_name = np.random.choice(class_names)
 
     def get_features_meaning(self):
