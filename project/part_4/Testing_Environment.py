@@ -11,6 +11,7 @@ from project.dia_pckg.Product import Product
 from project.dia_pckg.User import User
 from project.part_4.Env_4 import Env_4
 from project.part_4.TS_Learner import TS_Learner
+from project.part_4.SWTS_Learner import SWTS_Learner
 
 np.random.seed(23)
 n_arms = 20
@@ -22,6 +23,7 @@ def excecute_experiment(args):
 
     _, done = env.reset()
     ts_learner = TS_Learner(n_arms=n_arms, arm_prices=env.arm_prices['prices'])
+    #ts_learner = SWTS_Learner(n_arms=n_arms, arm_prices=env.arm_prices['prices'], window_size=2000)
     optimal_revenues = np.array([])
 
     while not done:
@@ -84,19 +86,21 @@ if __name__ == '__main__':
     plt.legend()
     plt.show()
 
+
+
     n_experiments = 200  # the number is small to do a raw test, otherwise set it to 1000
     rewards_per_experiment = []  # collect all the rewards achieved from the TS
     optimals_per_experiment = []  # collect all the optimals of the users generated
-    args = [{'environmnet': copy.deepcopy(env), 'index': idx} for idx in
-            range(n_experiments)]  # create arguments for the experiment
+    args = [{'environmnet': copy.deepcopy(env), 'index': idx} for idx in range(n_experiments)]  # create arguments for the experiment
 
-    with Pool(
-            processes=8) as pool:  # make sure that 'processes' is less or equal than your actual number of logic cores
+    with Pool(processes=8) as pool:  # make sure that 'processes' is less or equal than your actual number of logic cores
         results = pool.map(excecute_experiment, args, chunksize=1)
 
     for result in results:
         rewards_per_experiment.append(result['collected_rewards'])
         optimals_per_experiment.append(result['optimal_revenues'])
+
+
 
     aggregate_opt = optimals['aggregate']['price'] * optimals['aggregate']['probability']
     class1_opt = optimals['class_1']['price'] * optimals['class_1']['probability']
@@ -117,7 +121,3 @@ if __name__ == '__main__':
     plt.ylabel('Regret')
     plt.legend()
     plt.show()
-
-# test over 200 experiments with 17500 epochs
-# 3:46 1_core (default)
-# 0:43 8_core
