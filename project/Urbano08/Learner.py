@@ -50,5 +50,6 @@ class Learner():
         self.update_model()
 
     def pull_arm(self):
-        sampled_values = np.random.normal(self.means, self.sigmas)
-        return np.argmax(sampled_values)
+        return np.argmax(self.sigmas)
+        #sampled_values = np.random.normal(self.means, self.sigmas)
+        #return np.argmax(sampled_values)
