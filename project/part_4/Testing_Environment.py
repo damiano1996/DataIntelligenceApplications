@@ -56,7 +56,7 @@ if __name__ == '__main__':
     env = Env_4(initial_date=initial_date,
                 n_days=n_days,
                 # users_per_day=avg_users_per_day,
-                users_per_day=2,
+                users_per_day=10,
                 mutli_class_handler=mch,
                 n_arms=n_arms)
 
@@ -95,9 +95,13 @@ if __name__ == '__main__':
         area = opt['price'] * opt['probability']
         plt.plot(np.cumsum(np.mean(area - rewards_per_experiment, axis=0)),
                  label='Regret of the ' + opt_class_name.upper() + ' model')
-    area_aggregate = mch.aggregate_opt['price'] * mch.aggregate_opt['probability']
-    plt.plot(np.cumsum(np.mean(area_aggregate - rewards_per_experiment, axis=0)), label='Regret of the aggregate model')
 
+    # Regret computed UN-knowing the class of the users
+    area_aggregate = mch.aggregate_opt['price'] * mch.aggregate_opt['probability']
+    plt.plot(np.cumsum(np.mean(area_aggregate - rewards_per_experiment, axis=0)),
+             label='Regret of the aggregate model')
+
+    # Below the regret computed knowing the optimal for each user
     plt.plot(np.cumsum(np.mean(optimals_per_experiment, axis=0) - np.mean(rewards_per_experiment, axis=0)),
              label='Regret of the true evaluation')
 
