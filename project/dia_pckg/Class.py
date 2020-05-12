@@ -8,7 +8,7 @@ from project.dia_pckg.Utils import polynomial
 
 class Class:
 
-    def __init__(self, class_config, product, n_abrupt_phases, summary=True):
+    def __init__(self, class_name, class_config, product, n_abrupt_phases, summary=True):
         """
         :param class_name: name of the class
         :param class_features: binary features of the class
@@ -16,7 +16,7 @@ class Class:
         :param n_abrupt_phases: number of abrupt phases
         :param summary: boolean to print the summary of the information of the class
         """
-        self.name = class_config['name']
+        self.name = class_name
         self.features = class_config['features']
         self.max_demand = class_config['max_demand']
 

@@ -27,9 +27,9 @@ features_space = {
 
 # three classes of users
 classes_config = {
-    'elegant': {'name': 'elegant', 'features': [1, 1], 'max_demand': 0.6},  # >30, worker
-    'casual': {'name': 'casual', 'features': [0, 0], 'max_demand': 0.9},  # <30, student
-    'sports': {'name': 'sports', 'features': [0, 1], 'max_demand': 0.75}  # <30, worker
+    'elegant': {'features': [1, 1], 'max_demand': 0.6},  # >30, worker
+    'casual': {'features': [0, 0], 'max_demand': 0.9},  # <30, student
+    'sports': {'features': [0, 1], 'max_demand': 0.75}  # <30, worker
 }
 # number of abrupt phases
 n_abrupts = 3

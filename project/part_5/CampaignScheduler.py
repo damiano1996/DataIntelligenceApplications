@@ -1,9 +1,20 @@
-class CampaignScheduler():
+from project.dia_pckg.Environment import Environment
+from project.part_5.ContextGenerator import ContextGenerator
 
-    def __init__(self):
+
+class CampaignScheduler(Environment):
+
+    def __init__(self, initial_date, n_days, MAB_algorithm, users_per_day, n_arms):
+        super().__init__(initial_date, n_days)
+
+        self.MAB = MAB_algorithm  # Multi Armed Bandit algorithm to use
+        self.users_per_day = users_per_day
+        self.n_arms = n_arms
+
         self.users = []  # to list the users
-        self.weekly_contexts = []  # to store the contexts generated at each week
-        self.learners = []  # to store the bandits algorithms
+        self.weeks = []  # to store the Week objects
+
+        self.cntxt_generator = ContextGenerator()
 
     def weekend_update(self):
         """
@@ -27,7 +38,8 @@ class CampaignScheduler():
             Here we'll call the ContextGenerator object to get the new contexts
         :return:
         """
-        pass
+        # new_contexts = self.cntxt_generator.get_weekly_contexts(features_space, self.users)
+        # self.weekly_contexts.append(new_contexts)
 
     def round_in_week(self, user):
         """
