@@ -8,9 +8,11 @@ from project.dia_pckg.Campaign import Campaign
 from project.dia_pckg.Class import Class
 from project.dia_pckg.Config import *
 from project.dia_pckg.Product import Product
-from project.part_4.Env_4 import Env_4
+from project.dia_pckg.User import User
 from project.part_4.MultiClassHandler import MultiClassHandler
 from project.part_4.TS_Learner import TS_Learner
+from project.part_5.CampaignScheduler import CampaignScheduler
+from project.part_5.Env_5 import Env_5
 
 np.random.seed(23)
 n_arms = 20
@@ -19,24 +21,33 @@ n_arms = 20
 def excecute_experiment(args):
     index = args['index']
     env = args['environment']
+    campaign_scheduler = args['campaign_scheduler']
 
-    _, done = env.reset()
-    ts_learner = TS_Learner(n_arms=n_arms, arm_prices=env.arm_prices['prices'])
+    new_week, _, done = env.reset()
     # ts_learner = SWTS_Learner(n_arms=n_arms, arm_prices=env.arm_prices['prices'], window_size=2000)
     optimal_revenues = np.array([])
 
     while not done:
+
+        if new_week:  # in this case we can generate new contexts and new learners
+            campaign_scheduler.weekend_update()
+
+        user = User(random=True)
+        # selection of the learner associated to this user, observing the features
+        campaign_scheduler.add_user(user)
+        learner = campaign_scheduler.get_learner(user)
+
         # pulled_arm = ts_learner.pull_arm() #optimize by demand
-        pulled_arm = ts_learner.pull_arm_revenue()  # optimize by revenue
+        pulled_arm = learner.pull_arm_revenue()  # optimize by revenue
 
-        reward, _, done, opt_revenue = env.round(pulled_arm)
+        new_week, reward, _, done, opt_revenue = env.round(pulled_arm, user)
 
-        ts_learner.update(pulled_arm, reward)
+        learner.update(pulled_arm, reward)
         optimal_revenues = np.append(optimal_revenues, opt_revenue)
 
     print(str(index) + 'has ended')
 
-    return {'collected_rewards': ts_learner.collected_rewards, 'optimal_revenues': optimal_revenues}
+    return {'collected_rewards': learner.collected_rewards, 'optimal_revenues': optimal_revenues}
 
 
 if __name__ == '__main__':
@@ -56,12 +67,14 @@ if __name__ == '__main__':
 
     mch = MultiClassHandler(class_1, class_2, class_3)
 
-    env = Env_4(initial_date=initial_date,
+    env = Env_5(initial_date=initial_date,
                 n_days=n_days,
                 # users_per_day=avg_users_per_day,
                 users_per_day=10,
                 mutli_class_handler=mch,
                 n_arms=n_arms)
+
+    campaign_scheduler = CampaignScheduler(TS_Learner, n_arms, env.arm_prices['prices'])
 
     for class_ in mch.classes:
         plt.plot(class_.conv_rates['phase_0']['prices'],
@@ -83,7 +96,8 @@ if __name__ == '__main__':
     n_experiments = 10  # the number is small to do a raw test, otherwise set it to 1000
     rewards_per_experiment = []  # collect all the rewards achieved from the TS
     optimals_per_experiment = []  # collect all the optimals of the users generated
-    args = [{'environment': copy.deepcopy(env), 'index': idx} for idx in
+    args = [{'environment': copy.deepcopy(env), 'campaign_scheduler': copy.deepcopy(campaign_scheduler), 'index': idx}
+            for idx in
             range(n_experiments)]  # create arguments for the experiment
 
     with Pool(
