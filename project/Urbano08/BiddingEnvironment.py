@@ -17,7 +17,7 @@ class BiddingEnvironment():
         return self.max * (1.0 - np.exp(-5 * x))
 
     def bid_sub3(self, x):
-        return self.max * (1.0 - np.exp(-0.9 * x))
+        return self.max * (1.0 - np.exp(-7 * x))
 
     def round(self, pulled_arm1, pulled_arm2, pulled_arm3):
         reward1 = 0 if pulled_arm1 == 0 else np.maximum(0,np.random.normal(self.bid_sub1(self.bids[pulled_arm1]), self.sigma))
