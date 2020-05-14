@@ -23,8 +23,8 @@ class User():
             to generate an user with random parameters
         :return:
         """
-        self.features = self.features  # to be implemented
         self.class_name = np.random.choice(list(classes_config.keys()))
+        self.features = classes_config[self.class_name]['features']
 
     def get_features_meaning(self):
         """

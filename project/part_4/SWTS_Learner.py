@@ -35,3 +35,5 @@ class SWTS_Learner(TS_Learner):
         """
         self.rewards_per_arm[pulled_arm].append(bernoulli_reward)
         self.collected_rewards = np.append(self.collected_rewards, real_reward)
+
+    

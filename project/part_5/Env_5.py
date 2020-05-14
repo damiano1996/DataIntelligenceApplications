@@ -10,8 +10,8 @@ class Env_5(Env_4):
         """
         :return: (new_week, current date, done)
         """
-        # This isn't a new week -> False
-        return False, super(Env_5, self).reset()
+        # This is a new week since it starts the experiment
+        return True, super(Env_5, self).reset()
 
     def round(self, pulled_arm, user):
         """
@@ -21,18 +21,15 @@ class Env_5(Env_4):
         :return: (new_week, reward, current date, done)
         """
         new_week = False
-        if self.current_date.weekday() == 7:
-            new_week = True
-
-        # below the code is equal to the code in Env_4.round()
-        reward, opt_revenue = self.one_user_round(pulled_arm, user)
-
-        current_date = self.get_current_date()
         done = False
-
+        
+        reward, opt_revenue = self.one_user_round(pulled_arm, user)
+        
         self.count_rounds_today += 1
         if self.count_rounds_today == self.round_per_day:
             self.count_rounds_today = 0
             current_date, done = self.step()
-
-        return new_week, reward, current_date, done, opt_revenue
+            if current_date.weekday() == 6:
+                new_week = True
+                
+        return new_week, reward, done, opt_revenue

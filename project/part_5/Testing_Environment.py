@@ -11,6 +11,7 @@ from project.dia_pckg.Product import Product
 from project.dia_pckg.User import User
 from project.part_4.MultiClassHandler import MultiClassHandler
 from project.part_4.TS_Learner import TS_Learner
+from project.part_4.SWTS_Learner import SWTS_Learner
 from project.part_5.CampaignScheduler import CampaignScheduler
 from project.part_5.Env_5 import Env_5
 
@@ -23,31 +24,25 @@ def excecute_experiment(args):
     env = args['environment']
     campaign_scheduler = args['campaign_scheduler']
 
-    new_week, _, done = env.reset()
+    new_week, (_, done) = env.reset()
     # ts_learner = SWTS_Learner(n_arms=n_arms, arm_prices=env.arm_prices['prices'], window_size=2000)
     optimal_revenues = np.array([])
 
     while not done:
-
         if new_week:  # in this case we can generate new contexts and new learners
-            campaign_scheduler.weekend_update()
+            campaign_scheduler.context_update()
 
         user = User(random=True)
-        # selection of the learner associated to this user, observing the features
-        campaign_scheduler.add_user(user)
-        learner = campaign_scheduler.get_learner(user)
 
-        # pulled_arm = ts_learner.pull_arm() #optimize by demand
-        pulled_arm = learner.pull_arm_revenue()  # optimize by revenue
-
-        new_week, reward, _, done, opt_revenue = env.round(pulled_arm, user)
-
-        learner.update(pulled_arm, reward)
+        pulled_arm = campaign_scheduler.pull_arm_from_user(user)
+        new_week, reward, done, opt_revenue = env.round(pulled_arm, user)
+        campaign_scheduler.update(user, pulled_arm, reward)
+        
         optimal_revenues = np.append(optimal_revenues, opt_revenue)
 
     print(str(index) + 'has ended')
 
-    return {'collected_rewards': learner.collected_rewards, 'optimal_revenues': optimal_revenues}
+    return {'collected_rewards': campaign_scheduler.collected_rewards, 'optimal_revenues': optimal_revenues}
 
 
 if __name__ == '__main__':
@@ -68,13 +63,14 @@ if __name__ == '__main__':
     mch = MultiClassHandler(class_1, class_2, class_3)
 
     env = Env_5(initial_date=initial_date,
-                n_days=n_days,
+                #n_days=n_days,
+                n_days=18,
                 # users_per_day=avg_users_per_day,
-                users_per_day=10,
+                users_per_day=1000,
                 mutli_class_handler=mch,
                 n_arms=n_arms)
 
-    campaign_scheduler = CampaignScheduler(TS_Learner, n_arms, env.arm_prices['prices'])
+    campaign_scheduler = CampaignScheduler(SWTS_Learner, n_arms, env.arm_prices['prices'], 2000)
 
     for class_ in mch.classes:
         plt.plot(class_.conv_rates['phase_0']['prices'],
@@ -93,16 +89,20 @@ if __name__ == '__main__':
     plt.legend()
     plt.show()
 
-    n_experiments = 10  # the number is small to do a raw test, otherwise set it to 1000
+
+
+
+    n_experiments = 200  # the number is small to do a raw test, otherwise set it to 1000
     rewards_per_experiment = []  # collect all the rewards achieved from the TS
     optimals_per_experiment = []  # collect all the optimals of the users generated
     args = [{'environment': copy.deepcopy(env), 'campaign_scheduler': copy.deepcopy(campaign_scheduler), 'index': idx}
-            for idx in
-            range(n_experiments)]  # create arguments for the experiment
+            for idx in range(n_experiments)]  # create arguments for the experiment
 
-    with Pool(
-            processes=8) as pool:  # make sure that 'processes' is less or equal than your actual number of logic cores
+    with Pool(processes=8) as pool:  # make sure that 'processes' is less or equal than your actual number of logic cores
         results = pool.map(excecute_experiment, args, chunksize=1)
+
+
+
 
     for result in results:
         rewards_per_experiment.append(result['collected_rewards'])
