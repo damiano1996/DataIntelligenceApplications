@@ -1,7 +1,6 @@
 import numpy as np
 
 from project.dia_pckg.Environment import Environment
-from project.dia_pckg.User import User
 
 
 class Env_4(Environment):
@@ -24,14 +23,13 @@ class Env_4(Environment):
         self.n_arms = n_arms
         self.arm_prices = self.get_candidate_prices()
 
-    def round(self, pulled_arm):
+    def round(self, pulled_arm, user):
         """
             This method performs a round considering the number of steps per day
             Only after n rounds it perform a step in the implemented class
         :param pulled_arm: arm to pull
         :return: (reward, current date, done) done is a boolean -> True if the "game" is finished
         """
-        user = User(random=True)
         reward, opt_revenue = self.one_user_round(pulled_arm, user)
 
         current_date = self.get_current_date()
@@ -42,7 +40,7 @@ class Env_4(Environment):
             self.count_rounds_today = 0
             current_date, done = self.step()
 
-        return (reward, current_date, done, opt_revenue)
+        return reward, current_date, done, opt_revenue
 
     def one_user_round(self, pulled_arm, user):
         """

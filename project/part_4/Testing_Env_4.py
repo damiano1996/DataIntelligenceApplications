@@ -8,6 +8,7 @@ from project.dia_pckg.Campaign import Campaign
 from project.dia_pckg.Class import Class
 from project.dia_pckg.Config import *
 from project.dia_pckg.Product import Product
+from project.dia_pckg.User import User
 from project.part_4.Env_4 import Env_4
 from project.part_4.MultiClassHandler import MultiClassHandler
 from project.part_4.TS_Learner import TS_Learner
@@ -26,15 +27,17 @@ def excecute_experiment(args):
     optimal_revenues = np.array([])
 
     while not done:
+        user = User(random=True)
+
         # pulled_arm = ts_learner.pull_arm() #optimize by demand
         pulled_arm = ts_learner.pull_arm_revenue()  # optimize by revenue
 
-        reward, _, done, opt_revenue = env.round(pulled_arm)
+        reward, _, done, opt_revenue = env.round(pulled_arm, user)
 
         ts_learner.update(pulled_arm, reward)
         optimal_revenues = np.append(optimal_revenues, opt_revenue)
 
-    print(str(index) + 'has ended')
+    print(str(index) + ' has ended')
 
     return {'collected_rewards': ts_learner.collected_rewards, 'optimal_revenues': optimal_revenues}
 

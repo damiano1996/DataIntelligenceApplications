@@ -35,13 +35,13 @@ def excecute_experiment(args):
         user = User(random=True)
 
         pulled_arm = campaign_scheduler.pull_arm_from_user(user)
-        new_week, reward, done, opt_revenue = env.round(pulled_arm, user)
-        campaign_scheduler.add_sale(reward, user)
-        campaign_scheduler.update(user, pulled_arm, reward)
 
+        new_week, (reward, current_date, done, opt_revenue) = env.round(pulled_arm, user)
+
+        campaign_scheduler.update(user, pulled_arm, reward)
         optimal_revenues = np.append(optimal_revenues, opt_revenue)
 
-    print(str(index) + 'has ended')
+    print(str(index) + ' has ended')
 
     return {'collected_rewards': campaign_scheduler.collected_rewards, 'optimal_revenues': optimal_revenues}
 
@@ -64,8 +64,7 @@ if __name__ == '__main__':
     mch = MultiClassHandler(class_1, class_2, class_3)
 
     env = Env_5(initial_date=initial_date,
-                # n_days=n_days,
-                n_days=100,
+                n_days=n_days,
                 # users_per_day=avg_users_per_day,
                 users_per_day=10,
                 mutli_class_handler=mch,
@@ -90,7 +89,7 @@ if __name__ == '__main__':
     plt.legend()
     plt.show()
 
-    n_experiments = 200  # the number is small to do a raw test, otherwise set it to 1000
+    n_experiments = 10  # the number is small to do a raw test, otherwise set it to 1000
     rewards_per_experiment = []  # collect all the rewards achieved from the TS
     optimals_per_experiment = []  # collect all the optimals of the users generated
     args = [{'environment': copy.deepcopy(env), 'campaign_scheduler': copy.deepcopy(campaign_scheduler), 'index': idx}
