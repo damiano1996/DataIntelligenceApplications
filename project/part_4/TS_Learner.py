@@ -12,7 +12,7 @@ class TS_Learner(Learner):
         self.beta_parameters = np.ones((n_arms, 2))
         self.arm_prices = arm_prices
 
-    def initialize_learner (self, beta_parameters, rewards_per_arm):
+    def initialize_learner(self, beta_parameters, rewards_per_arm):
         """
         Set the prior passed as input
         :param beta_parameters: beta parameters with whom will be initialized
@@ -53,7 +53,7 @@ class TS_Learner(Learner):
         self.beta_parameters[pulled_arm, 0] = self.beta_parameters[pulled_arm, 0] + bernoulli_reward
         self.beta_parameters[pulled_arm, 1] = self.beta_parameters[pulled_arm, 1] + 1.0 - bernoulli_reward
 
-    def get_real_reward (self, pulled_arm, bernoulli_reward):
+    def get_real_reward(self, pulled_arm, bernoulli_reward):
         """
         :param pulled_arm:
         :param bernoulli_reward:

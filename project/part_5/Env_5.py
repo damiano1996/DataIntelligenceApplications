@@ -22,14 +22,14 @@ class Env_5(Env_4):
         """
         new_week = False
         done = False
-        
+
         reward, opt_revenue = self.one_user_round(pulled_arm, user)
-        
+
         self.count_rounds_today += 1
         if self.count_rounds_today == self.round_per_day:
             self.count_rounds_today = 0
             current_date, done = self.step()
             if current_date.weekday() == 6:
                 new_week = True
-                
+
         return new_week, reward, done, opt_revenue

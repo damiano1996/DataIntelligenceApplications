@@ -1,0 +1,356 @@
+Index: project/part_5/Env_5.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>from project.part_4.Env_4 import Env_4\n\n\nclass Env_5(Env_4):\n\n    def __init__(self, initial_date, n_days, users_per_day, mutli_class_handler, n_arms):\n        super().__init__(initial_date, n_days, users_per_day, mutli_class_handler, n_arms)\n\n    def reset(self):\n        \"\"\"\n        :return: (new_week, current date, done)\n        \"\"\"\n        # This is a new week since it starts the experiment\n        return True, super(Env_5, self).reset()\n\n    def round(self, pulled_arm, user):\n        \"\"\"\n            This method computes a round and checks if another week is finished.\n        :param pulled_arm: arm to pull\n        :param user: User object\n        :return: (new_week, reward, current date, done)\n        \"\"\"\n        new_week = False\n        done = False\n        \n        reward, opt_revenue = self.one_user_round(pulled_arm, user)\n        \n        self.count_rounds_today += 1\n        if self.count_rounds_today == self.round_per_day:\n            self.count_rounds_today = 0\n            current_date, done = self.step()\n            if current_date.weekday() == 6:\n                new_week = True\n                \n        return new_week, reward, done, opt_revenue\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- project/part_5/Env_5.py	(revision 7af1e9b9cf74670ae69723d642d055ceee3f4248)
++++ project/part_5/Env_5.py	(date 1589524328028)
+@@ -22,14 +22,14 @@
+         """
+         new_week = False
+         done = False
+-        
++
+         reward, opt_revenue = self.one_user_round(pulled_arm, user)
+-        
++
+         self.count_rounds_today += 1
+         if self.count_rounds_today == self.round_per_day:
+             self.count_rounds_today = 0
+             current_date, done = self.step()
+             if current_date.weekday() == 6:
+                 new_week = True
+-                
++
+         return new_week, reward, done, opt_revenue
+Index: project/part_5/Testing_Environment.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>import copy\nfrom multiprocessing import Pool\n\nimport matplotlib.pyplot as plt\nimport numpy as np\n\nfrom project.dia_pckg.Campaign import Campaign\nfrom project.dia_pckg.Class import Class\nfrom project.dia_pckg.Config import *\nfrom project.dia_pckg.Product import Product\nfrom project.dia_pckg.User import User\nfrom project.part_4.MultiClassHandler import MultiClassHandler\nfrom project.part_4.TS_Learner import TS_Learner\nfrom project.part_4.SWTS_Learner import SWTS_Learner\nfrom project.part_5.CampaignScheduler import CampaignScheduler\nfrom project.part_5.Env_5 import Env_5\n\nnp.random.seed(23)\nn_arms = 20\n\n\ndef excecute_experiment(args):\n    index = args['index']\n    env = args['environment']\n    campaign_scheduler = args['campaign_scheduler']\n\n    new_week, (_, done) = env.reset()\n    # ts_learner = SWTS_Learner(n_arms=n_arms, arm_prices=env.arm_prices['prices'], window_size=2000)\n    optimal_revenues = np.array([])\n\n    while not done:\n        if new_week:  # in this case we can generate new contexts and new learners\n            campaign_scheduler.context_update()\n\n        user = User(random=True)\n\n        pulled_arm = campaign_scheduler.pull_arm_from_user(user)\n        new_week, reward, done, opt_revenue = env.round(pulled_arm, user)\n        campaign_scheduler.update(user, pulled_arm, reward)\n        \n        optimal_revenues = np.append(optimal_revenues, opt_revenue)\n\n    print(str(index) + 'has ended')\n\n    return {'collected_rewards': campaign_scheduler.collected_rewards, 'optimal_revenues': optimal_revenues}\n\n\nif __name__ == '__main__':\n    campaign = Campaign(max_budget=seller_max_budget, max_n_clicks=max_n_clicks)\n\n    # one product to sell\n    product = Product(product_config=product_config)\n\n    # initialization of the three classes\n    class_names = list(classes_config.keys())\n    class_1 = Class(class_name=class_names[0], class_config=classes_config[class_names[0]], product=product,\n                    n_abrupt_phases=n_abrupts)\n    class_2 = Class(class_name=class_names[1], class_config=classes_config[class_names[1]], product=product,\n                    n_abrupt_phases=n_abrupts)\n    class_3 = Class(class_name=class_names[2], class_config=classes_config[class_names[2]], product=product,\n                    n_abrupt_phases=n_abrupts)\n\n    mch = MultiClassHandler(class_1, class_2, class_3)\n\n    env = Env_5(initial_date=initial_date,\n                #n_days=n_days,\n                n_days=18,\n                # users_per_day=avg_users_per_day,\n                users_per_day=1000,\n                mutli_class_handler=mch,\n                n_arms=n_arms)\n\n    campaign_scheduler = CampaignScheduler(SWTS_Learner, n_arms, env.arm_prices['prices'], 2000)\n\n    for class_ in mch.classes:\n        plt.plot(class_.conv_rates['phase_0']['prices'],\n                 class_.conv_rates['phase_0']['probabilities'], label=class_.name.upper(), linestyle='--')\n    plt.plot(mch.aggregate_demand_curve['prices'],\n             mch.aggregate_demand_curve['probabilities'], label='aggregate')\n\n    for opt_class_name, opt in mch.classes_opt.items():\n        plt.scatter(opt['price'],\n                    opt['probability'], marker='o', label=f'opt {opt_class_name.upper()}')\n    plt.scatter(mch.aggregate_opt['price'],\n                mch.aggregate_opt['probability'], marker='o', label='opt aggregate')\n\n    plt.xlabel('Price')\n    plt.ylabel('Conversion Rate')\n    plt.legend()\n    plt.show()\n\n\n\n\n    n_experiments = 200  # the number is small to do a raw test, otherwise set it to 1000\n    rewards_per_experiment = []  # collect all the rewards achieved from the TS\n    optimals_per_experiment = []  # collect all the optimals of the users generated\n    args = [{'environment': copy.deepcopy(env), 'campaign_scheduler': copy.deepcopy(campaign_scheduler), 'index': idx}\n            for idx in range(n_experiments)]  # create arguments for the experiment\n\n    with Pool(processes=8) as pool:  # make sure that 'processes' is less or equal than your actual number of logic cores\n        results = pool.map(excecute_experiment, args, chunksize=1)\n\n\n\n\n    for result in results:\n        rewards_per_experiment.append(result['collected_rewards'])\n        optimals_per_experiment.append(result['optimal_revenues'])\n\n    for opt_class_name, opt in mch.classes_opt.items():\n        area = opt['price'] * opt['probability']\n        plt.plot(np.cumsum(np.mean(area - rewards_per_experiment, axis=0)),\n                 label='Regret of the ' + opt_class_name.upper() + ' model')\n\n    # Regret computed UN-knowing the class of the users\n    area_aggregate = mch.aggregate_opt['price'] * mch.aggregate_opt['probability']\n    plt.plot(np.cumsum(np.mean(area_aggregate - rewards_per_experiment, axis=0)),\n             label='Regret of the aggregate model')\n\n    # Below the regret computed knowing the optimal for each user\n    plt.plot(np.cumsum(np.mean(optimals_per_experiment, axis=0) - np.mean(rewards_per_experiment, axis=0)),\n             label='Regret of the true evaluation')\n\n    plt.xlabel('Time')\n    plt.ylabel('Regret')\n    plt.legend()\n    plt.show()\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- project/part_5/Testing_Environment.py	(revision 7af1e9b9cf74670ae69723d642d055ceee3f4248)
++++ project/part_5/Testing_Environment.py	(date 1589524328068)
+@@ -10,7 +10,6 @@
+ from project.dia_pckg.Product import Product
+ from project.dia_pckg.User import User
+ from project.part_4.MultiClassHandler import MultiClassHandler
+-from project.part_4.TS_Learner import TS_Learner
+ from project.part_4.SWTS_Learner import SWTS_Learner
+ from project.part_5.CampaignScheduler import CampaignScheduler
+ from project.part_5.Env_5 import Env_5
+@@ -37,7 +36,7 @@
+         pulled_arm = campaign_scheduler.pull_arm_from_user(user)
+         new_week, reward, done, opt_revenue = env.round(pulled_arm, user)
+         campaign_scheduler.update(user, pulled_arm, reward)
+-        
++
+         optimal_revenues = np.append(optimal_revenues, opt_revenue)
+ 
+     print(str(index) + 'has ended')
+@@ -63,7 +62,7 @@
+     mch = MultiClassHandler(class_1, class_2, class_3)
+ 
+     env = Env_5(initial_date=initial_date,
+-                #n_days=n_days,
++                # n_days=n_days,
+                 n_days=18,
+                 # users_per_day=avg_users_per_day,
+                 users_per_day=1000,
+@@ -89,21 +88,16 @@
+     plt.legend()
+     plt.show()
+ 
+-
+-
+-
+     n_experiments = 200  # the number is small to do a raw test, otherwise set it to 1000
+     rewards_per_experiment = []  # collect all the rewards achieved from the TS
+     optimals_per_experiment = []  # collect all the optimals of the users generated
+     args = [{'environment': copy.deepcopy(env), 'campaign_scheduler': copy.deepcopy(campaign_scheduler), 'index': idx}
+             for idx in range(n_experiments)]  # create arguments for the experiment
+ 
+-    with Pool(processes=8) as pool:  # make sure that 'processes' is less or equal than your actual number of logic cores
++    with Pool(
++            processes=8) as pool:  # make sure that 'processes' is less or equal than your actual number of logic cores
+         results = pool.map(excecute_experiment, args, chunksize=1)
+ 
+-
+-
+-
+     for result in results:
+         rewards_per_experiment.append(result['collected_rewards'])
+         optimals_per_experiment.append(result['optimal_revenues'])
+Index: project/part_5/CampaignScheduler.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>import copy\n\nimport numpy as np\n\nfrom project.dia_pckg.Config import features_space\nfrom project.part_5.ContextGenerator import ContextGenerator\nfrom project.part_5.Week import Week\nfrom project.part_5.Context_B import Context_B\n\nclass CampaignScheduler():\n\n    def __init__(self, mab_algorithm, *mab_args):\n        # general MAB algorithm to perform multiple tests, with different configurations\n        self.MAB = mab_algorithm  # Multi Armed Bandit algorithm to use\n        self.MAB_args = mab_args\n\n        self.users = []  # to list the users, serve?\n        self.weeks = []  # to store the Week objects\n        self.contexts = [] # list of current contexts\n\n        #self.context_generator = ContextGenerator() this should be implemented\n        self.collected_rewards = np.array([])\n    \n    def context_update(self):\n        \"\"\"\n            At the end of the week, I take the new contexts from ContextGenerator \n        :return:\n        \"\"\"\n        #contexts = self.context_generator.get_weekly_contexts(features_space=features_space, users=self.users) \n\n        #An example, this should be generated by contex generator above\n        old_contexts = copy.deepcopy(self.contexts)\n        \n        features_space = [[0,0], [0,1], [1,0], [1,1]] #aggregate model feature space\n        self.contexts = [Context_B(features_space, self.MAB, self.MAB_args), ] #generate the new contexts list\n        \n        if (len(old_contexts) > 0): #initialize the new prior with the old one\n            prior = old_contexts[0].learner.beta_parameters\n            rewards_per_arm = old_contexts[0].learner.rewards_per_arm\n            self.contexts[0].learner.initialize_learner(prior, rewards_per_arm)\n        #An example, this should be generated by contex generator above\n\n    def pull_arm_from_user(self, user):\n        \"\"\"\n        Return the pulled arm from the context in which the user belongs\n        :param user: User object\n        :return: pulled arm\n        \"\"\"\n        self.users.append(user) \n        for context in self.contexts:\n            if (context.is_user_belonging(user)):\n                return context.learner.pull_arm_revenue()\n\n    def update (self, user, pulled_arm, reward):\n        \"\"\"\n        Update the context in which the user belongs, also update the collected rewards\n        :param user: User object\n        :param user: pulled arm\n        :param user: reward associated to the pulled arm\n        :return:\n        \"\"\"\n        for context in self.contexts:\n            if (context.is_user_belonging(user)):\n                context.learner.update(pulled_arm, reward)\n                real_reward = context.learner.get_real_reward(pulled_arm, reward)\n                self.collected_rewards = np.append(self.collected_rewards, real_reward)\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- project/part_5/CampaignScheduler.py	(revision 7af1e9b9cf74670ae69723d642d055ceee3f4248)
++++ project/part_5/CampaignScheduler.py	(date 1589524328016)
+@@ -2,11 +2,9 @@
+ 
+ import numpy as np
+ 
+-from project.dia_pckg.Config import features_space
+-from project.part_5.ContextGenerator import ContextGenerator
+-from project.part_5.Week import Week
+ from project.part_5.Context_B import Context_B
+ 
++
+ class CampaignScheduler():
+ 
+     def __init__(self, mab_algorithm, *mab_args):
+@@ -16,29 +14,29 @@
+ 
+         self.users = []  # to list the users, serve?
+         self.weeks = []  # to store the Week objects
+-        self.contexts = [] # list of current contexts
++        self.contexts = []  # list of current contexts
+ 
+-        #self.context_generator = ContextGenerator() this should be implemented
++        # self.context_generator = ContextGenerator() this should be implemented
+         self.collected_rewards = np.array([])
+-    
++
+     def context_update(self):
+         """
+             At the end of the week, I take the new contexts from ContextGenerator 
+         :return:
+         """
+-        #contexts = self.context_generator.get_weekly_contexts(features_space=features_space, users=self.users) 
++        # contexts = self.context_generator.get_weekly_contexts(features_space=features_space, users=self.users)
+ 
+-        #An example, this should be generated by contex generator above
++        # An example, this should be generated by contex generator above
+         old_contexts = copy.deepcopy(self.contexts)
+-        
+-        features_space = [[0,0], [0,1], [1,0], [1,1]] #aggregate model feature space
+-        self.contexts = [Context_B(features_space, self.MAB, self.MAB_args), ] #generate the new contexts list
+-        
+-        if (len(old_contexts) > 0): #initialize the new prior with the old one
++
++        features_space = [[0, 0], [0, 1], [1, 0], [1, 1]]  # aggregate model feature space
++        self.contexts = [Context_B(features_space, self.MAB, self.MAB_args), ]  # generate the new contexts list
++
++        if (len(old_contexts) > 0):  # initialize the new prior with the old one
+             prior = old_contexts[0].learner.beta_parameters
+             rewards_per_arm = old_contexts[0].learner.rewards_per_arm
+             self.contexts[0].learner.initialize_learner(prior, rewards_per_arm)
+-        #An example, this should be generated by contex generator above
++        # An example, this should be generated by contex generator above
+ 
+     def pull_arm_from_user(self, user):
+         """
+@@ -46,12 +44,12 @@
+         :param user: User object
+         :return: pulled arm
+         """
+-        self.users.append(user) 
++        self.users.append(user)
+         for context in self.contexts:
+             if (context.is_user_belonging(user)):
+                 return context.learner.pull_arm_revenue()
+ 
+-    def update (self, user, pulled_arm, reward):
++    def update(self, user, pulled_arm, reward):
+         """
+         Update the context in which the user belongs, also update the collected rewards
+         :param user: User object
+Index: project/part_5/Context_B.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>import copy\r\nimport numpy as np\r\n\r\nfrom project.dia_pckg.Config import features_space\r\nfrom project.dia_pckg.User import User\r\n\r\nclass Context_B():\r\n\r\n    def __init__(self, features_space, mab_algorithm, mab_args):\r\n        # general MAB algorithm to perform multiple tests, with different configurations\r\n        self.MAB = mab_algorithm  # Multi Armed Bandit algorithm to use\r\n        self.MAB_args = mab_args\r\n\r\n        self.learner = self.MAB(*self.MAB_args)\r\n\r\n        self.features_space = features_space\r\n\r\n    def is_user_belonging (self, user):\r\n        \"\"\"\r\n        Return if the user belongs to this context by looking at common features\r\n        :param user: User object\r\n        :return: if the user belongs to this context\r\n        \"\"\"\r\n        if user.features in self.features_space:\r\n            return True\r\n        return False
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- project/part_5/Context_B.py	(revision 7af1e9b9cf74670ae69723d642d055ceee3f4248)
++++ project/part_5/Context_B.py	(date 1589524328056)
+@@ -1,9 +1,3 @@
+-import copy
+-import numpy as np
+-
+-from project.dia_pckg.Config import features_space
+-from project.dia_pckg.User import User
+-
+ class Context_B():
+ 
+     def __init__(self, features_space, mab_algorithm, mab_args):
+@@ -15,7 +9,7 @@
+ 
+         self.features_space = features_space
+ 
+-    def is_user_belonging (self, user):
++    def is_user_belonging(self, user):
+         """
+         Return if the user belongs to this context by looking at common features
+         :param user: User object
+@@ -23,4 +17,4 @@
+         """
+         if user.features in self.features_space:
+             return True
+-        return False
+\ No newline at end of file
++        return False
+Index: project/part_4/TS_Learner.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>from project.dia_pckg.Learner import *\n\n\nclass TS_Learner(Learner):\n\n    def __init__(self, n_arms, arm_prices):\n        \"\"\"\n        :param n_arms:\n        \"\"\"\n        super().__init__(n_arms)\n\n        self.beta_parameters = np.ones((n_arms, 2))\n        self.arm_prices = arm_prices\n\n    def initialize_learner (self, beta_parameters, rewards_per_arm):\n        \"\"\"\n        Set the prior passed as input\n        :param beta_parameters: beta parameters with whom will be initialized\n        :param rewards_per_arm: beta rewards_per_arm with whom will be initialized\n        \"\"\"\n        self.beta_parameters = beta_parameters\n        self.rewards_per_arm = rewards_per_arm\n\n    def pull_arm_demand(self):\n        \"\"\"\n        :return: index of the most interesting arm from the demand point of view\n        \"\"\"\n        idx = np.argmax(\n            np.random.beta(self.beta_parameters[:, 0],\n                           self.beta_parameters[:, 1])\n        )\n        return idx\n\n    def pull_arm_revenue(self):\n        \"\"\"\n        :return: index of the most interesting arm from the revenue point of view\n        \"\"\"\n        probabilities = np.random.beta(self.beta_parameters[:, 0],\n                                       self.beta_parameters[:, 1])\n        idx = np.argmax(probabilities * self.arm_prices)\n        return idx\n\n    def update(self, pulled_arm, bernoulli_reward):\n        \"\"\"\n        :param pulled_arm:\n        :param reward:\n        :return:\n        \"\"\"\n        self.t += 1\n        real_reward = bernoulli_reward * self.arm_prices[pulled_arm]  # calculate the real reward (isBought*price)\n\n        self.update_observations(pulled_arm, real_reward)\n        self.beta_parameters[pulled_arm, 0] = self.beta_parameters[pulled_arm, 0] + bernoulli_reward\n        self.beta_parameters[pulled_arm, 1] = self.beta_parameters[pulled_arm, 1] + 1.0 - bernoulli_reward\n\n    def get_real_reward (self, pulled_arm, bernoulli_reward):\n        \"\"\"\n        :param pulled_arm:\n        :param bernoulli_reward:\n        :return: the real reward price*bernoulli_reard\n        \"\"\"\n        real_reward = bernoulli_reward * self.arm_prices[pulled_arm]  # calculate the real reward (isBought*price)\n        return real_reward\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- project/part_4/TS_Learner.py	(revision 7af1e9b9cf74670ae69723d642d055ceee3f4248)
++++ project/part_4/TS_Learner.py	(date 1589524328036)
+@@ -12,7 +12,7 @@
+         self.beta_parameters = np.ones((n_arms, 2))
+         self.arm_prices = arm_prices
+ 
+-    def initialize_learner (self, beta_parameters, rewards_per_arm):
++    def initialize_learner(self, beta_parameters, rewards_per_arm):
+         """
+         Set the prior passed as input
+         :param beta_parameters: beta parameters with whom will be initialized
+@@ -53,7 +53,7 @@
+         self.beta_parameters[pulled_arm, 0] = self.beta_parameters[pulled_arm, 0] + bernoulli_reward
+         self.beta_parameters[pulled_arm, 1] = self.beta_parameters[pulled_arm, 1] + 1.0 - bernoulli_reward
+ 
+-    def get_real_reward (self, pulled_arm, bernoulli_reward):
++    def get_real_reward(self, pulled_arm, bernoulli_reward):
+         """
+         :param pulled_arm:
+         :param bernoulli_reward:
+Index: project/part_4/SWTS_Learner.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>import numpy as np\n\nfrom project.part_4.TS_Learner import TS_Learner\n\n\nclass SWTS_Learner(TS_Learner):\n\n    def __init__(self, n_arms, arm_prices, window_size):\n        super().__init__(n_arms, arm_prices)\n\n        self.window_size = window_size\n\n    def update(self, pulled_arm, bernoulli_reward):\n        \"\"\"\n        :param pulled_arm:\n        :param reward:\n        :return:\n        \"\"\"\n        self.t += 1\n\n        real_reward = bernoulli_reward * self.arm_prices[pulled_arm]  # calculate the real reward (isBought*price)\n        self.update_observations(pulled_arm, bernoulli_reward, real_reward)\n\n        cum_rew = np.sum(self.rewards_per_arm[pulled_arm][-self.window_size:])\n        n_rounds_arm = len(self.rewards_per_arm[pulled_arm][-self.window_size:])\n\n        self.beta_parameters[pulled_arm, 0] = cum_rew + 1.0\n        self.beta_parameters[pulled_arm, 1] = n_rounds_arm - cum_rew + 1.0\n\n    def update_observations(self, pulled_arm, bernoulli_reward, real_reward):\n        \"\"\"\n        :param pulled_arm:\n        :param reward:\n        :return:\n        \"\"\"\n        self.rewards_per_arm[pulled_arm].append(bernoulli_reward)\n        self.collected_rewards = np.append(self.collected_rewards, real_reward)\n\n    
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- project/part_4/SWTS_Learner.py	(revision 7af1e9b9cf74670ae69723d642d055ceee3f4248)
++++ project/part_4/SWTS_Learner.py	(date 1589524328044)
+@@ -35,5 +35,3 @@
+         """
+         self.rewards_per_arm[pulled_arm].append(bernoulli_reward)
+         self.collected_rewards = np.append(self.collected_rewards, real_reward)
+-
+-    
+\ No newline at end of file
+Index: project/part_5/ContextGenerator.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>from project.part_5.Context import Context\nimport math\nimport numpy as np\n\n\nclass ContextGenerator:\n\n    def __init__(self, class_1, class_2, class_3, feature_1, feature_2):\n        \"\"\"\n\n        :param class_1: class object\n        :param class_2: class object\n        :param class_3: class object\n        \"\"\"\n        self.classes = {class_1.features: class_1, class_2.features: class_2, class_3.features: class_3, }\n        self.features = {feature_1, feature_2}\n        pass\n\n    def get_weekly_contexts(self, users, contexts, sales, date, n_arms, users_per_day):\n        \"\"\"\n        :param users: dictionary of class->number of users, they are users collected from the beginning of the campaign\n        :param contexts: the list of contexts used in the previous iteration\n        :param sales: dictionary class->sold items during the week\n        :param date: starting date for a new context\n        :param n_arms: arms of the bandit for this context\n        :param users_per_day: estimated users in a day for each class\n        :return: dictionary of the following shape:\n                {'context_1': features, 'context_2': features, ...}\n                    where features is a list containing the features of the context: e.g. ['<30', 'worker]\n        \"\"\"\n\n        if contexts.len() == 1:\n            cont = {}\n            not_cont = {}\n            low_bound = {}\n            for feature in self.features:\n                cont[feature], not_cont[feature] = self.get_classes(feature, contexts['context_1'])\n                low_bound[feature] = self.get_low_bound(cont, not_cont, users, sales)\n            best_feature = np.argmax(low_bound)\n            if low_bound[best_feature] > self.get_low_bound(contexts['context_1'].classes, [], users, sales):\n                #split\n                new_contexts = {\n                    'context_1': Context(classes=cont[best_feature], feature=best_feature, initial_date=date,\n                                         n_arms=n_arms, users_per_day=users_per_day, n_days=7, context_name='giuseppe'),\n                    'context_2': Context(classes=not_cont[best_feature], feature=best_feature, initial_date=date,\n                                         n_arms=n_arms, users_per_day=users_per_day, n_days=7, context_name='giuseppe')}\n            else:\n                #no split\n                new_contexts = {'context_1': Context(classes=contexts['context_1'].classes, feature=contexts['context_1'].feature,\n                                                     initial_date=date, n_arms=n_arms, users_per_day=users_per_day, n_days=7,\n                                                     context_name=contexts['context_1'].context_name)}\n\n        elif contexts.len() == 2:\n            if contexts['context_1'].feature == 'age':\n                cont, not_cont = self.get_classes('profession', contexts['context_1'])\n                feature = 'profession'\n                low_bound = self.get_low_bound(cont, not_cont, users, sales)\n            else:\n                cont, not_cont = self.get_classes('age', contexts['context_1'])\n                feature = 'age'\n                low_bound = self.get_low_bound(cont, not_cont, users, sales)\n            # add possibility to recombine contexts\n            if low_bound > self.get_low_bound(contexts[0].classes, [], users, sales):\n                #split\n                new_contexts = {\n                    'context_1': Context(classes=cont, feature=feature, initial_date=date,\n                                         n_arms=n_arms, users_per_day=users_per_day, n_days=7, context_name='giuseppe'),\n                    'context_2': Context(classes=not_cont, feature=feature, initial_date=date,\n                                         n_arms=n_arms, users_per_day=users_per_day, n_days=7, context_name='giuseppe'),\n                    'context_3': Context(classes=contexts['context_2'].classes, feature=contexts['context_2'].feature,\n                                         initial_date=date, n_arms=n_arms, users_per_day=users_per_day, n_days=7,\n                                         context_name=contexts['context_2'].context_name)\n                }\n            else:\n                #no split\n                new_contexts = {\n                    'context_1': Context(classes=contexts['context_1'].classes, feature=contexts['context_1'].feature,\n                                         initial_date=date, n_arms=n_arms, users_per_day=users_per_day, n_days=7,\n                                         context_name=contexts['context_1'].context_name),\n                    'context_2': Context(classes=contexts['context_2'].classes, feature=contexts['context_2'].feature,\n                                         initial_date=date, n_arms=n_arms, users_per_day=users_per_day, n_days=7,\n                                         context_name=contexts['context_2'].context_name)\n                }\n        else:\n            # add possibility to recombine contexts\n            new_contexts = {\n                'context_1': Context(classes=contexts['context_1'].classes, feature=contexts['context_1'].feature,\n                                     initial_date=date, n_arms=n_arms, users_per_day=users_per_day, n_days=7,\n                                     context_name=contexts['context_1'].context_name),\n                'context_2': Context(classes=contexts['context_2'].classes, feature=contexts['context_2'].feature,\n                                     initial_date=date, n_arms=n_arms, users_per_day=users_per_day, n_days=7,\n                                     context_name=contexts['context_2'].context_name),\n                'context_3': Context(classes=contexts['context_3'].classes, feature=contexts['context_3'].feature,\n                                     initial_date=date, n_arms=n_arms, users_per_day=users_per_day, n_days=7,\n                                     context_name=contexts['context_3'].context_name)\n            }\n\n        return new_contexts\n\n    def get_classes(self, feature, context):\n        \"\"\"\n        this function splits according to the considered feature\n        :param feature: the feature we want to evaluate\n        :param context: the context we want to split\n        :return:\n        \"\"\"\n        class_cont = {}\n        class_not_cont = {}\n        if context.n_classes == 3:\n            if feature == 'age':\n                class_cont = {'class_1': self.classes[{'<30', 'student'}], 'class_2': self.classes[{'<30', 'worker'}]}\n                class_not_cont = self.classes[{'>30', 'worker'}]\n            else:\n                class_cont = {'class_1': self.classes[{'>30', 'worker'}], 'class_2': self.classes[{'<30', 'worker'}]}\n                class_not_cont = self.classes[{'<30', 'student'}]\n\n        elif context.n_classes == 2:\n            if feature == 'age':\n                class_cont = self.classes[{'>30', 'worker'}]\n                class_not_cont = self.classes[{'<30', 'worker'}]\n            else:\n                class_cont = self.classes[{'<30', 'worker'}]\n                class_not_cont = self.classes[{'<30', 'student'}]\n\n        return class_cont, class_not_cont\n\n    def get_low_bound(self, cont, not_cont, users, sales):\n        \"\"\"\n        this function evaluates a feature based on the classes that it splits\n        :param sales:\n        :param users: number of users in the last week for each class\n        :param cont: the class we want to put in the context\n        :param not_cont: the class we don't want to put in the context\n        :return: the lower bound of the context to be generated\n        \"\"\"\n        delta_1 = 5\n        z_1 = 0\n        x_1 = 0\n        delta_2 = 5\n        z_2 = 0\n        x_2 = 0\n        for classe in cont:\n            z_1 += users[classe]\n            x_1 += sales[classe]\n        for classe in not_cont:\n            z_2 += users[classe]\n            x_2 += sales[classe]\n        tot = z_1 + z_2\n        return z_1/tot *(x_1 - math.sqrt(-math.log(delta_1) / 2 * z_1)) + z_2/tot*(x_2 - math.sqrt(-math.log(delta_2) / 2 * z_2))\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- project/part_5/ContextGenerator.py	(revision 7af1e9b9cf74670ae69723d642d055ceee3f4248)
++++ project/part_5/ContextGenerator.py	(date 1589541894690)
+@@ -1,7 +1,9 @@
+-from project.part_5.Context import Context
+ import math
++
+ import numpy as np
+ 
++from project.part_5.Context import Context
++
+ 
+ class ContextGenerator:
+ 
+@@ -38,17 +40,18 @@
+                 low_bound[feature] = self.get_low_bound(cont, not_cont, users, sales)
+             best_feature = np.argmax(low_bound)
+             if low_bound[best_feature] > self.get_low_bound(contexts['context_1'].classes, [], users, sales):
+-                #split
++                # split
+                 new_contexts = {
+                     'context_1': Context(classes=cont[best_feature], feature=best_feature, initial_date=date,
+                                          n_arms=n_arms, users_per_day=users_per_day, n_days=7, context_name='giuseppe'),
+                     'context_2': Context(classes=not_cont[best_feature], feature=best_feature, initial_date=date,
+                                          n_arms=n_arms, users_per_day=users_per_day, n_days=7, context_name='giuseppe')}
+             else:
+-                #no split
+-                new_contexts = {'context_1': Context(classes=contexts['context_1'].classes, feature=contexts['context_1'].feature,
+-                                                     initial_date=date, n_arms=n_arms, users_per_day=users_per_day, n_days=7,
+-                                                     context_name=contexts['context_1'].context_name)}
++                # no split
++                new_contexts = {
++                    'context_1': Context(classes=contexts['context_1'].classes, feature=contexts['context_1'].feature,
++                                         initial_date=date, n_arms=n_arms, users_per_day=users_per_day, n_days=7,
++                                         context_name=contexts['context_1'].context_name)}
+ 
+         elif contexts.len() == 2:
+             if contexts['context_1'].feature == 'age':
+@@ -61,7 +64,7 @@
+                 low_bound = self.get_low_bound(cont, not_cont, users, sales)
+             # add possibility to recombine contexts
+             if low_bound > self.get_low_bound(contexts[0].classes, [], users, sales):
+-                #split
++                # split
+                 new_contexts = {
+                     'context_1': Context(classes=cont, feature=feature, initial_date=date,
+                                          n_arms=n_arms, users_per_day=users_per_day, n_days=7, context_name='giuseppe'),
+@@ -72,7 +75,7 @@
+                                          context_name=contexts['context_2'].context_name)
+                 }
+             else:
+-                #no split
++                # no split
+                 new_contexts = {
+                     'context_1': Context(classes=contexts['context_1'].classes, feature=contexts['context_1'].feature,
+                                          initial_date=date, n_arms=n_arms, users_per_day=users_per_day, n_days=7,
+@@ -146,4 +149,5 @@
+             z_2 += users[classe]
+             x_2 += sales[classe]
+         tot = z_1 + z_2
+-        return z_1/tot *(x_1 - math.sqrt(-math.log(delta_1) / 2 * z_1)) + z_2/tot*(x_2 - math.sqrt(-math.log(delta_2) / 2 * z_2))
++        return z_1 / tot * (x_1 - math.sqrt(-math.log(delta_1) / 2 * z_1)) + z_2 / tot * (
++                x_2 - math.sqrt(-math.log(delta_2) / 2 * z_2))
+Index: .idea/shelf/Uncommitted_changes_before_Update_at_15_05_20,_08_18_[Default_Changelist]/shelved.patch
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- .idea/shelf/Uncommitted_changes_before_Update_at_15_05_20,_08_18_[Default_Changelist]/shelved.patch	(date 1589523496594)
++++ .idea/shelf/Uncommitted_changes_before_Update_at_15_05_20,_08_18_[Default_Changelist]/shelved.patch	(date 1589523496594)
+@@ -0,0 +1,24 @@
++Index: project/part_5/CampaignScheduler.py
++IDEA additional info:
++Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
++<+>import copy\n\nimport numpy as np\n\nfrom project.dia_pckg.Config import features_space\nfrom project.part_5.ContextGenerator import ContextGenerator\nfrom project.part_5.Week import Week\n\n\nclass CampaignScheduler():\n\n    def __init__(self, mab_algorithm, *mab_args):\n        # general MAB algorithm to perform multiple tests, with different configurations\n        self.MAB = mab_algorithm  # Multi Armed Bandit algorithm to use\n        self.MAB_args = mab_args\n\n        self.users = []  # to list the users\n        self.weeks = []  # to store the Week objects\n        self.initialize_weeks_list()\n\n        self.context_generator = ContextGenerator()\n\n    def initialize_weeks_list(self):\n        \"\"\"\n            For the first week we cannot generate contexts,\n            thus we initialize only one learner, to learn the aggregate model\n        :return:\n        \"\"\"\n        learner = self.MAB(self.MAB_args)\n        contexts = {'context_1': []}  # this represents an empty context\n        week = Week(week_number=0, contexts=contexts, learners=[learner])\n        self.weeks.append(week)\n\n    def weekend_update(self):\n        \"\"\"\n            At the end of the week,\n            we'll generate the new contexts and\n            we'll associate to each new context a MAB (where possible, re-using the prior of the last week).\n        :return:\n        \"\"\"\n        contexts = self.context_generator.get_weekly_contexts(features_space=features_space, users=self.users)\n        # here we need an algorithm being able to select from the last week the learner that we can re-use.\n        learners = self.learner_generator(contexts)\n        week = Week(week_number=self.weeks[-1].number + 1,\n                    contexts=contexts,\n                    learners=learners)\n        self.weeks.append(week)\n\n    def learner_generator(self, new_contexts):\n        \"\"\"\n            Knowing the new contexts and the past weeks, we generate associated MABs.\n        :param new_contexts: contexts generated for the next week\n        :return: list of learners\n        \"\"\"\n        # greedy implementation. We have to discuss about this algorithm\n        last_week_learner = np.random.choice(self.weeks[-1].pairs)['learner']\n        new_learners = [copy.deepcopy(last_week_learner) for i in range(len(list(new_contexts.keys())))]\n        return new_learners\n\n    def add_user(self, user):\n        \"\"\"\n        :param user: User object\n        :return:\n        \"\"\"\n        self.users.append(user)\n\n    def get_learner(self, user):\n        \"\"\"\n            During the week, we know the generated contexts and we have one MAB for each context.\n            In this function, we observe the features of the incoming user, to get the corresponding generated context\n            and from the context, to get the associated MAB.\n            From the MAB, we will propose a price to the user and we will observe the reward.\n        :param user: User object\n        :return: Learner object\n        \"\"\"\n        current_week = self.weeks[-1]\n        # to get the learner associated\n        learner = current_week.get_learner(user_features=user.features)\n        return learner\n
++Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
++<+>UTF-8
++===================================================================
++--- project/part_5/CampaignScheduler.py	(revision 40ced30708418a5328e708428c974802322a318d)
+++++ project/part_5/CampaignScheduler.py	(date 1589476565752)
++@@ -26,7 +26,7 @@
++             thus we initialize only one learner, to learn the aggregate model
++         :return:
++         """
++-        learner = self.MAB(self.MAB_args)
+++        learner = self.MAB(self.MAB_args[0], self.MAB_args[1])
++         contexts = {'context_1': []}  # this represents an empty context
++         week = Week(week_number=0, contexts=contexts, learners=[learner])
++         self.weeks.append(week)
++diff --git project/part_4/Testing_Environment.py project/part_4/Testing_Env_4.py
++rename from project/part_4/Testing_Environment.py
++rename to project/part_4/Testing_Env_4.py
++diff --git project/part_5/Testing_Environment.py project/part_5/Testing_Env_5.py
++rename from project/part_5/Testing_Environment.py
++rename to project/part_5/Testing_Env_5.py
+Index: .idea/shelf/Uncommitted_changes_before_Update_at_15_05_20__08_18__Default_Changelist_.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- .idea/shelf/Uncommitted_changes_before_Update_at_15_05_20__08_18__Default_Changelist_.xml	(date 1589545967702)
++++ .idea/shelf/Uncommitted_changes_before_Update_at_15_05_20__08_18__Default_Changelist_.xml	(date 1589545967702)
+@@ -0,0 +1,4 @@
++<changelist name="Uncommitted_changes_before_Update_at_15_05_20,_08_18_[Default_Changelist]" date="1589523496598" recycled="false" toDelete="true">
++  <option name="PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_15_05_20,_08_18_[Default_Changelist]/shelved.patch" />
++  <option name="DESCRIPTION" value="Uncommitted changes before Update at 15/05/20, 08:18 [Default Changelist]" />
++</changelist>
+\ No newline at end of file

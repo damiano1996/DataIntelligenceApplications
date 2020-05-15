@@ -1,0 +1,24 @@
+Index: project/part_5/CampaignScheduler.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>import copy\n\nimport numpy as np\n\nfrom project.dia_pckg.Config import features_space\nfrom project.part_5.ContextGenerator import ContextGenerator\nfrom project.part_5.Week import Week\n\n\nclass CampaignScheduler():\n\n    def __init__(self, mab_algorithm, *mab_args):\n        # general MAB algorithm to perform multiple tests, with different configurations\n        self.MAB = mab_algorithm  # Multi Armed Bandit algorithm to use\n        self.MAB_args = mab_args\n\n        self.users = []  # to list the users\n        self.weeks = []  # to store the Week objects\n        self.initialize_weeks_list()\n\n        self.context_generator = ContextGenerator()\n\n    def initialize_weeks_list(self):\n        \"\"\"\n            For the first week we cannot generate contexts,\n            thus we initialize only one learner, to learn the aggregate model\n        :return:\n        \"\"\"\n        learner = self.MAB(self.MAB_args)\n        contexts = {'context_1': []}  # this represents an empty context\n        week = Week(week_number=0, contexts=contexts, learners=[learner])\n        self.weeks.append(week)\n\n    def weekend_update(self):\n        \"\"\"\n            At the end of the week,\n            we'll generate the new contexts and\n            we'll associate to each new context a MAB (where possible, re-using the prior of the last week).\n        :return:\n        \"\"\"\n        contexts = self.context_generator.get_weekly_contexts(features_space=features_space, users=self.users)\n        # here we need an algorithm being able to select from the last week the learner that we can re-use.\n        learners = self.learner_generator(contexts)\n        week = Week(week_number=self.weeks[-1].number + 1,\n                    contexts=contexts,\n                    learners=learners)\n        self.weeks.append(week)\n\n    def learner_generator(self, new_contexts):\n        \"\"\"\n            Knowing the new contexts and the past weeks, we generate associated MABs.\n        :param new_contexts: contexts generated for the next week\n        :return: list of learners\n        \"\"\"\n        # greedy implementation. We have to discuss about this algorithm\n        last_week_learner = np.random.choice(self.weeks[-1].pairs)['learner']\n        new_learners = [copy.deepcopy(last_week_learner) for i in range(len(list(new_contexts.keys())))]\n        return new_learners\n\n    def add_user(self, user):\n        \"\"\"\n        :param user: User object\n        :return:\n        \"\"\"\n        self.users.append(user)\n\n    def get_learner(self, user):\n        \"\"\"\n            During the week, we know the generated contexts and we have one MAB for each context.\n            In this function, we observe the features of the incoming user, to get the corresponding generated context\n            and from the context, to get the associated MAB.\n            From the MAB, we will propose a price to the user and we will observe the reward.\n        :param user: User object\n        :return: Learner object\n        \"\"\"\n        current_week = self.weeks[-1]\n        # to get the learner associated\n        learner = current_week.get_learner(user_features=user.features)\n        return learner\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- project/part_5/CampaignScheduler.py	(revision 40ced30708418a5328e708428c974802322a318d)
++++ project/part_5/CampaignScheduler.py	(date 1589476565752)
+@@ -26,7 +26,7 @@
+             thus we initialize only one learner, to learn the aggregate model
+         :return:
+         """
+-        learner = self.MAB(self.MAB_args)
++        learner = self.MAB(self.MAB_args[0], self.MAB_args[1])
+         contexts = {'context_1': []}  # this represents an empty context
+         week = Week(week_number=0, contexts=contexts, learners=[learner])
+         self.weeks.append(week)
+diff --git project/part_4/Testing_Environment.py project/part_4/Testing_Env_4.py
+rename from project/part_4/Testing_Environment.py
+rename to project/part_4/Testing_Env_4.py
+diff --git project/part_5/Testing_Environment.py project/part_5/Testing_Env_5.py
+rename from project/part_5/Testing_Environment.py
+rename to project/part_5/Testing_Env_5.py
