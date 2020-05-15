@@ -5,7 +5,7 @@ import numpy as np
 
 class ContextGenerator:
 
-    def __init__(self, class_1, class_2, class_3, feature_1, feature_2):
+    def __init__(self, class_1, class_2, class_3, feature_1, feature_2, multi_class_handler, mab_algorithm, mab_args):
         """
 
         :param class_1: class object
@@ -14,90 +14,94 @@ class ContextGenerator:
         """
         self.classes = {class_1.features: class_1, class_2.features: class_2, class_3.features: class_3, }
         self.features = {feature_1, feature_2}
+        self.mab_algorithm = mab_algorithm
+        self.mab_args = mab_args
+        self.mch = multi_class_handler
         pass
 
-    def get_weekly_contexts(self, users, contexts, sales, date, n_arms, users_per_day):
+    def get_weekly_contexts(self, users, contexts, sales):
         """
         :param users: dictionary of class->number of users, they are users collected from the beginning of the campaign
         :param contexts: the list of contexts used in the previous iteration
         :param sales: dictionary class->sold items during the week
-        :param date: starting date for a new context
-        :param n_arms: arms of the bandit for this context
-        :param users_per_day: estimated users in a day for each class
         :return: dictionary of the following shape:
                 {'context_1': features, 'context_2': features, ...}
                     where features is a list containing the features of the context: e.g. ['<30', 'worker]
         """
-
-        if contexts.len() == 1:
+        if contexts.len() == 0:
+            #create aggregate context
+            new_contexts = {'context_1': Context(classes=self.classes, feature='aggregate', context_name='aggregate',
+                                                 mch=self.mch, mab_algorithm=self.mab_algorithm, mab_args=self.mab_args)}
+        elif contexts.len() == 1:
             cont = {}
             not_cont = {}
             low_bound = {}
             for feature in self.features:
-                cont[feature], not_cont[feature] = self.get_classes(feature, contexts['context_1'])
+                cont[feature], not_cont[feature] = self.split(feature, contexts['context_1'])
                 low_bound[feature] = self.get_low_bound(cont, not_cont, users, sales)
             best_feature = np.argmax(low_bound)
             if low_bound[best_feature] > self.get_low_bound(contexts['context_1'].classes, [], users, sales):
                 #split
                 new_contexts = {
-                    'context_1': Context(classes=cont[best_feature], feature=best_feature, initial_date=date,
-                                         n_arms=n_arms, users_per_day=users_per_day, n_days=7, context_name='giuseppe'),
-                    'context_2': Context(classes=not_cont[best_feature], feature=best_feature, initial_date=date,
-                                         n_arms=n_arms, users_per_day=users_per_day, n_days=7, context_name='giuseppe')}
+                    'context_1': Context(classes=cont[best_feature], feature=best_feature, context_name='giuseppe',
+                                         mch=self.mch, mab_algorithm=self.mab_algorithm, mab_args=self.mab_args),
+                    'context_2': Context(classes=not_cont[best_feature], feature=best_feature, context_name='giuseppe',
+                                         mch=self.mch, mab_algorithm=self.mab_algorithm, mab_args=self.mab_args)}
             else:
                 #no split
-                new_contexts = {'context_1': Context(classes=contexts['context_1'].classes, feature=contexts['context_1'].feature,
-                                                     initial_date=date, n_arms=n_arms, users_per_day=users_per_day, n_days=7,
-                                                     context_name=contexts['context_1'].context_name)}
+                new_contexts = {'context_1': Context(classes=contexts['context_1'].classes,
+                                                     feature=contexts['context_1'].feature,
+                                                     context_name=contexts['context_1'].context_name,
+                                                     mab_algorithm=self.mab_algorithm, mab_args=self.mab_args)}
 
         elif contexts.len() == 2:
             if contexts['context_1'].feature == 'age':
-                cont, not_cont = self.get_classes('profession', contexts['context_1'])
+                cont, not_cont = self.split('profession', contexts['context_1'])
                 feature = 'profession'
                 low_bound = self.get_low_bound(cont, not_cont, users, sales)
             else:
-                cont, not_cont = self.get_classes('age', contexts['context_1'])
+                cont, not_cont = self.split('age', contexts['context_1'])
                 feature = 'age'
                 low_bound = self.get_low_bound(cont, not_cont, users, sales)
             # add possibility to recombine contexts
             if low_bound > self.get_low_bound(contexts[0].classes, [], users, sales):
                 #split
                 new_contexts = {
-                    'context_1': Context(classes=cont, feature=feature, initial_date=date,
-                                         n_arms=n_arms, users_per_day=users_per_day, n_days=7, context_name='giuseppe'),
-                    'context_2': Context(classes=not_cont, feature=feature, initial_date=date,
-                                         n_arms=n_arms, users_per_day=users_per_day, n_days=7, context_name='giuseppe'),
+                    'context_1': Context(classes=cont, feature=feature, context_name='giuseppe',
+                                         mch=self.mch, mab_algorithm=self.mab_algorithm, mab_args=self.mab_args),
+                    'context_2': Context(classes=not_cont, feature=feature, context_name='giuseppe',
+                                         mch=self.mch, mab_algorithm=self.mab_algorithm, mab_args=self.mab_args),
                     'context_3': Context(classes=contexts['context_2'].classes, feature=contexts['context_2'].feature,
-                                         initial_date=date, n_arms=n_arms, users_per_day=users_per_day, n_days=7,
-                                         context_name=contexts['context_2'].context_name)
+                                         context_name=contexts['context_2'].context_name, mch=self.mch,
+                                         mab_algorithm=self.mab_algorithm, mab_args=self.mab_args)
                 }
             else:
                 #no split
                 new_contexts = {
                     'context_1': Context(classes=contexts['context_1'].classes, feature=contexts['context_1'].feature,
-                                         initial_date=date, n_arms=n_arms, users_per_day=users_per_day, n_days=7,
-                                         context_name=contexts['context_1'].context_name),
+                                         context_name=contexts['context_1'].context_name, mch=self.mch,
+                                         mab_algorithm=self.mab_algorithm, mab_args=self.mab_args),
                     'context_2': Context(classes=contexts['context_2'].classes, feature=contexts['context_2'].feature,
-                                         initial_date=date, n_arms=n_arms, users_per_day=users_per_day, n_days=7,
-                                         context_name=contexts['context_2'].context_name)
+                                         context_name=contexts['context_2'].context_name, mch=self.mch,
+                                         mab_algorithm=self.mab_algorithm, mab_args=self.mab_args)
                 }
         else:
             # add possibility to recombine contexts
             new_contexts = {
                 'context_1': Context(classes=contexts['context_1'].classes, feature=contexts['context_1'].feature,
-                                     initial_date=date, n_arms=n_arms, users_per_day=users_per_day, n_days=7,
-                                     context_name=contexts['context_1'].context_name),
+                                     context_name=contexts['context_1'].context_name, mch=self.mch,
+                                     mab_algorithm=self.mab_algorithm, mab_args=self.mab_args),
                 'context_2': Context(classes=contexts['context_2'].classes, feature=contexts['context_2'].feature,
-                                     initial_date=date, n_arms=n_arms, users_per_day=users_per_day, n_days=7,
-                                     context_name=contexts['context_2'].context_name),
+                                     context_name=contexts['context_2'].context_name, mch=self.mch,
+                                     mab_algorithm=self.mab_algorithm, mab_args=self.mab_args),
                 'context_3': Context(classes=contexts['context_3'].classes, feature=contexts['context_3'].feature,
-                                     initial_date=date, n_arms=n_arms, users_per_day=users_per_day, n_days=7,
-                                     context_name=contexts['context_3'].context_name)
+                                     context_name=contexts['context_3'].context_name, mch=self.mch,
+                                     mab_algorithm=self.mab_algorithm, mab_args=self.mab_args)
             }
 
         return new_contexts
 
-    def get_classes(self, feature, context):
+    def split(self, feature, context):
         """
         this function splits according to the considered feature
         :param feature: the feature we want to evaluate
@@ -108,19 +112,19 @@ class ContextGenerator:
         class_not_cont = {}
         if context.n_classes == 3:
             if feature == 'age':
-                class_cont = {'class_1': self.classes[{'<30', 'student'}], 'class_2': self.classes[{'<30', 'worker'}]}
-                class_not_cont = self.classes[{'>30', 'worker'}]
+                class_cont = {'class_1': self.classes[{0, 0}], 'class_2': self.classes[{0, 1}]}
+                class_not_cont = self.classes[{1, 1}]
             else:
-                class_cont = {'class_1': self.classes[{'>30', 'worker'}], 'class_2': self.classes[{'<30', 'worker'}]}
-                class_not_cont = self.classes[{'<30', 'student'}]
+                class_cont = {'class_1': self.classes[{1, 1}], 'class_2': self.classes[{0, 1}]}
+                class_not_cont = self.classes[{0, 0}]
 
         elif context.n_classes == 2:
             if feature == 'age':
-                class_cont = self.classes[{'>30', 'worker'}]
-                class_not_cont = self.classes[{'<30', 'worker'}]
+                class_cont = self.classes[{1, 1}]
+                class_not_cont = self.classes[{0, 0}]
             else:
-                class_cont = self.classes[{'<30', 'worker'}]
-                class_not_cont = self.classes[{'<30', 'student'}]
+                class_cont = self.classes[{0, 1}]
+                class_not_cont = self.classes[{0, 0}]
 
         return class_cont, class_not_cont
 
