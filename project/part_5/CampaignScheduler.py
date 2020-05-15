@@ -30,12 +30,9 @@ class CampaignScheduler():
             At the end of the week, I take the new contexts from ContextGenerator 
         :return:
         """
-        try:
-            self.contexts = self.context_generator.get_weekly_contexts(users_counter=self.users_counter,
-                                                                       contexts=self.contexts,
-                                                                       sales=self.rewards_counter)
-        except:
-            print('Errore fatale')
+        self.contexts = self.context_generator.get_weekly_contexts(users_counter=self.users_counter,
+                                                                   contexts=self.contexts,
+                                                                   sales=self.rewards_counter)
 
     def add_new_user(self, user):
         """
@@ -68,7 +65,7 @@ class CampaignScheduler():
         :return:
         """
         for context_name, context_obj in self.contexts.items():
-            if (context_obj.is_user_belonging(user)):
+            if context_obj.is_user_belonging(user):
                 context_obj.learner.update(pulled_arm, reward)
                 real_reward = context_obj.learner.get_real_reward(pulled_arm, reward)
                 self.collected_rewards = np.append(self.collected_rewards, real_reward)

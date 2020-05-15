@@ -40,7 +40,7 @@ class ContextGenerator:
                 low_bound[feature] = self.get_low_bound(cont[feature], not_cont[feature], users_counter, sales)
 
             best_feature = max(low_bound.items(), key=operator.itemgetter(1))[0]
-            if low_bound[best_feature] > self.get_low_bound(contexts['context_1'].classes, [], users_counter, sales):
+            if low_bound[best_feature] > self.get_low_bound(contexts['context_1'].features, [], users_counter, sales):
                 # split
 
                 new_contexts = {
@@ -53,7 +53,7 @@ class ContextGenerator:
                 new_contexts = {'context_1': copy.deepcopy(contexts['context_1'])}
 
         elif len(contexts) == 2:
-            if contexts['context_1'].feature == 'age':
+            if contexts['context_1'].features == 'age':
                 cont, not_cont = self.split('profession', contexts['context_1'])
                 feature = 'profession'
                 low_bound = self.get_low_bound(cont, not_cont, users_counter, sales)
@@ -133,10 +133,10 @@ class ContextGenerator:
         :param not_cont: the class we don't want to put in the context
         :return: the lower bound of the context to be generated
         """
-        delta_1 = 5
+        delta_1 = 0.5
         z_1 = 0
         x_1 = 0
-        delta_2 = 5
+        delta_2 = 0.5
         z_2 = np.finfo(np.float32).eps
         x_2 = 0
 
