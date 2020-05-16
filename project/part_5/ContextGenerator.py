@@ -23,33 +23,42 @@ class ContextGenerator():
         :param rewards_counters: dictionary containing counters of rewards for each class
         :return: dictionary containing Context objects
         """
+        report = 'Generation context '
+
         if len(last_contexts) == 0:
             # create aggregate context
             my_features = [feat['features'] for feat in classes_config.values()]
             new_contexts = {'context_1': Context_B(features=my_features, mab_algorithm=self.mab_algorithm,
                                                    mab_args=self.mab_args)}
+            report += 'aggregate '
 
         elif len(last_contexts) == 1:
             cont = {}
             not_cont = {}
             low_bound = {}
+            
             for feature in features_space.keys():
                 cont[feature], not_cont[feature] = self.split(feature, last_contexts['context_1'])
-                low_bound[feature] = self.get_low_bound(cont[feature], not_cont[feature], users_counters,
-                                                        rewards_counters)
-
+                #low_bound[feature] = self.get_low_bound(cont[feature], not_cont[feature], users_counters, rewards_counters)
+                low_bound[feature] = self.get_mean_value(cont[feature], not_cont[feature], users_counters, rewards_counters)
+                
             best_feature = max(low_bound.items(), key=operator.itemgetter(1))[0]
-            if low_bound[best_feature] > self.get_low_bound(last_contexts['context_1'].features, [], users_counters,
-                                                            rewards_counters):
+            #parent_low_bound = self.get_low_bound(last_contexts['context_1'].features, [], users_counters, rewards_counters)
+            parent_low_bound = self.get_mean_value(last_contexts['context_1'].features, [], users_counters, rewards_counters)
+
+            if low_bound[best_feature] > parent_low_bound:
                 # split
                 new_contexts = {
-                    'context_1': Context_B(features=cont, mab_algorithm=self.mab_algorithm,
+                    'context_1': Context_B(features=cont[best_feature], mab_algorithm=self.mab_algorithm,
                                            mab_args=self.mab_args),
-                    'context_2': Context_B(features=not_cont, mab_algorithm=self.mab_algorithm,
+                    'context_2': Context_B(features=not_cont[best_feature], mab_algorithm=self.mab_algorithm,
                                            mab_args=self.mab_args)}
+                report += 'split 1 -> 2 features '
             else:
                 # no split
                 new_contexts = {'context_1': copy.deepcopy(last_contexts['context_1'])}
+                report += 'no split 1 feature '
+
 
         elif len(last_contexts) == 2:
             if last_contexts['context_1'].features == 'age':
@@ -70,32 +79,37 @@ class ContextGenerator():
                     'context_2': Context_B(features=not_cont, mab_algorithm=self.mab_algorithm,
                                            mab_args=self.mab_args),
                     'context_3': copy.deepcopy(last_contexts['context_2'])}
+                report += 'split 2 -> 3 features '
             else:
                 # no split
                 new_contexts = {
                     'context_1': copy.deepcopy(last_contexts['context_1']),
                     'context_2': copy.deepcopy(last_contexts['context_2'])}
+                report +=  'no split 2 feature '
         else:
-            # add possibility to recombine contexts
+            # add possibility to recombine contexts 
             new_contexts = copy.deepcopy(last_contexts)
+        
 
         # Initialization of the new learners
-
-        if len(new_contexts) == 2:
+        if len(new_contexts) == 2 and len(last_contexts) != len(new_contexts):
             prior = last_contexts['context_1'].learner.beta_parameters
             rewards_per_arm = last_contexts['context_1'].learner.rewards_per_arm
 
             new_contexts['context_1'].learner.initialize_learner(prior, rewards_per_arm)
             new_contexts['context_2'].learner.initialize_learner(prior, rewards_per_arm)
 
-        elif len(new_contexts) == 3:
+            report += '| Initialized prior 2 features'
+
+        elif len(new_contexts) == 3 and len(last_contexts) != len(new_contexts):
             prior = last_contexts['context_1'].learner.beta_parameters
             rewards_per_arm = last_contexts['context_1'].learner.rewards_per_arm
 
             new_contexts['context_1'].learner.initialize_learner(prior, rewards_per_arm)
             new_contexts['context_2'].learner.initialize_learner(prior, rewards_per_arm)
             new_contexts['context_3'].learner.initialize_learner(prior, rewards_per_arm)
-
+        
+        print (report)
         return new_contexts
 
     def split(self, feature_name, context):
@@ -110,19 +124,18 @@ class ContextGenerator():
         if len(context.features) == 3:
             if feature_name == 'age':
                 class_cont = [[0, 0], [0, 1]]
-                class_not_cont = [1, 1]
+                class_not_cont = [[1, 1],]
             else:
-
                 class_cont = [[1, 1], [0, 1]]
-                class_not_cont = [0, 0]
+                class_not_cont = [[0, 0],]
 
         elif len(context.features) == 2:
             if feature_name == 'age':
-                class_cont = [[1, 1]]
-                class_not_cont = [0, 1]
+                class_cont = [[1, 1],]
+                class_not_cont = [[0, 1],]
             else:
-                class_cont = [[0, 1]]
-                class_not_cont = [0, 0]
+                class_cont = [[0, 1],]
+                class_not_cont = [[0, 0],]
 
         return class_cont, class_not_cont
 
@@ -157,3 +170,24 @@ class ContextGenerator():
 
         return z_1 / tot * (x_1 - math.sqrt(-math.log(delta_1) / 2 * z_1)) + z_2 / tot * (
                 x_2 - math.sqrt(-math.log(delta_2) / 2 * z_2))
+
+
+    #rew_cont/user_cont + rew_not_cont/user_not_cont
+    def get_mean_value (self, conts, not_cont, users_counters, rewards_counters):
+        z_1 = 0; x_1 = 0; z_2 = 0; x_2 = 0
+
+        for class_ in self.mch.classes:
+            class_name = class_.name
+            for cont in conts:
+                if cont == class_.features:
+                    z_1 += users_counters[class_name]
+                    x_1 += rewards_counters[class_name]
+
+            if not_cont == class_.features:
+                z_2 += users_counters[class_name]
+                x_2 += rewards_counters[class_name]
+
+        cont_value = x_1 / z_1 if z_1 > 0 else 0
+        not_cont_value = x_2 / z_2 if z_2 > 0 else 0
+
+        return cont_value + not_cont_value

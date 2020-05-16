@@ -15,13 +15,24 @@ class Env_5(Env_4):
 
     def round(self, pulled_arm, user):
         """
-            This method computes a round and checks if another week is finished.
+            This method performs a round considering the number of steps per day
+            Only after n rounds it perform a step in the implemented class
         :param pulled_arm: arm to pull
-        :param user: User object
-        :return: (new_week, reward, current date, done)
+        :return: (reward, current date, done) done is a boolean -> True if the "game" is finished
         """
         new_week = False
-        if self.get_current_date().weekday() == 6:
-            new_week = True
+        done = False
 
-        return new_week, super(Env_5, self).round(pulled_arm, user)
+        reward, opt_revenue = self.one_user_round(pulled_arm, user)
+        current_date = self.get_current_date()
+
+        self.count_rounds_today += 1
+        if self.count_rounds_today == self.round_per_day:
+            self.count_rounds_today = 0
+            current_date, done = self.step()
+            if self.get_current_date().weekday() == 6:
+                new_week = True
+
+        return new_week, reward, current_date, done, opt_revenue
+
+        

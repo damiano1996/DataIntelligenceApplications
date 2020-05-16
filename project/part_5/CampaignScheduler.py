@@ -18,7 +18,8 @@ class CampaignScheduler(ContextGenerator):
             Resetting variables
         :return: None
         """
-        self.users_counters = self.rewards_counters = {class_name: 0 for class_name in classes_config.keys()}
+        self.users_counters = {class_name: 0 for class_name in classes_config.keys()}
+        self.rewards_counters = {class_name: 0 for class_name in classes_config.keys()}
         self.week_contexts = {}
         self.collected_rewards = np.array([])
 
@@ -69,10 +70,11 @@ class CampaignScheduler(ContextGenerator):
         :return: None
         """
         self.update_users_counters(user)
-        self.update_rewards_counters(reward, user)
+        #self.update_rewards_counters(reward, user)
 
         for context_name, context_obj in self.week_contexts.items():
             if context_obj.is_user_belonging(user):
                 context_obj.learner.update(pulled_arm, reward)
                 real_reward = context_obj.learner.get_real_reward(pulled_arm, reward)
+                self.update_rewards_counters(real_reward, user)
                 self.collected_rewards = np.append(self.collected_rewards, real_reward)
