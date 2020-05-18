@@ -30,8 +30,9 @@ class DynamicLearner():
 
     def update_observations(self, arm_idx, reward):
         if(len(self.collected_rewards) == self.len_window):
-            del(self.rewards_per_arm[arm_idx][0])
-            del(self.pulled_arms[0])
+            index_arm = np.where(self.arms == self.pulled_arms[0])[0][0]
+            self.rewards_per_arm[index_arm].pop(0)
+            self.pulled_arms.pop(0)
             self.collected_rewards = np.delete(self.collected_rewards, 0)
         self.rewards_per_arm[arm_idx].append(reward)
         self.pulled_arms.append(self.arms[arm_idx])
