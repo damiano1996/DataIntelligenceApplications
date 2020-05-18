@@ -8,3 +8,5 @@
 /httpRequests/
 *.xml
 *.iml
+
+./idea/**
