@@ -12,8 +12,6 @@
 .DS_Store
 .idea
 
-# Ignore node_modules folder
-node_modules
 
 # Ignore all text files
 *.txt
@@ -21,5 +19,5 @@ node_modules
 # Ignore files related to API keys
 .env
 
-# Ignore SASS config files
-.sass-cache
+
+*.pyc
