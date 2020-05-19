@@ -20,11 +20,12 @@ class Learner():
 
         alpha = 10.0
         kernel = C(1.0, (1e-3, 1e3)) * RBF(1.0, (1e-3, 1e3))
-        self.gp = GaussianProcessRegressor(kernel=kernel,
-                                           alpha=alpha ** 2,
-                                           normalize_y=True,
+        #self.gp = GaussianProcessRegressor(kernel=kernel,
+        #                                   alpha=alpha ** 2,
+        #                                   normalize_y=True,
+        #                                   n_restarts_optimizer=9)
+        self.gp = GaussianProcessRegressor(normalize_y=True,
                                            n_restarts_optimizer=9)
-
         self.X = []
         self.Y = []
 
@@ -37,12 +38,20 @@ class Learner():
         x = np.atleast_2d(self.pulled_arms).T
         y = self.collected_rewards
 
+        x = np.nan_to_num(x)
+        y = np.nan_to_num(y)
+
         self.X = x
         self.Y = y.ravel()
 
-        self.gp.fit(x, y)
-        self.means, self.sigmas = self.gp.predict(np.atleast_2d(self.arms).T, return_std=True)
-        self.sigmas = np.maximum(self.sigmas, 1e-2)
+
+        try:
+            self.gp.fit(x, y)
+            self.means, self.sigmas = self.gp.predict(np.atleast_2d(self.arms).T, return_std=True)
+            self.sigmas = np.maximum(self.sigmas, 1e-2)
+        except:
+            self.means = [0]
+            self.sigmas = [0]
 
     def update(self, pulled_arm, reward):
         self.t += 1
