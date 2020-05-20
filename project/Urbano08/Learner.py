@@ -20,12 +20,12 @@ class Learner():
 
         alpha = 10.0
         kernel = C(1.0, (1e-3, 1e3)) * RBF(1.0, (1e-3, 1e3))
-        #self.gp = GaussianProcessRegressor(kernel=kernel,
-        #                                   alpha=alpha ** 2,
-        #                                   normalize_y=True,
-        #                                   n_restarts_optimizer=9)
-        self.gp = GaussianProcessRegressor(normalize_y=True,
+        self.gp = GaussianProcessRegressor(kernel=kernel,
+                                           alpha=alpha ** 2,
+                                           normalize_y=True,
                                            n_restarts_optimizer=9)
+        #self.gp = GaussianProcessRegressor(normalize_y=True,
+         #                                  n_restarts_optimizer=9)
         self.X = []
         self.Y = []
 
