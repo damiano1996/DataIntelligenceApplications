@@ -3,14 +3,14 @@ import numpy as np
 
 class AbruptBiddingEnvironment():
 
-    def __init__(self, bids, max, sigma):
+    def __init__(self, bids, max, sigma, phaselen = 60,n_phases = 3):
         self.bids = bids
         self.sigma = sigma
         self.max = max
         self.subs = [self.bid_sub1,self.bid_sub2,self.bid_sub3]
         self.day = 0
-        self.phaselen = 60
-        self.n_phases = 3
+        self.phaselen = phaselen
+        self.n_phases = n_phases
 
 
     def phase(self):
@@ -22,11 +22,11 @@ class AbruptBiddingEnvironment():
         elif int(phase) == 1:
             return self.max * (1.0 - np.exp(-20 * x))
         elif int(phase) == 2:
-            return self.max * (1.0 - np.exp(-9 * x))
+            return 0.0#self.max * (1.0 - np.exp(-9 * x))
 
     def bid_sub2(self, x,phase = 0):
         if int(phase) == 0:
-            return self.max * (1.0 - np.exp(-5 * x))
+            return 0.0#self.max * (1.0 - np.exp(-5 * x))
         elif int(phase) == 1:
             return self.max * (1.0 - np.exp(-1 * x))
         elif int(phase) == 2:
@@ -42,8 +42,10 @@ class AbruptBiddingEnvironment():
 
     def round(self, pulled_arm1, pulled_arm2, pulled_arm3):
         phase = (self.day/self.phaselen)%self.n_phases
-        reward1 = 0 if pulled_arm1 == 0 else np.maximum(0,np.random.normal(self.bid_sub1(self.bids[pulled_arm1],phase), self.sigma))
-        reward2 = 0 if pulled_arm2 == 0 else np.maximum(0,np.random.normal(self.bid_sub2(self.bids[pulled_arm2],phase), self.sigma))
-        reward3 = 0 if pulled_arm3 == 0 else np.maximum(0,np.random.normal(self.bid_sub3(self.bids[pulled_arm3],phase), self.sigma))
+        pulled_arms = [pulled_arm1, pulled_arm2, pulled_arm3]
+        rewards = np.array([])
+        for i in range(0,len(pulled_arms)):
+            reward = 0 if pulled_arms[i] == 0 else np.maximum(0,np.random.normal(self.subs[i](self.bids[pulled_arms[i]],phase), self.sigma))
+            rewards = np.append(rewards,reward)
         self.day = self.day + 1
-        return np.array([reward1,reward2,reward3])
+        return rewards
