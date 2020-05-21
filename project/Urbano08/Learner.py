@@ -1,4 +1,5 @@
 import numpy as np
+import matplotlib.pyplot as plt
 from sklearn.gaussian_process import GaussianProcessRegressor
 from sklearn.gaussian_process.kernels import RBF, ConstantKernel as C
 
@@ -50,3 +51,25 @@ class Learner:
 
     def pull_arm(self):
         return np.argmax(self.sigmas)
+
+    def plot(self, env_sub):
+        print(len(self.means))
+
+        x_pred = np.atleast_2d(self.arms).T
+
+        X = self.pulled_arms
+        Y = self.collected_rewards
+
+        plt.figure()
+
+        plt.plot(x_pred, env_sub(x_pred), 'r:', label=r'$n(x)$')
+        plt.plot(X, Y, 'ro', label=r'Observed Clicks')
+        plt.plot(x_pred, self.means, 'b-', label=f'Predicted Clicks {self.t}')
+        plt.fill(np.concatenate([x_pred, x_pred[::-1]]),
+                 np.concatenate([self.means - 1.96 * self.sigmas,
+                                 (self.means + 1.96 * self.sigmas)[::-1]]),
+                 alpha=.5, fc='b', ec='None', label='95% conf interval')
+        plt.xlabel('$x$')
+        plt.ylabel('$n(x)$')
+        plt.legend(loc='lower right')
+        plt.show()
