@@ -4,6 +4,11 @@ from sklearn.gaussian_process import GaussianProcessRegressor
 from sklearn.gaussian_process.kernels import RBF, ConstantKernel as C
 
 
+# we estimate the expected reward given by a bid value
+# at each round the learner fit a GP with the chosen bids as inputs
+# the targets of the GP are the observed number of clicks
+
+
 class Learner:
 
     def __init__(self, n_arms, arms):
@@ -18,11 +23,13 @@ class Learner:
         self.sigmas = np.ones(n_arms) * 10
         self.pulled_arms = []
 
+    # update the values of the pulled arms and of the collected rewards
     def update_observations(self, arm_idx, reward):
         self.rewards_per_arm[arm_idx].append(reward)
         self.pulled_arms.append(self.arms[arm_idx])
         self.collected_rewards = np.append(self.collected_rewards, reward)
 
+    # update the GP estimation and the parameters (mean and sigma) after each round
     def update_model(self):
         alpha = 10.0
         kernel = C(1.0, (1e-3, 1e3)) * RBF(1.0, (1e-3, 1e3))
@@ -44,14 +51,23 @@ class Learner:
             self.means = [0]
             self.sigmas = [0]
 
+    # given the pulled arm and the reward, update the observations and the model
     def update(self, pulled_arm, reward):
         self.t += 1
         self.update_observations(pulled_arm, reward)
         self.update_model()
 
+    # The learner choose which arm to pull at each round
+    # it returns the index of the maximum value drawn from the normal distribution of the arms
     def pull_arm(self):
-        return np.argmax(self.sigmas)
+        sampled_values = np.random.normal(self.means, self.sigmas)
+        return np.argmax(sampled_values)
 
+
+    # For each sub-campaign we plot:
+    # - the real function nr.clicks w.r.t. the bid value
+    # - the observed click (one at each round)
+    # - the prediction model
     def plot(self, env_sub):
         print(len(self.means))
 
