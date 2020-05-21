@@ -1,13 +1,14 @@
 import numpy as np
 
-class TableAlgorithm(np):
+
+class TableAlgorithm(np.ndarray):
 
     def fit_table(table_all_Subs):
         raws = table_all_Subs.shape[0]
         cols = table_all_Subs.shape[1]
         algorithm_table = np.ndarray(shape=(0, cols), dtype=float)
 
-        for r in raws:
+        for r in range(0,raws):
             algorithm_table = np.append(algorithm_table, np.atleast_2d(np.zeros(cols)), 0)
 
         algorithm_table[0, :] = table_all_Subs[0, :]
@@ -28,4 +29,4 @@ class TableAlgorithm(np):
 
                 algorithm_table[i, j] = possibilities[max_index]
                 allocations_table[i][j] = poss_allocation[max_index]
-        return allocations_table[raws-1][cols-1],max(algorithm_table[cols-1])
+        return allocations_table[raws - 1][cols - 1], max(algorithm_table[raws - 1])

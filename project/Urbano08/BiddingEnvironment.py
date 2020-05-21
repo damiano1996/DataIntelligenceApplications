@@ -23,8 +23,8 @@ class BiddingEnvironment():
         rewards = np.array([])
         pulledarms = [pulled_arm1,pulled_arm2,pulled_arm3]
 
-        for i in range(0,pulledarms):
-            r = 0 if pulledarms[i] == 0 else np.maximum(0,np.random.normal(self.bid_sub[i](self.bids[pulledarms[i]]), self.sigma))
+        for i in range(0,len(pulledarms)):
+            r = 0 if pulledarms[i] == 0 else np.maximum(0,np.random.normal(self.subs[i](self.bids[pulledarms[i]]), self.sigma))
             rewards = np.append(rewards,r)
 
         return rewards
