@@ -1,7 +1,7 @@
 import numpy as np
 
 
-class TableAlgorithm(np.ndarray):
+class Optimizer(np.ndarray):
 
     def fit_table(table_all_Subs):
         raws = table_all_Subs.shape[0]
