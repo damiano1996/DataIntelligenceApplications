@@ -85,9 +85,15 @@ class ContextGenerator:
                     'context_1': copy.deepcopy(last_contexts['context_1']),
                     'context_2': copy.deepcopy(last_contexts['context_2'])}
                 report += 'no split 2 feature '
+        
         else:
-            # add possibility to recombine contexts 
-            new_contexts = copy.deepcopy(last_contexts)
+            # no split
+            new_contexts = {
+                'context_1': copy.deepcopy(last_contexts['context_1']),
+                'context_2': copy.deepcopy(last_contexts['context_2']),
+                'context_3': copy.deepcopy(last_contexts['context_3'])}
+            #new_contexts = copy.deepcopy(last_contexts) #sembra non funzionare a dovere, o  comunque da una peggiore regret
+            report += 'no split 3 feature '
 
         # Initialization of the new learners
         if len(new_contexts) == 2 and len(last_contexts) != len(new_contexts):
@@ -105,10 +111,8 @@ class ContextGenerator:
 
             new_contexts['context_1'].learner.initialize_learner(prior, rewards_per_arm)
             new_contexts['context_2'].learner.initialize_learner(prior, rewards_per_arm)
-            # non ci deve essere questa parte credo
-            # prior = last_contexts['context_2'].learner.beta_parameters
-            # rewards_per_arm = last_contexts['context_2'].learner.rewards_per_arm
-            # new_contexts['context_3'].learner.initialize_learner(prior, rewards_per_arm)
+
+            report += '| Initialized prior 3 features'
         
         print(report)
         return new_contexts
