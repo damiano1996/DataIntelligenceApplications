@@ -20,11 +20,12 @@ class BiddingEnvironment():
         return self.max * (1.0 - np.exp(-7 * x))
 
     def round(self, pulled_arm1, pulled_arm2, pulled_arm3):
-        reward1 = 0 if pulled_arm1 == 0 else np.maximum(0,np.random.normal(self.bid_sub1(self.bids[pulled_arm1]), self.sigma))
-        reward2 = 0 if pulled_arm2 == 0 else np.maximum(0,np.random.normal(self.bid_sub2(self.bids[pulled_arm2]), self.sigma))
-        reward3 = 0 if pulled_arm3 == 0 else np.maximum(0,np.random.normal(self.bid_sub3(self.bids[pulled_arm3]), self.sigma))
-        return np.array([reward1,reward2,reward3])
-        #return np.array([np.maximum(0,np.random.normal(self.bid_sub1(self.bids[pulled_arm1]), self.sigma)),
-        #        np.maximum(0,np.random.normal(self.bid_sub2(self.bids[pulled_arm2]), self.sigma)),
-        #        np.maximum(0,np.random.normal(self.bid_sub3(self.bids[pulled_arm3]), self.sigma))])
+        rewards = np.array([])
+        pulledarms = [pulled_arm1,pulled_arm2,pulled_arm3]
+
+        for i in range(0,pulledarms):
+            r = 0 if pulledarms[i] == 0 else np.maximum(0,np.random.normal(self.bid_sub[i](self.bids[pulledarms[i]]), self.sigma))
+            rewards = np.append(rewards,r)
+
+        return rewards
 
