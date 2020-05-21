@@ -1,4 +1,4 @@
-class Context_B():
+class Context():
 
     def __init__(self, features, mab_algorithm, mab_args):
         # general MAB algorithm to perform multiple tests, with different configurations
