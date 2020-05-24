@@ -17,18 +17,7 @@ class DynamicLearner(Learner):
                 self.rewards_per_arm[arm_idx].pop(0)
                 self.pulled_arms.pop(index_to_pop)
                 self.collected_rewards = np.delete(self.collected_rewards, index_to_pop)
-                # try:
-                #     if arm_idx > 1:
-                #         index_to_pop = np.where(self.pulled_arms == self.arms[arm_idx - 1])[0][0]
-                #         self.rewards_per_arm[arm_idx - 1].pop(0)
-                #         self.pulled_arms.pop(index_to_pop)
-                #         self.collected_rewards = np.delete(self.collected_rewards, index_to_pop)
-                #
-                #         self.rewards_per_arm[arm_idx - 1].append(reward)
-                #         self.pulled_arms.append(self.arms[arm_idx - 1 ])
-                #         self.collected_rewards = np.append(self.collected_rewards, reward)
-                # except:
-                #     pass
+
 
             except:
                 index_arm = np.where(self.arms == self.pulled_arms[0])[0][0]
