@@ -70,7 +70,7 @@ class CampaignScheduler(ContextGenerator):
         :return: None
         """
         self.update_users_counters(user)
-        #self.update_rewards_counters(reward, user)
+        # self.update_rewards_counters(reward, user)
 
         for context_name, context_obj in self.week_contexts.items():
             if context_obj.is_user_belonging(user):

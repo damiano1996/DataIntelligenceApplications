@@ -36,15 +36,17 @@ class ContextGenerator:
             cont = {}
             not_cont = {}
             low_bound = {}
-            
+
             for feature in features_space.keys():
                 cont[feature], not_cont[feature] = self.split(feature, last_contexts['context_1'])
-                # low_bound[feature] = self.get_low_bound(cont[feature], not_cont[feature], users_counters, rewards_counters)
-                low_bound[feature] = self.get_mean_value(cont[feature], not_cont[feature], users_counters, rewards_counters)
-                
+                low_bound[feature] = self.get_low_bound(cont[feature], not_cont[feature], users_counters,
+                                                        rewards_counters)
+                # low_bound[feature] = self.get_mean_value(cont[feature], not_cont[feature], users_counters, rewards_counters)
+
             best_feature = max(low_bound.items(), key=operator.itemgetter(1))[0]
-            # parent_low_bound = self.get_low_bound(last_contexts['context_1'].features, [], users_counters, rewards_counters)
-            parent_low_bound = self.get_mean_value(last_contexts['context_1'].features, [], users_counters, rewards_counters)
+            parent_low_bound = self.get_low_bound(last_contexts['context_1'].features, [], users_counters,
+                                                  rewards_counters)
+            # parent_low_bound = self.get_mean_value(last_contexts['context_1'].features, [], users_counters, rewards_counters)
             if low_bound[best_feature] > parent_low_bound:
                 # split
                 new_contexts = {
@@ -61,15 +63,16 @@ class ContextGenerator:
         elif len(last_contexts) == 2:
             if last_contexts['context_1'].features == [[0, 0], [0, 1]]:
                 cont, not_cont = self.split('profession', last_contexts['context_1'])
-                # low_bound = self.get_low_bound(cont, not_cont, users_counters, rewards_counters)
-                low_bound = self.get_mean_value(cont, not_cont, users_counters, rewards_counters)
+                low_bound = self.get_low_bound(cont, not_cont, users_counters, rewards_counters)
+                # low_bound = self.get_mean_value(cont, not_cont, users_counters, rewards_counters)
             else:
                 cont, not_cont = self.split('age', last_contexts['context_1'])
-                # low_bound = self.get_low_bound(cont, not_cont, users_counters, rewards_counters)
-                low_bound = self.get_mean_value(cont, not_cont, users_counters, rewards_counters)
+                low_bound = self.get_low_bound(cont, not_cont, users_counters, rewards_counters)
+                # low_bound = self.get_mean_value(cont, not_cont, users_counters, rewards_counters)
             # add possibility to recombine contexts
-            # parent_low_bound = self.get_low_bound(last_contexts['context_1'].features, [], users_counters, rewards_counters)
-            parent_low_bound = self.get_mean_value(last_contexts['context_1'].features, [], users_counters, rewards_counters)
+            parent_low_bound = self.get_low_bound(last_contexts['context_1'].features, [], users_counters,
+                                                  rewards_counters)
+            # parent_low_bound = self.get_mean_value(last_contexts['context_1'].features, [], users_counters, rewards_counters)
             if low_bound > parent_low_bound:
                 # split
                 new_contexts = {
@@ -85,14 +88,14 @@ class ContextGenerator:
                     'context_1': copy.deepcopy(last_contexts['context_1']),
                     'context_2': copy.deepcopy(last_contexts['context_2'])}
                 report += 'no split 2 feature '
-        
+
         else:
             # no split
             new_contexts = {
                 'context_1': copy.deepcopy(last_contexts['context_1']),
                 'context_2': copy.deepcopy(last_contexts['context_2']),
                 'context_3': copy.deepcopy(last_contexts['context_3'])}
-            #new_contexts = copy.deepcopy(last_contexts) #sembra non funzionare a dovere, o  comunque da una peggiore regret
+            # new_contexts = copy.deepcopy(last_contexts) #sembra non funzionare a dovere, o  comunque da una peggiore regret
             report += 'no split 3 feature '
 
         # Initialization of the new learners
@@ -106,14 +109,17 @@ class ContextGenerator:
             report += '| Initialized prior 2 features'
 
         elif len(new_contexts) == 3 and len(last_contexts) != len(new_contexts):
-            prior = last_contexts['context_1'].learner.beta_parameters
-            rewards_per_arm = last_contexts['context_1'].learner.rewards_per_arm
+            prior_1 = last_contexts['context_1'].learner.beta_parameters
+            rewards_per_arm_1 = last_contexts['context_1'].learner.rewards_per_arm
+            prior_2 = last_contexts['context_2'].learner.beta_parameters
+            rewards_per_arm_2 = last_contexts['context_2'].learner.rewards_per_arm
 
-            new_contexts['context_1'].learner.initialize_learner(prior, rewards_per_arm)
-            new_contexts['context_2'].learner.initialize_learner(prior, rewards_per_arm)
+            new_contexts['context_1'].learner.initialize_learner(prior_1, rewards_per_arm_1)
+            new_contexts['context_2'].learner.initialize_learner(prior_1, rewards_per_arm_1)
+            new_contexts['context_3'].learner.initialize_learner(prior_2, rewards_per_arm_2)
 
             report += '| Initialized prior 3 features'
-        
+
         print(report)
         return new_contexts
 
@@ -153,7 +159,7 @@ class ContextGenerator:
         :param rewards_counters: dictionary containing counters of rewards for each class
         :return:
         """
-        delta = 0.05
+        delta = 0.5
         z_1 = 0
         x_1 = 0
         z_2 = np.finfo(np.float32).eps
@@ -171,8 +177,8 @@ class ContextGenerator:
                 x_2 += rewards_counters[class_name]
 
         tot = z_1 + z_2
-        cont_val = (z_1 / tot) * (x_1 - math.sqrt(-math.log(delta) / (2 * z_1)))
-        not_cont_val = (z_2 / tot) * (x_2 - math.sqrt(-math.log(delta) / (2 * z_2)))
+        cont_val = (z_1 / tot) * (x_1 / z_1 - math.sqrt(-math.log(delta) / (2 * z_1)))
+        not_cont_val = (z_2 / tot) * (x_2 / z_2 - math.sqrt(-math.log(delta) / (2 * z_2)))
         return cont_val + not_cont_val
 
     # rew_cont/user_cont + rew_not_cont/user_not_cont

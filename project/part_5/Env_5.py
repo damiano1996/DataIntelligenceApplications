@@ -34,5 +34,3 @@ class Env_5(Env_4):
                 new_week = True
 
         return new_week, reward, current_date, done, opt_revenue
-
-        

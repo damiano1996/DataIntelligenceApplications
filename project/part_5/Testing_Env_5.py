@@ -14,7 +14,7 @@ from project.part_4.SWTS_Learner import SWTS_Learner
 from project.part_5.CampaignScheduler import CampaignScheduler
 from project.part_5.Env_5 import Env_5
 
-np.random.seed(23)
+np.random.seed(50)
 n_arms = 20
 
 
@@ -63,10 +63,10 @@ if __name__ == '__main__':
     mch = MultiClassHandler(class_1, class_2, class_3)
 
     env = Env_5(initial_date=initial_date,
-                #n_days=n_days,
-                n_days=35,
+                # n_days=n_days,
+                n_days=30,
                 # users_per_day=avg_users_per_day,
-                users_per_day=500,
+                users_per_day=2000,
                 mutli_class_handler=mch,
                 n_arms=n_arms)
 
@@ -89,40 +89,33 @@ if __name__ == '__main__':
     plt.legend()
     plt.show()
 
-
-
-
     n_experiments = 1  # the number is small to do a raw test, otherwise set it to 1000
     rewards_per_experiment = []  # collect all the rewards achieved from the TS
     optimals_per_experiment = []  # collect all the optimals of the users generated
     args = [{'environment': copy.deepcopy(env), 'campaign_scheduler': copy.deepcopy(campaign_scheduler), 'index': idx}
             for idx in range(n_experiments)]  # create arguments for the experiment
 
-    with Pool(processes=8) as pool:  # make sure that 'processes' is less or equal than your actual number of logic cores
+    with Pool(
+            processes=8) as pool:  # make sure that 'processes' is less or equal than your actual number of logic cores
         results = pool.map(excecute_experiment, args, chunksize=1)
 
     for result in results:
         rewards_per_experiment.append(result['collected_rewards'])
         optimals_per_experiment.append(result['optimal_revenues'])
 
-
-    
-    for opt_class_name, opt in mch.classes_opt.items():
-        area = opt['price'] * opt['probability']
-        plt.plot(np.cumsum(np.mean(area - rewards_per_experiment, axis=0)),
-                 label='Regret of the ' + opt_class_name.upper() + ' model')
-    
+    # for opt_class_name, opt in mch.classes_opt.items():
+    #     area = opt['price'] * opt['probability']
+    #     plt.plot(np.cumsum(np.mean(area - rewards_per_experiment, axis=0)),
+    #              label='Regret of the ' + opt_class_name.upper() + ' model')
 
     # Regret computed UN-knowing the class of the users
     area_aggregate = mch.aggregate_opt['price'] * mch.aggregate_opt['probability']
     plt.plot(np.cumsum(np.mean(area_aggregate - rewards_per_experiment, axis=0)),
              label='Regret of the aggregate model')
 
-    
     # Below the regret computed knowing the optimal for each user
     plt.plot(np.cumsum(np.mean(optimals_per_experiment, axis=0) - np.mean(rewards_per_experiment, axis=0)),
              label='Regret of the true evaluation')
-    
 
     plt.xlabel('Time')
     plt.ylabel('Regret')
