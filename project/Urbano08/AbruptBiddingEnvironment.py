@@ -29,7 +29,7 @@ class AbruptBiddingEnvironment():
         phase = self.phase if phase == -1 else phase
 
         if int(phase) == 0:
-            return self.max * (1.0 - np.exp(-5 * x))
+            return x-x#self.max * (1.0 - np.exp(-5 * x))
         elif int(phase) == 1:
             return self.max * (1.0 - np.exp(-1 * x))
         elif int(phase) == 2:
@@ -43,7 +43,7 @@ class AbruptBiddingEnvironment():
         elif int(phase) == 1:
             return self.max * (1.0 - np.exp(-1 * x))
         elif int(phase) == 2:
-            return self.max * (1.0 - np.exp(-6 * x))
+            return x-x#self.max * (1.0 - np.exp(-6 * x))
 
     def round(self, pulled_arm1, pulled_arm2, pulled_arm3):
         self.phase = (self.day / self.phaselen) % self.n_phases
