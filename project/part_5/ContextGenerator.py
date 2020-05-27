@@ -41,14 +41,14 @@ class ContextGenerator:
 
             for feature in features_space.keys():
                 cont[feature], not_cont[feature] = self.split(feature, last_contexts['context_1'])
-                low_bound[feature] = self.get_low_bound(cont[feature], not_cont[feature], users_counters,
-                                                        rewards_counters)
-                # low_bound[feature] = self.get_mean_value(cont[feature], not_cont[feature], users_counters, rewards_counters)
-
+                low_bound[feature] = self.get_low_bound(cont[feature], not_cont[feature], users_counters, rewards_counters)
+                #low_bound[feature] = self.get_mean_value(cont[feature], not_cont[feature], users_counters, rewards_counters)
+                
             best_feature = max(low_bound.items(), key=operator.itemgetter(1))[0]
-            parent_low_bound = self.get_low_bound(last_contexts['context_1'].features, [], users_counters,
-                                                  rewards_counters)
-            # parent_low_bound = self.get_mean_value(last_contexts['context_1'].features, [], users_counters, rewards_counters)
+            parent_low_bound = self.get_low_bound(last_contexts['context_1'].features, [], users_counters, rewards_counters)
+            #parent_low_bound = self.get_mean_value(last_contexts['context_1'].features, [], users_counters, rewards_counters)
+            print(low_bound[best_feature])
+            print(parent_low_bound)
             if low_bound[best_feature] > parent_low_bound:
                 # split
                 new_contexts = {
@@ -67,15 +67,16 @@ class ContextGenerator:
             if last_contexts['context_1'].features == [[0, 0], [0, 1]]:
                 cont, not_cont = self.split('profession', last_contexts['context_1'])
                 low_bound = self.get_low_bound(cont, not_cont, users_counters, rewards_counters)
-                # low_bound = self.get_mean_value(cont, not_cont, users_counters, rewards_counters)
+                #low_bound = self.get_mean_value(cont, not_cont, users_counters, rewards_counters)
             else:
                 cont, not_cont = self.split('age', last_contexts['context_1'])
                 low_bound = self.get_low_bound(cont, not_cont, users_counters, rewards_counters)
-                # low_bound = self.get_mean_value(cont, not_cont, users_counters, rewards_counters)
+                #low_bound = self.get_mean_value(cont, not_cont, users_counters, rewards_counters)
             # add possibility to recombine contexts
-            parent_low_bound = self.get_low_bound(last_contexts['context_1'].features, [], users_counters,
-                                                  rewards_counters)
-            # parent_low_bound = self.get_mean_value(last_contexts['context_1'].features, [], users_counters, rewards_counters)
+            parent_low_bound = self.get_low_bound(last_contexts['context_1'].features, [], users_counters, rewards_counters)
+            #parent_low_bound = self.get_mean_value(last_contexts['context_1'].features, [], users_counters, rewards_counters)
+            print(low_bound)
+            print(parent_low_bound)
             if low_bound > parent_low_bound:
                 # split
                 new_contexts = {
