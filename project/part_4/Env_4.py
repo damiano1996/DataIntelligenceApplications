@@ -39,7 +39,7 @@ class Env_4(Environment):
         if self.count_rounds_today == self.round_per_day:
             self.count_rounds_today = 0
             current_date, done = self.step()
-            print(current_date.weekday())
+            # print(current_date.weekday())
 
         return reward, current_date, done, opt_revenue
 

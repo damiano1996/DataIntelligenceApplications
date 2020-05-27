@@ -1,7 +1,6 @@
 import copy
 from multiprocessing import Pool
 
-import matplotlib.pyplot as plt
 import numpy as np
 
 from project.dia_pckg.Campaign import Campaign
@@ -9,12 +8,13 @@ from project.dia_pckg.Class import Class
 from project.dia_pckg.Config import *
 from project.dia_pckg.Product import Product
 from project.dia_pckg.User import User
+from project.dia_pckg.plot_style.cb91visuals import *
 from project.part_4.MultiClassHandler import MultiClassHandler
 from project.part_4.SWTS_Learner import SWTS_Learner
 from project.part_5.CampaignScheduler import CampaignScheduler
 from project.part_5.Env_5 import Env_5
 
-np.random.seed(50)
+np.random.seed(0)
 n_arms = 20
 
 
@@ -63,10 +63,8 @@ if __name__ == '__main__':
     mch = MultiClassHandler(class_1, class_2, class_3)
 
     env = Env_5(initial_date=initial_date,
-                # n_days=n_days,
-                n_days=30,
-                # users_per_day=avg_users_per_day,
-                users_per_day=2000,
+                n_days=n_days,
+                users_per_day=avg_users_per_day,
                 mutli_class_handler=mch,
                 n_arms=n_arms)
 
@@ -102,6 +100,12 @@ if __name__ == '__main__':
     for result in results:
         rewards_per_experiment.append(result['collected_rewards'])
         optimals_per_experiment.append(result['optimal_revenues'])
+
+    # to plot every 7 days a vertical line
+    # note: the lines may not match with the generation of a new context since the generation depends by the week day
+    idx = np.arange(0, int(n_days * avg_users_per_day), int(7 * avg_users_per_day))
+    for i in idx:
+        plt.axvline(i, 0, 1, alpha=0.1, color='k')
 
     # for opt_class_name, opt in mch.classes_opt.items():
     #     area = opt['price'] * opt['probability']

@@ -32,6 +32,11 @@ class CampaignScheduler(ContextGenerator):
                                                       users_counters=self.users_counters,
                                                       rewards_counters=self.rewards_counters)
 
+        print('WEEK CONTEXTS:')
+        for key, context in self.week_contexts.items():
+            print(key, context.features)
+        print()
+
     def pull_arm_from_user(self, user):
         """
             Return the pulled arm from the context in which the user belongs

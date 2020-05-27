@@ -4,12 +4,12 @@
 
 # campaign
 initial_date = '20200101'
-n_days = 365
+n_days = 100  # 365
 
 # Seller wallet and ambitions
 seller_max_budget = 20000  # $
 max_n_clicks = 10000
-avg_users_per_day = 30  # this param must be changed after budget allocation available!
+avg_users_per_day = 500  # this param must be changed after budget allocation available!
 
 # one product to sell
 product_config = {

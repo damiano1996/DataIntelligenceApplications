@@ -1,7 +1,6 @@
 import copy
 from multiprocessing import Pool
 
-import matplotlib.pyplot as plt
 import numpy as np
 
 from project.dia_pckg.Campaign import Campaign
@@ -9,11 +8,12 @@ from project.dia_pckg.Class import Class
 from project.dia_pckg.Config import *
 from project.dia_pckg.Product import Product
 from project.dia_pckg.User import User
+from project.dia_pckg.plot_style.cb91visuals import *
 from project.part_4.Env_4 import Env_4
 from project.part_4.MultiClassHandler import MultiClassHandler
 from project.part_4.TS_Learner import TS_Learner
 
-np.random.seed(23)
+np.random.seed(0)
 n_arms = 20
 
 
@@ -61,8 +61,7 @@ if __name__ == '__main__':
 
     env = Env_4(initial_date=initial_date,
                 n_days=n_days,
-                # users_per_day=avg_users_per_day,
-                users_per_day=10,
+                users_per_day=avg_users_per_day,
                 mutli_class_handler=mch,
                 n_arms=n_arms)
 
@@ -97,10 +96,10 @@ if __name__ == '__main__':
         rewards_per_experiment.append(result['collected_rewards'])
         optimals_per_experiment.append(result['optimal_revenues'])
 
-    for opt_class_name, opt in mch.classes_opt.items():
-        area = opt['price'] * opt['probability']
-        plt.plot(np.cumsum(np.mean(area - rewards_per_experiment, axis=0)),
-                 label='Regret of the ' + opt_class_name.upper() + ' model')
+    # for opt_class_name, opt in mch.classes_opt.items():
+    #     area = opt['price'] * opt['probability']
+    #     plt.plot(np.cumsum(np.mean(area - rewards_per_experiment, axis=0)),
+    #              label='Regret of the ' + opt_class_name.upper() + ' model')
 
     # Regret computed UN-knowing the class of the users
     area_aggregate = mch.aggregate_opt['price'] * mch.aggregate_opt['probability']

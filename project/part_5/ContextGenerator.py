@@ -16,6 +16,8 @@ class ContextGenerator:
         self.mab_algorithm = mab_algorithm
         self.mab_args = mab_args
 
+        self.report = ''
+
     def get_weekly_contexts(self, last_contexts, users_counters, rewards_counters):
         """
         :param last_contexts: dictionary containing Context objects
@@ -23,14 +25,14 @@ class ContextGenerator:
         :param rewards_counters: dictionary containing counters of rewards for each class
         :return: dictionary containing Context objects
         """
-        report = 'Generation context '
+        self.report = 'Generation context '
 
         if len(last_contexts) == 0:
             # create aggregate context
             my_features = [feat['features'] for feat in classes_config.values()]
             new_contexts = {'context_1': Context(features=my_features, mab_algorithm=self.mab_algorithm,
                                                  mab_args=self.mab_args)}
-            report += 'aggregate '
+            self.report += 'aggregate '
 
         elif len(last_contexts) == 1:
             cont = {}
@@ -54,11 +56,12 @@ class ContextGenerator:
                                          mab_args=self.mab_args),
                     'context_2': Context(features=not_cont[best_feature], mab_algorithm=self.mab_algorithm,
                                          mab_args=self.mab_args)}
-                report += 'split 1 -> 2 features '
+                self.report += 'split 1 -> 2 features '
+
             else:
                 # no split
                 new_contexts = {'context_1': copy.deepcopy(last_contexts['context_1'])}
-                report += 'no split 1 feature '
+                self.report += 'no split 1 feature '
 
         elif len(last_contexts) == 2:
             if last_contexts['context_1'].features == [[0, 0], [0, 1]]:
@@ -81,13 +84,13 @@ class ContextGenerator:
                     'context_2': Context(features=not_cont, mab_algorithm=self.mab_algorithm,
                                          mab_args=self.mab_args),
                     'context_3': copy.deepcopy(last_contexts['context_2'])}
-                report += 'split 2 -> 3 features '
+                self.report += 'split 2 -> 3 features '
             else:
                 # no split
                 new_contexts = {
                     'context_1': copy.deepcopy(last_contexts['context_1']),
                     'context_2': copy.deepcopy(last_contexts['context_2'])}
-                report += 'no split 2 feature '
+                self.report += 'no split 2 feature '
 
         else:
             # no split
@@ -96,8 +99,13 @@ class ContextGenerator:
                 'context_2': copy.deepcopy(last_contexts['context_2']),
                 'context_3': copy.deepcopy(last_contexts['context_3'])}
             # new_contexts = copy.deepcopy(last_contexts) #sembra non funzionare a dovere, o  comunque da una peggiore regret
-            report += 'no split 3 feature '
+            self.report += 'no split 3 feature '
 
+        new_contexts = self.initialize_learners(last_contexts, new_contexts)
+        print(self.report)
+        return new_contexts
+
+    def initialize_learners(self, last_contexts, new_contexts):
         # Initialization of the new learners
         if len(new_contexts) == 2 and len(last_contexts) != len(new_contexts):
             prior = last_contexts['context_1'].learner.beta_parameters
@@ -106,7 +114,7 @@ class ContextGenerator:
             new_contexts['context_1'].learner.initialize_learner(prior, rewards_per_arm)
             new_contexts['context_2'].learner.initialize_learner(prior, rewards_per_arm)
 
-            report += '| Initialized prior 2 features'
+            self.report += '| Initialized prior 2 features'
 
         elif len(new_contexts) == 3 and len(last_contexts) != len(new_contexts):
             prior_1 = last_contexts['context_1'].learner.beta_parameters
@@ -118,9 +126,7 @@ class ContextGenerator:
             new_contexts['context_2'].learner.initialize_learner(prior_1, rewards_per_arm_1)
             new_contexts['context_3'].learner.initialize_learner(prior_2, rewards_per_arm_2)
 
-            report += '| Initialized prior 3 features'
-
-        print(report)
+            self.report += '| Initialized prior 3 features'
         return new_contexts
 
     def split(self, feature_name, context):
@@ -165,6 +171,8 @@ class ContextGenerator:
         z_2 = np.finfo(np.float32).eps
         x_2 = 0
 
+        print(conts, not_cont, users_counters, rewards_counters)
+
         for class_ in self.mch.classes:
             class_name = class_.name
             for cont in conts:
@@ -176,6 +184,7 @@ class ContextGenerator:
                 z_2 += users_counters[class_name]
                 x_2 += rewards_counters[class_name]
 
+        print(x_1, x_2, z_1, z_2)
         tot = z_1 + z_2
         cont_val = (z_1 / tot) * (x_1 / z_1 - math.sqrt(-math.log(delta) / (2 * z_1)))
         not_cont_val = (z_2 / tot) * (x_2 / z_2 - math.sqrt(-math.log(delta) / (2 * z_2)))
