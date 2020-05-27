@@ -68,7 +68,7 @@ if __name__ == '__main__':
                 mutli_class_handler=mch,
                 n_arms=n_arms)
 
-    campaign_scheduler = CampaignScheduler(mch, SWTS_Learner, n_arms, env.arm_prices['prices'], 100)
+    campaign_scheduler = CampaignScheduler(mch, SWTS_Learner, n_arms, env.arm_prices['prices'], 2000)
 
     for class_ in mch.classes:
         plt.plot(class_.conv_rates['phase_0']['prices'],

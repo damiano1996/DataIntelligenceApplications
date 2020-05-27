@@ -1,15 +1,19 @@
 import numpy as np
 
-from project.dia_pckg.Config import classes_config
-from project.part_5.ContextGenerator import ContextGenerator
+from project.dia_pckg.Config import features_space
+from project.part_5.ContextGenerator_V2 import MyContextGenerator
 
 
-class CampaignScheduler(ContextGenerator):
+class CampaignScheduler(MyContextGenerator):
 
     def __init__(self, multi_class_handler, mab_algorithm, *mab_args):
         super().__init__(multi_class_handler, mab_algorithm, mab_args)
 
-        self.users_counters = self.rewards_counters = {class_name: 0 for class_name in classes_config.keys()}
+        # total reward: cumulative price
+        # n_purchases: number of times that users bought with the corresponding feature
+        # n_users: number of times users arrived with the corresponding feature
+        self.counters = {feat: {'total_reward': 0, 'n_purchases': 0, 'n_users': 0} for feat in
+                         list(features_space.values())[0] + list(features_space.values())[1]}
         self.week_contexts = {}
         self.collected_rewards = np.array([])
 
@@ -18,8 +22,8 @@ class CampaignScheduler(ContextGenerator):
             Resetting variables
         :return: None
         """
-        self.users_counters = {class_name: 0 for class_name in classes_config.keys()}
-        self.rewards_counters = {class_name: 0 for class_name in classes_config.keys()}
+        self.counters = {feat: {'total_reward': 0, 'n_purchases': 0, 'n_users': 0} for feat in
+                         list(features_space.values())[0] + list(features_space.values())[1]}
         self.week_contexts = {}
         self.collected_rewards = np.array([])
 
@@ -28,11 +32,9 @@ class CampaignScheduler(ContextGenerator):
             Updating the context
         :return: None
         """
-        self.week_contexts = self.get_weekly_contexts(last_contexts=self.week_contexts,
-                                                      users_counters=self.users_counters,
-                                                      rewards_counters=self.rewards_counters)
-
+        self.week_contexts = self.get_weekly_contexts(last_contexts=self.week_contexts, rewards_counters=self.counters)
         print('WEEK CONTEXTS:')
+        print(self.counters)
         for key, context in self.week_contexts.items():
             print(key, context.features)
         print()
@@ -47,15 +49,6 @@ class CampaignScheduler(ContextGenerator):
             if context_obj.is_user_belonging(user):
                 return context_obj.learner.pull_arm_revenue()
 
-    def update_users_counters(self, user):
-        """
-            Updating the user counter
-        :param user: User object
-        :return: None
-        """
-        class_name_user = user.class_name
-        self.users_counters[class_name_user] += 1
-
     def update_rewards_counters(self, reward, user):
         """
             Updating the reward counter
@@ -63,8 +56,11 @@ class CampaignScheduler(ContextGenerator):
         :param user:
         :return:
         """
-        class_name_user = user.class_name
-        self.rewards_counters[class_name_user] += reward
+        user_features = user.get_features_meaning()
+        for feat in user_features:
+            self.counters[feat]['total_reward'] += reward
+            self.counters[feat]['n_purchases'] += 1 if reward > 0 else 0
+            self.counters[feat]['n_users'] += 1
 
     def update(self, user, pulled_arm, reward):
         """
@@ -74,8 +70,6 @@ class CampaignScheduler(ContextGenerator):
         :param user: reward associated to the pulled arm
         :return: None
         """
-        self.update_users_counters(user)
-        # self.update_rewards_counters(reward, user)
 
         for context_name, context_obj in self.week_contexts.items():
             if context_obj.is_user_belonging(user):

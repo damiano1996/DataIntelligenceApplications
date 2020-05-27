@@ -39,5 +39,5 @@ class User():
 
 if __name__ == '__main__':
     # example
-    user = User([1, 1])
+    user = User(random=True)
     print(user.get_features_meaning())
