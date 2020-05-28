@@ -69,7 +69,6 @@ class Learner:
     # - the observed click (one at each round)
     # - the prediction model
     def plot(self, env_sub):
-        print(len(self.means))
 
         x_pred = np.atleast_2d(self.arms).T
 
