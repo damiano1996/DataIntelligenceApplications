@@ -11,13 +11,13 @@ class BiddingEnvironment():
 
     def bid_sub1(self, x):
         # return self.max * (1.0 - np.exp(-(4 * x)))
-        return self.max * (1.0 - np.exp(-4 * x))
+        return np.ceil(self.max * (1.0 - np.exp(-4 * x)))
 
     def bid_sub2(self, x):
-        return self.max * (1.0 - np.exp(-5 * x))
+        return np.ceil(self.max * (1.0 - np.exp(-5 * x)))
 
     def bid_sub3(self, x):
-        return self.max * (1.0 - np.exp(-7 * x))
+        return np.ceil(self.max * (1.0 - np.exp(-7 * x)))
 
     # for each sub-campaign, given the index of the pulled arm (i.e. the index of the bid chosen by the Learner)
     # returns the reward
@@ -26,7 +26,8 @@ class BiddingEnvironment():
         pulledarms = [pulled_arm1, pulled_arm2, pulled_arm3]
 
         for i in range(0,len(pulledarms)):
-            r = 0 if pulledarms[i] == 0 else np.maximum(0,np.random.normal(self.subs[i](self.bids[pulledarms[i]]), self.sigma))
+            r = 0 if pulledarms[i] == 0 else np.maximum(0,np.ceil(np.random.normal(
+                self.subs[i](self.bids[pulledarms[i]]), self.sigma)))
             rewards = np.append(rewards, r)
 
         return rewards
