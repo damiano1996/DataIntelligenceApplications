@@ -4,7 +4,7 @@
 
 # campaign
 initial_date = '20200101'
-n_days = 50
+n_days = 500
 
 # Seller wallet and ambitions
 seller_max_budget = 20000  # $
@@ -27,9 +27,9 @@ features_space = {
 
 # three classes of users
 classes_config = {
-    'elegant': {'features': [1, 1]},  # >30, worker
-    'casual': {'features': [0, 0]},  # <30, student
-    'sports': {'features': [0, 1]}  # <30, worker
+    'elegant': [1, 1],  # >30, worker
+    'casual': [0, 0],  # <30, student
+    'sports': [0, 1]  # <30, worker
 }
 # number of abrupt phases
 n_abrupts = 3

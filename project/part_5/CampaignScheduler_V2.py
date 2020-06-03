@@ -1,10 +1,11 @@
 import numpy as np
 
-from project.dia_pckg.Config import features_space
+from project.dia_pckg.Config import features_space, classes_config
 from project.part_5.ContextGenerator_V2 import MyContextGenerator
+from project.part_5.ContextGenerator import ContextGenerator
 
 
-class CampaignScheduler(MyContextGenerator):
+class CampaignScheduler(ContextGenerator):
 
     def __init__(self, multi_class_handler, mab_algorithm, *mab_args):
         super().__init__(multi_class_handler, mab_algorithm, mab_args)
@@ -12,8 +13,8 @@ class CampaignScheduler(MyContextGenerator):
         # total reward: cumulative price
         # n_purchases: number of times that users bought with the corresponding feature
         # n_users: number of times users arrived with the corresponding feature
-        self.counters = {feat: {'total_reward': 0, 'n_purchases': 0, 'n_users': 0} for feat in
-                         list(features_space.values())[0] + list(features_space.values())[1]}
+        self.counters = {(feat[0], feat[1]): {'total_reward': 0, 'n_purchases': 0, 'n_users': 0} for feat in
+                         list(classes_config.values())}
         self.week_contexts = {}
         self.collected_rewards = np.array([])
 
@@ -22,8 +23,8 @@ class CampaignScheduler(MyContextGenerator):
             Resetting variables
         :return: None
         """
-        self.counters = {feat: {'total_reward': 0, 'n_purchases': 0, 'n_users': 0} for feat in
-                         list(features_space.values())[0] + list(features_space.values())[1]}
+        self.counters = {(feat[0], feat[1]): {'total_reward': 0, 'n_purchases': 0, 'n_users': 0} for feat in
+                         list(classes_config.values())}
         self.week_contexts = {}
         self.collected_rewards = np.array([])
 
@@ -56,18 +57,17 @@ class CampaignScheduler(MyContextGenerator):
         :param user:
         :return:
         """
-        user_features = user.get_features_meaning()
-        for feat in user_features:
-            self.counters[feat]['total_reward'] += reward
-            self.counters[feat]['n_purchases'] += 1 if reward > 0 else 0
-            self.counters[feat]['n_users'] += 1
+        user_features = user.features
+        self.counters[(user_features[0], user_features[1])]['total_reward'] += reward
+        self.counters[(user_features[0], user_features[1])]['n_purchases'] += 1 if reward > 0 else 0
+        self.counters[(user_features[0], user_features[1])]['n_users'] += 1
 
     def update(self, user, pulled_arm, reward):
         """
             Update the context in which the user belongs, also update the collected rewards
         :param user: User object
-        :param user: pulled arm
-        :param user: reward associated to the pulled arm
+        :param pulled_arm: pulled arm
+        :param reward: reward associated to the pulled arm
         :return: None
         """
 

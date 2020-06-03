@@ -45,7 +45,7 @@ class TS_Learner(Learner):
     def update(self, pulled_arm, bernoulli_reward):
         """
         :param pulled_arm:
-        :param reward:
+        :param bernoulli_reward:
         :return:
         """
         self.t += 1

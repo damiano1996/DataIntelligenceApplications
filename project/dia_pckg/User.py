@@ -24,7 +24,7 @@ class User():
         :return:
         """
         self.class_name = np.random.choice(list(classes_config.keys()))
-        self.features = classes_config[self.class_name]['features']
+        self.features = classes_config[self.class_name]
 
     def get_features_meaning(self):
         """

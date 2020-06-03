@@ -19,7 +19,7 @@ class Class:
         :param summary: boolean to print the summary of the information of the class
         """
         self.name = class_name
-        self.features = class_config['features']
+        self.features = class_config
 
         self.product = product
         self.n_abrupt_phases = n_abrupt_phases
