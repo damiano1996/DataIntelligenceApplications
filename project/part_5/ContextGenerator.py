@@ -1,6 +1,8 @@
 import copy
 import math
 import operator
+import numpy as np
+import scipy
 
 from project.dia_pckg.Config import features_space, classes_config
 from project.part_5.Context import Context
@@ -285,3 +287,61 @@ class ContextGenerator:
 
         combined = (x / z - math.sqrt(-math.log(delta) / (2 * z)))
         return combined
+
+
+    def get_weekly_contexts_v2(self, last_contexts, rewards_counters):
+        self.report = 'Generation context '
+
+        if len(last_contexts) == 0:
+            # create aggregate context
+            my_features = [feat for feat in classes_config.values()]
+            new_contexts = {'context_1': Context(features=my_features, mab_algorithm=self.mab_algorithm, mab_args=self.mab_args)}
+            self.report += 'aggregate '
+
+        else:
+            #split = self.get_gaussian_lower_bound( [[[0,0] , [0,1] , [1,1]]] , [[[0,0],[0,1]], [[1,1]]] , rewards_counters)
+            split = self.is_worth_split( [[[0,0] , [0,1] , [1,1]]] , [[[0,0]], [[1,1], [0,1]]] , rewards_counters)
+        
+            my_features = [feat for feat in classes_config.values()]
+            new_contexts = {'context_1': Context(features=my_features, mab_algorithm=self.mab_algorithm, mab_args=self.mab_args)}
+            self.report += 'aggregate '
+
+        print(self.report)
+        return new_contexts
+
+
+    def is_worth_split (self, father_features, son_features, reward_counters, delta=0.9):
+        father_rewards = self.get_rewards_from_features(father_features, reward_counters)
+        son_rewards = self.get_rewards_from_features(son_features, reward_counters)
+
+        father_low_bound = self.get_gaussian_low_bound(father_rewards, delta)
+        son_low_bound = self.get_gaussian_low_bound(son_rewards, delta)
+
+        print ('father: ' + str(father_low_bound) , 'son: ' + str(son_low_bound))
+        print ()
+        return True
+
+
+    #Manca la gestione della probabilità, non so come fare
+    def get_gaussian_low_bound(self, feature_rewards, delta):
+        total_low_bound = 0
+        for rewards in feature_rewards:
+            x = np.mean(rewards) #Mean value
+            s_q = np.var(rewards, ddof=1) #Corrected variance
+            n = len(rewards) #Number of samples
+            t = scipy.stats.t.ppf(delta, n-1) #T student for ((1-d/2),n-1)
+            low_bound = x - (t * math.sqrt(s_q/n)) #Lower bound for gaussian distribution with unknow standard deviation
+            # low_bound = (n/n_tot) * low_bound #Not correct probabibility
+            total_low_bound += low_bound
+            print (low_bound)
+        return total_low_bound
+
+    
+    def get_rewards_from_features (self, features, reward_counters):
+        rewards = []
+        for combinations in features:
+            rew = np.empty((0))
+            for comb in combinations:
+                rew = np.append(rew, np.array(reward_counters[(comb[0],comb[1])]['rewards'])) 
+            rewards.append(rew)
+        return rewards
