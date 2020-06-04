@@ -13,7 +13,7 @@ class CampaignScheduler(ContextGenerator):
         # total reward: cumulative price
         # n_purchases: number of times that users bought with the corresponding feature
         # n_users: number of times users arrived with the corresponding feature
-        self.counters = {(feat[0], feat[1]): {'total_reward': 0, 'n_purchases': 0, 'n_users': 0} for feat in
+        self.counters = {(feat[0], feat[1]): {'total_reward': 0, 'n_purchases': 0, 'n_users': 0, 'rewards':[]} for feat in
                          list(classes_config.values())}
         self.week_contexts = {}
         self.collected_rewards = np.array([])
@@ -23,7 +23,7 @@ class CampaignScheduler(ContextGenerator):
             Resetting variables
         :return: None
         """
-        self.counters = {(feat[0], feat[1]): {'total_reward': 0, 'n_purchases': 0, 'n_users': 0} for feat in
+        self.counters = {(feat[0], feat[1]): {'total_reward': 0, 'n_purchases': 0, 'n_users': 0, 'rewards':[]} for feat in
                          list(classes_config.values())}
         self.week_contexts = {}
         self.collected_rewards = np.array([])
@@ -33,12 +33,7 @@ class CampaignScheduler(ContextGenerator):
             Updating the context
         :return: None
         """
-        self.week_contexts = self.get_weekly_contexts(last_contexts=self.week_contexts, rewards_counters=self.counters)
-        print('WEEK CONTEXTS:')
-        print(self.counters)
-        for key, context in self.week_contexts.items():
-            print(key, context.features)
-        print()
+        self.week_contexts = self.get_weekly_contexts_v2(last_contexts=self.week_contexts, rewards_counters=self.counters)
 
     def pull_arm_from_user(self, user):
         """
@@ -61,6 +56,7 @@ class CampaignScheduler(ContextGenerator):
         self.counters[(user_features[0], user_features[1])]['total_reward'] += reward
         self.counters[(user_features[0], user_features[1])]['n_purchases'] += 1 if reward > 0 else 0
         self.counters[(user_features[0], user_features[1])]['n_users'] += 1
+        self.counters[(user_features[0], user_features[1])]['rewards'].append(reward)
 
     def update(self, user, pulled_arm, reward):
         """
