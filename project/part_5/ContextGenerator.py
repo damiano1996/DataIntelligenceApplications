@@ -314,27 +314,39 @@ class ContextGenerator:
         father_rewards = self.get_rewards_from_features(father_features, reward_counters)
         son_rewards = self.get_rewards_from_features(son_features, reward_counters)
 
-        father_low_bound = self.get_gaussian_low_bound(father_rewards, delta)
-        son_low_bound = self.get_gaussian_low_bound(son_rewards, delta)
+        father_low_bound = self.get_context_low_bound(father_rewards, delta)
+        son_low_bound = self.get_context_low_bound(son_rewards, delta)
 
         print ('father: ' + str(father_low_bound) , 'son: ' + str(son_low_bound))
         print ()
-        return True
+        
+        return True if son_low_bound >= father_low_bound else False
 
 
-    #Manca la gestione della probabilità, non so come fare
-    def get_gaussian_low_bound(self, feature_rewards, delta):
-        total_low_bound = 0
+    def get_context_low_bound(self, feature_rewards, delta):
+        expected_low_bound = 0
         for rewards in feature_rewards:
-            x = np.mean(rewards) #Mean value
-            s_q = np.var(rewards, ddof=1) #Corrected variance
-            n = len(rewards) #Number of samples
-            t = scipy.stats.t.ppf(delta, n-1) #T student for ((1-d/2),n-1)
-            low_bound = x - (t * math.sqrt(s_q/n)) #Lower bound for gaussian distribution with unknow standard deviation
-            # low_bound = (n/n_tot) * low_bound #Not correct probabibility
-            total_low_bound += low_bound
-            print (low_bound)
-        return total_low_bound
+            reward_low_bound = self.get_gaussian_low_bound(rewards, delta) #Lower bound on the expected reward
+            prob_low_bound = self.get_bernoullian_low_bound(rewards, delta) #Lower bound on the probability of the context
+            expected_low_bound += prob_low_bound * reward_low_bound
+            print (prob_low_bound,reward_low_bound)
+        return expected_low_bound
+
+    def get_bernoullian_low_bound (self, rewards, delta):
+        rewards[rewards > 0] = 1
+        x = np.mean(rewards) #Mean value
+        log_d = math.log(delta,math.e) #Natural logarithm of delta
+        n = len(rewards) #Number of samples
+        low_bound = x - (math.sqrt(-(log_d/(2*n)))) # Hoeffding bound
+        return low_bound
+
+    def get_gaussian_low_bound(self, rewards, delta):
+        x = np.mean(rewards) #Mean value
+        s_q = np.var(rewards, ddof=1) #Corrected variance
+        n = len(rewards) #Number of samples
+        t = scipy.stats.t.ppf(delta, n-1) #T student for ((1-d/2),n-1)
+        low_bound = x - (t * math.sqrt(s_q/n))#Lower bound for gaussian distribution with unknow standard deviation
+        return low_bound
 
     
     def get_rewards_from_features (self, features, reward_counters):
