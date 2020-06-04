@@ -1,8 +1,6 @@
 import numpy as np
-from sklearn.gaussian_process import GaussianProcessRegressor
-from sklearn.gaussian_process.kernels import RBF, ConstantKernel as C
 
-from project.Urbano08.Learner import Learner
+from project.part_2.Learner import Learner
 
 
 class DynamicLearner(Learner):
@@ -33,4 +31,3 @@ class DynamicLearner(Learner):
         self.rewards_per_arm[arm_idx].append(reward)
         self.pulled_arms.append(self.arms[arm_idx])
         self.collected_rewards = np.append(self.collected_rewards, reward)
-

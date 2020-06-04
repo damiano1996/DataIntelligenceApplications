@@ -9,7 +9,7 @@ class SubCampaign:
         """
         :param class_obj: Class object
         :param product: Product object
-        :param campaign: Camaign object
+        :param campaign: Campaign object
         """
         self.my_class = class_obj
         self.product = product
@@ -17,7 +17,8 @@ class SubCampaign:
 
         # similarly to Class, but in this case we don't need the three curves for the abrupt phases
         # Modify if necessary
-        self.cob_curve = self.get_clicks_over_budget(self.campaign.max_budget, self.campaign.max_n_clicks,
+        self.cob_curve = self.get_clicks_over_budget(self.campaign.max_budget,
+                                                     self.campaign.max_n_clicks,
                                                      random_params=True)
 
     def get_clicks_over_budget(self, max_budget, max_n_clicks, m=1, q=0, random_params=False):
@@ -44,7 +45,7 @@ class SubCampaign:
         if first_n_clicks.shape[0] > 0:
             clicks[first_n_clicks[0]:] = max_n_clicks
 
-        return (budget, clicks)
+        return {'budget': np.asarray(budget), 'clicks': np.asarray(clicks)}
 
     def plot_cob_curve(self):
         """
@@ -57,8 +58,8 @@ class SubCampaign:
         fig.suptitle(f'Clicks over Budget Curve - Class name: {self.my_class.name}', y=1.)
 
         # ax.set_ylim(0, 1)
-        ax.plot(self.cob_curve[0],
-                self.cob_curve[1])
+        ax.plot(self.cob_curve['budget'],
+                self.cob_curve['clicks'])
         ax.set_xlabel('Budget')
         ax.set_ylabel('Number of Clicks')
 
