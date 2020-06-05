@@ -143,7 +143,7 @@ class ContextGenerator:
                     else:
                         prior_1 += last_contexts[context].learner.beta_parameters
                         rewards_per_arm_1 += last_contexts[context].learner.rewards_per_arm
-                new_contexts['context_1'].learner.initialize_learner(prior_1/2, rewards_per_arm_1)
+                new_contexts['context_1'].learner.initialize_learner(prior_1 / 2, rewards_per_arm_1)
                 new_contexts['context_2'].learner.initialize_learner(prior_2, rewards_per_arm_2)
             else:
                 # no split
@@ -288,72 +288,128 @@ class ContextGenerator:
         combined = (x / z - math.sqrt(-math.log(delta) / (2 * z)))
         return combined
 
-
-    def get_weekly_contexts_v2(self, last_contexts, rewards_counters):
+    def get_weekly_contexts_v2(self, last_contexts, rewards_counters, delta=0.9):
         self.report = 'Generation context '
 
         if len(last_contexts) == 0:
             # create aggregate context
             my_features = [feat for feat in classes_config.values()]
-            new_contexts = {'context_1': Context(features=my_features, mab_algorithm=self.mab_algorithm, mab_args=self.mab_args)}
+            new_contexts = {
+                'context_1': Context(features=my_features, mab_algorithm=self.mab_algorithm, mab_args=self.mab_args)}
             self.report += 'aggregate '
 
         else:
-            #split = self.get_gaussian_lower_bound( [[[0,0] , [0,1] , [1,1]]] , [[[0,0],[0,1]], [[1,1]]] , rewards_counters)
-            split = self.is_worth_split( [[[0,0] , [0,1] , [1,1]]] , [[[0,0]], [[1,1], [0,1]]] , rewards_counters)
-        
-            my_features = [feat for feat in classes_config.values()]
-            new_contexts = {'context_1': Context(features=my_features, mab_algorithm=self.mab_algorithm, mab_args=self.mab_args)}
-            self.report += 'aggregate '
+            # split = self.get_gaussian_lower_bound( [[[0,0] , [0,1] , [1,1]]] , [[[0,0],[0,1]], [[1,1]]] , rewards_counters)
+            # split = self.is_worth_split([[[0, 0], [0, 1], [1, 1]]], [[[0, 0]], [[1, 1], [0, 1]]], rewards_counters)
+
+            father_rewards = self.get_rewards_from_features([[[0, 0], [0, 1], [1, 1]]], rewards_counters)
+            son1_rewards = self.get_rewards_from_features([[[0, 0]], [[1, 1], [0, 1]]], rewards_counters)
+            son2_rewards = self.get_rewards_from_features([[[0, 0], [0, 1]], [[1, 1]]], rewards_counters)
+            father_low_bound = self.get_context_low_bound(father_rewards, delta)
+            son1_low_bound = self.get_context_low_bound(son1_rewards, delta)
+            son2_low_bound = self.get_context_low_bound(son2_rewards, delta)
+
+            best_son_low_bound = max([son1_low_bound, son2_low_bound])
+            if best_son_low_bound > father_low_bound:
+                son_rewards = self.get_rewards_from_features([[[0, 0]], [[0, 1]], [[1, 1]]], rewards_counters)
+                son_low_bound = self.get_context_low_bound(son_rewards, delta)
+                if son_low_bound > best_son_low_bound:
+                    new_contexts = {
+                        'context_1': Context(features=[[0, 0]], mab_algorithm=self.mab_algorithm,
+                                             mab_args=self.mab_args),
+                        'context_2': Context(features=[[0, 1]], mab_algorithm=self.mab_algorithm,
+                                             mab_args=self.mab_args),
+                        'context_3': Context(features=[[1, 1]], mab_algorithm=self.mab_algorithm,
+                                             mab_args=self.mab_args)
+                    }
+                    self.report += '3 contexts '
+                else:
+                    if best_son_low_bound == son1_low_bound:
+                        new_contexts = {
+                            'context_1': Context(features=[[0, 0]], mab_algorithm=self.mab_algorithm,
+                                                 mab_args=self.mab_args),
+                            'context_2': Context(features=[[0, 1], [1, 1]], mab_algorithm=self.mab_algorithm,
+                                                 mab_args=self.mab_args)
+                        }
+                        self.report += '2 contexts '
+                    else:
+                        new_contexts = {
+                            'context_1': Context(features=[[1, 1]], mab_algorithm=self.mab_algorithm,
+                                                 mab_args=self.mab_args),
+                            'context_2': Context(features=[[0, 0], [0, 1]], mab_algorithm=self.mab_algorithm,
+                                                 mab_args=self.mab_args)
+                        }
+                        self.report += '2 contexts '
+            else:
+                new_contexts = {
+                    'context_1': Context(features=[[0, 0], [0, 1], [1, 1]], mab_algorithm=self.mab_algorithm,
+                                         mab_args=self.mab_args)
+                }
+                self.report += 'aggregate '
 
         print(self.report)
+        new_contexts = self.initialize_learners(last_contexts, new_contexts)
         return new_contexts
 
-
-    def is_worth_split (self, father_features, son_features, reward_counters, delta=0.9):
+    def is_worth_split(self, father_features, son_features, reward_counters, delta=0.9):
         father_rewards = self.get_rewards_from_features(father_features, reward_counters)
         son_rewards = self.get_rewards_from_features(son_features, reward_counters)
 
         father_low_bound = self.get_context_low_bound(father_rewards, delta)
         son_low_bound = self.get_context_low_bound(son_rewards, delta)
 
-        print ('father: ' + str(father_low_bound) , 'son: ' + str(son_low_bound))
-        print ()
-        
-        return True if son_low_bound >= father_low_bound else False
+        print('father: ' + str(father_low_bound), 'son: ' + str(son_low_bound))
+        print()
 
+        return True if son_low_bound >= father_low_bound else False
 
     def get_context_low_bound(self, feature_rewards, delta):
         expected_low_bound = 0
         for rewards in feature_rewards:
-            reward_low_bound = self.get_gaussian_low_bound(rewards, delta) #Lower bound on the expected reward
-            prob_low_bound = self.get_bernoullian_low_bound(rewards, delta) #Lower bound on the probability of the context
+            reward_low_bound = self.get_gaussian_low_bound(rewards, delta)  # Lower bound on the expected reward
+            prob_low_bound = self.get_bernoullian_low_bound(rewards,
+                                                            delta)  # Lower bound on the probability of the context
             expected_low_bound += prob_low_bound * reward_low_bound
-            print (prob_low_bound,reward_low_bound)
+            print(prob_low_bound, reward_low_bound)
         return expected_low_bound
 
-    def get_bernoullian_low_bound (self, rewards, delta):
+    def get_bernoullian_low_bound(self, rewards, delta):
         rewards[rewards > 0] = 1
-        x = np.mean(rewards) #Mean value
-        log_d = math.log(delta,math.e) #Natural logarithm of delta
-        n = len(rewards) #Number of samples
-        low_bound = x - (math.sqrt(-(log_d/(2*n)))) # Hoeffding bound
+        x = np.mean(rewards)  # Mean value
+        log_d = math.log(delta, math.e)  # Natural logarithm of delta
+        n = len(rewards)  # Number of samples
+        low_bound = x - (math.sqrt(-(log_d / (2 * n))))  # Hoeffding bound
         return low_bound
 
     def get_gaussian_low_bound(self, rewards, delta):
-        x = np.mean(rewards) #Mean value
-        s_q = np.var(rewards, ddof=1) #Corrected variance
-        n = len(rewards) #Number of samples
-        t = scipy.stats.t.ppf(delta, n-1) #T student for ((1-d/2),n-1)
-        low_bound = x - (t * math.sqrt(s_q/n))#Lower bound for gaussian distribution with unknow standard deviation
+        x = np.mean(rewards)  # Mean value
+        s_q = np.var(rewards, ddof=1)  # Corrected variance
+        n = len(rewards)  # Number of samples
+        t = scipy.stats.t.ppf(delta, n - 1)  # T student for ((1-d/2),n-1)
+        low_bound = x - (t * math.sqrt(s_q / n))  # Lower bound for gaussian distribution with unknow standard deviation
         return low_bound
 
-    
-    def get_rewards_from_features (self, features, reward_counters):
+    def get_rewards_from_features(self, features, reward_counters):
         rewards = []
         for combinations in features:
             rew = np.empty((0))
+            print(combinations)
             for comb in combinations:
-                rew = np.append(rew, np.array(reward_counters[(comb[0],comb[1])]['rewards'])) 
+                rew = np.append(rew, np.array(reward_counters[(comb[0], comb[1])]['rewards']))
             rewards.append(rew)
         return rewards
+
+    def initialize_learners(self, last_contexts, new_contexts):
+        """
+        :param last_contexts:
+        :param new_contexts:
+        :return:
+        """
+        for new_context in new_contexts.values():
+            for last_context in last_contexts.values():
+                if new_context.features[0] in last_context.features:
+                    prior = last_context.learner.beta_parameters
+                    rewards_per_arm = last_context.learner.rewards_per_arm
+                    new_context.learner.initialize_learner(prior, rewards_per_arm)
+
+        return new_contexts
