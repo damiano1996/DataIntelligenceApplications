@@ -157,7 +157,7 @@ class ContextGenerator:
         new_contexts = self.initialize_learners(last_contexts, new_contexts)
         print(self.report)
         return new_contexts
-
+    """
     def initialize_learners(self, last_contexts, new_contexts):
         # Initialization of the new learners
         if len(new_contexts) == 1 and len(last_contexts) == 2:
@@ -196,7 +196,7 @@ class ContextGenerator:
 
             self.report += '| Initialized prior 3 features'
         return new_contexts
-
+    """
     def split(self, feature_name, context):
         """
         this function splits according to the considered feature
@@ -288,6 +288,14 @@ class ContextGenerator:
         combined = (x / z - math.sqrt(-math.log(delta) / (2 * z)))
         return combined
 
+
+
+
+
+
+
+
+
     def get_weekly_contexts_v2(self, last_contexts, rewards_counters, delta=0.9):
         self.report = 'Generation context '
 
@@ -299,9 +307,6 @@ class ContextGenerator:
             self.report += 'aggregate '
 
         else:
-            # split = self.get_gaussian_lower_bound( [[[0,0] , [0,1] , [1,1]]] , [[[0,0],[0,1]], [[1,1]]] , rewards_counters)
-            # split = self.is_worth_split([[[0, 0], [0, 1], [1, 1]]], [[[0, 0]], [[1, 1], [0, 1]]], rewards_counters)
-
             father_rewards = self.get_rewards_from_features([[[0, 0], [0, 1], [1, 1]]], rewards_counters)
             son1_rewards = self.get_rewards_from_features([[[0, 0]], [[1, 1], [0, 1]]], rewards_counters)
             son2_rewards = self.get_rewards_from_features([[[0, 0], [0, 1]], [[1, 1]]], rewards_counters)
@@ -313,42 +318,30 @@ class ContextGenerator:
             if best_son_low_bound > father_low_bound:
                 son_rewards = self.get_rewards_from_features([[[0, 0]], [[0, 1]], [[1, 1]]], rewards_counters)
                 son_low_bound = self.get_context_low_bound(son_rewards, delta)
+                
+                #split feature -> split feature
                 if son_low_bound > best_son_low_bound:
-                    new_contexts = {
-                        'context_1': Context(features=[[0, 0]], mab_algorithm=self.mab_algorithm,
-                                             mab_args=self.mab_args),
-                        'context_2': Context(features=[[0, 1]], mab_algorithm=self.mab_algorithm,
-                                             mab_args=self.mab_args),
-                        'context_3': Context(features=[[1, 1]], mab_algorithm=self.mab_algorithm,
-                                             mab_args=self.mab_args)
-                    }
+                    new_context_features = [[[0, 0]], [[0, 1]], [[1, 1]]]
                     self.report += '3 contexts '
+                
                 else:
+                    #split feature 1 -> no split feature 2
                     if best_son_low_bound == son1_low_bound:
-                        new_contexts = {
-                            'context_1': Context(features=[[0, 0]], mab_algorithm=self.mab_algorithm,
-                                                 mab_args=self.mab_args),
-                            'context_2': Context(features=[[0, 1], [1, 1]], mab_algorithm=self.mab_algorithm,
-                                                 mab_args=self.mab_args)
-                        }
+                        new_context_features = [[[0, 0]], [[0, 1]], [[1, 1]]]
                         self.report += '2 contexts '
+                    #split feature 2 -> no split feature 1
                     else:
-                        new_contexts = {
-                            'context_1': Context(features=[[1, 1]], mab_algorithm=self.mab_algorithm,
-                                                 mab_args=self.mab_args),
-                            'context_2': Context(features=[[0, 0], [0, 1]], mab_algorithm=self.mab_algorithm,
-                                                 mab_args=self.mab_args)
-                        }
+                        new_context_features = [[[0, 0], [0, 1]], [[1, 1]]]
                         self.report += '2 contexts '
+
+            #no split feature 1 or 2
             else:
-                new_contexts = {
-                    'context_1': Context(features=[[0, 0], [0, 1], [1, 1]], mab_algorithm=self.mab_algorithm,
-                                         mab_args=self.mab_args)
-                }
+                new_context_features = [[[0, 0], [0, 1], [1, 1]]]
                 self.report += 'aggregate '
 
+            new_contexts = self.initialize_contexts(last_contexts, new_context_features)
+
         print(self.report)
-        new_contexts = self.initialize_learners(last_contexts, new_contexts)
         return new_contexts
 
     def is_worth_split(self, father_features, son_features, reward_counters, delta=0.9):
@@ -358,8 +351,8 @@ class ContextGenerator:
         father_low_bound = self.get_context_low_bound(father_rewards, delta)
         son_low_bound = self.get_context_low_bound(son_rewards, delta)
 
-        print('father: ' + str(father_low_bound), 'son: ' + str(son_low_bound))
-        print()
+        #print('father: ' + str(father_low_bound), 'son: ' + str(son_low_bound))
+        #print()
 
         return True if son_low_bound >= father_low_bound else False
 
@@ -370,7 +363,7 @@ class ContextGenerator:
             prob_low_bound = self.get_bernoullian_low_bound(rewards,
                                                             delta)  # Lower bound on the probability of the context
             expected_low_bound += prob_low_bound * reward_low_bound
-            print(prob_low_bound, reward_low_bound)
+            #print(prob_low_bound, reward_low_bound)
         return expected_low_bound
 
     def get_bernoullian_low_bound(self, rewards, delta):
@@ -393,23 +386,41 @@ class ContextGenerator:
         rewards = []
         for combinations in features:
             rew = np.empty((0))
-            print(combinations)
             for comb in combinations:
                 rew = np.append(rew, np.array(reward_counters[(comb[0], comb[1])]['rewards']))
             rewards.append(rew)
         return rewards
 
-    def initialize_learners(self, last_contexts, new_contexts):
+    def initialize_contexts(self, last_contexts, new_context_features):
         """
         :param last_contexts:
         :param new_contexts:
         :return:
         """
-        for new_context in new_contexts.values():
+        new_contexts = {}
+
+        #Non capisco perchè ma sembra che nel caso in cui ci sia uno split è meglio resettare tutto
+        if (len(last_contexts) != len(new_context_features)):
+            for i in range(len(new_context_features)):
+                new_contexts['context_' + str(i)] = Context(features=new_context_features[i], mab_algorithm=self.mab_algorithm,
+                                         mab_args=self.mab_args)
+
+        #Ovviamente questa inizializzazione non funziona bene, va messo a posto l'initialize learner
+        else:
+            for i in range(len(new_context_features)):
+                for comb in new_context_features[i]:
+                    for context in last_contexts:
+                        if (comb in last_contexts[context].features):
+                            new_contexts['context_' + str(i)] = copy.deepcopy(last_contexts[context])
+                            new_contexts['context_' + str(i)].features = new_context_features[i]
+
+        """
+        for new_context in new_contexts:
             for last_context in last_contexts.values():
                 if new_context.features[0] in last_context.features:
                     prior = last_context.learner.beta_parameters
                     rewards_per_arm = last_context.learner.rewards_per_arm
                     new_context.learner.initialize_learner(prior, rewards_per_arm)
+        """
 
         return new_contexts

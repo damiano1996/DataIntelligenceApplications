@@ -1,7 +1,6 @@
 import numpy as np
 
 from project.dia_pckg.Config import features_space, classes_config
-from project.part_5.ContextGenerator_V2 import MyContextGenerator
 from project.part_5.ContextGenerator import ContextGenerator
 
 
