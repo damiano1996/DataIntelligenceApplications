@@ -68,7 +68,7 @@ if __name__ == '__main__':
                 mutli_class_handler=mch,
                 n_arms=n_arms)
 
-    campaign_scheduler = CampaignScheduler(mch, SWTS_Learner, n_arms, env.arm_prices['prices'], 2000)
+    campaign_scheduler = CampaignScheduler(mch, SWTS_Learner, n_arms, env.arm_prices['prices'], 5000)
 
     for class_ in mch.classes:
         plt.plot(class_.conv_rates['phase_0']['prices'],
@@ -93,8 +93,7 @@ if __name__ == '__main__':
     args = [{'environment': copy.deepcopy(env), 'campaign_scheduler': copy.deepcopy(campaign_scheduler), 'index': idx}
             for idx in range(n_experiments)]  # create arguments for the experiment
 
-    with Pool(
-            processes=8) as pool:  # make sure that 'processes' is less or equal than your actual number of logic cores
+    with Pool(processes=8) as pool:  # make sure that 'processes' is less or equal than your actual number of logic cores
         results = pool.map(excecute_experiment, args, chunksize=1)
 
     for result in results:
