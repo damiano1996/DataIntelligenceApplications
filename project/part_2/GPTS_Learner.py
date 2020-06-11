@@ -2,6 +2,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from sklearn.gaussian_process import GaussianProcessRegressor
 from sklearn.gaussian_process.kernels import RBF, ConstantKernel as C
+from project.dia_pckg.Learner import Learner
 
 
 # we estimate the expected reward given by a bid value
@@ -9,7 +10,7 @@ from sklearn.gaussian_process.kernels import RBF, ConstantKernel as C
 # the targets of the GP are the observed number of clicks
 
 
-class Learner:
+class GPTS_Learner(Learner):
 
     def __init__(self, n_arms, arms):
         self.n_arms = n_arms
@@ -89,3 +90,5 @@ class Learner:
         plt.ylabel('$n(x)$')
         plt.legend(loc='lower right')
         plt.show()
+
+

@@ -1,9 +1,8 @@
 import numpy as np
+from project.part_2.GPTS_Learner import GPTS_Learner
 
-from project.part_2.Learner import Learner
 
-
-class DynamicLearner(Learner):
+class DynamicLearner(GPTS_Learner):
     def __init__(self, n_arms, arms, len_window):
         super().__init__(n_arms, arms)
         self.len_window = len_window

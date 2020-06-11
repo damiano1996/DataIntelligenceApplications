@@ -1,8 +1,10 @@
 import numpy as np
+from project.dia_pckg.Environment import Environment
+# from project.dia_pckg import SubCampaign
 
 
-class BiddingEnvironment():
-
+class BiddingEnvironment(Environment):
+#TODO define bid in subCampaign
     def __init__(self, bids, max, sigma):
         self.bids = bids
         self.sigma = sigma
@@ -10,7 +12,6 @@ class BiddingEnvironment():
         self.subs = [self.bid_sub1, self.bid_sub2, self.bid_sub3]
 
     def bid_sub1(self, x):
-        # return self.max * (1.0 - np.exp(-(4 * x)))
         return np.ceil(self.max * (1.0 - np.exp(-4 * x)))
 
     def bid_sub2(self, x):

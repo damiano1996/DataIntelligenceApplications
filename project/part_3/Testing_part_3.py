@@ -24,7 +24,7 @@ import numpy as np
 import pandas as pd
 
 from project.dia_pckg.plot_style.cb91visuals import *
-from project.part_2.Learner import Learner
+from project.part_2.GPTS_Learner import Learner
 from project.part_2.Optimizer import fit_table
 from project.part_3.AbruptBiddingEnvironment import AbruptBiddingEnvironment
 from project.part_3.DynamicLearner import DynamicLearner

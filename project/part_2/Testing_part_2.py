@@ -9,7 +9,7 @@ import pandas as pd
 
 from project.dia_pckg.plot_style.cb91visuals import *
 from project.part_2.BiddingEnvironment import BiddingEnvironment
-from project.part_2.Learner import Learner
+from project.part_2.GPTS_Learner import Learner
 from project.part_2.Optimizer import fit_table
 
 # # EXPLORATION PHASE
