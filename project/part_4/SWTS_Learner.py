@@ -10,7 +10,7 @@ class SWTS_Learner(TS_Learner):
 
         self.window_size = window_size
 
-    def update(self, pulled_arm, bernoulli_reward):
+    def update(self, pulled_arm, reward):
         """
         :param pulled_arm:
         :param reward:
@@ -18,8 +18,8 @@ class SWTS_Learner(TS_Learner):
         """
         self.t += 1
 
-        real_reward = bernoulli_reward * self.arm_prices[pulled_arm]  # calculate the real reward (isBought*price)
-        self.update_observations(pulled_arm, bernoulli_reward, real_reward)
+        real_reward = reward * self.arm_prices[pulled_arm]  # calculate the real reward (isBought*price)
+        self.update_observations(pulled_arm, reward, real_reward)
 
         cum_rew = np.sum(self.rewards_per_arm[pulled_arm][-self.window_size:])
         n_rounds_arm = len(self.rewards_per_arm[pulled_arm][-self.window_size:])

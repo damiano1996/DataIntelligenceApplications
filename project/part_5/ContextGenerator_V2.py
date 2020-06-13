@@ -105,9 +105,9 @@ class MyContextGenerator():
 
         # probability that contexts occurs
         p_c1 = (rewards_counters[branch_1]['n_purchases'] + father_purchases) / (
-                    rewards_counters[branch_1]['n_users'] + father_users + 1e-20)
+                rewards_counters[branch_1]['n_users'] + father_users + 1e-20)
         p_c2 = (rewards_counters[branch_2]['n_purchases'] + father_purchases) / (
-                    rewards_counters[branch_2]['n_users'] + father_users + 1e-20)
+                rewards_counters[branch_2]['n_users'] + father_users + 1e-20)
         print('p_c1, p_c2', p_c1, p_c2)
 
         # lower bound of the un-splitted node -> node c0

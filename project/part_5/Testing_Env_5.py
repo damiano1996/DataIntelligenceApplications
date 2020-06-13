@@ -1,4 +1,5 @@
 import copy
+import multiprocessing
 from multiprocessing import Pool
 
 import numpy as np
@@ -93,7 +94,7 @@ if __name__ == '__main__':
     args = [{'environment': copy.deepcopy(env), 'campaign_scheduler': copy.deepcopy(campaign_scheduler), 'index': idx}
             for idx in range(n_experiments)]  # create arguments for the experiment
 
-    with Pool(processes=8) as pool:  # make sure that 'processes' is less or equal than your actual number of logic cores
+    with Pool(processes=multiprocessing.cpu_count()) as pool:
         results = pool.map(excecute_experiment, args, chunksize=1)
 
     for result in results:

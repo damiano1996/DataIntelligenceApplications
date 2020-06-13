@@ -1,5 +1,6 @@
 import copy
 
+
 class Context():
 
     def __init__(self, features, mab_algorithm=None, mab_args=None):
@@ -22,5 +23,5 @@ class Context():
             return True
         return False
 
-    def initialize_learner (self, mab):
+    def initialize_learner(self, mab):
         self.learner = copy.deepcopy(mab)
