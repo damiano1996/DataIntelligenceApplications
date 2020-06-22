@@ -12,7 +12,7 @@ from project.dia_pckg.User import User
 from project.dia_pckg.plot_style.cb91visuals import *
 from project.part_4.MultiClassHandler import MultiClassHandler
 from project.part_4.SWTS_Learner import SWTS_Learner
-from project.part_5.CampaignScheduler_V2 import CampaignScheduler
+from project.part_5.CampaignScheduler import CampaignScheduler
 from project.part_5.Env_5 import Env_5
 
 np.random.seed(0)
