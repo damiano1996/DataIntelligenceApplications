@@ -1,14 +1,16 @@
+import os
+
 import matplotlib.pyplot as plt
-import numpy as np
 from matplotlib.figure import figaspect
 
-from project.dia_pckg.Config import features_space
-from project.dia_pckg.Utils import polynomial
+from project.dia_pckg.Config import features_space, demand_path
+from project.dia_pckg.FunctionDesigner import load_function, design_function, save_function
+from project.dia_pckg.Utils import check_if_dir_exists, check_if_file_exists
 
 
 class Class:
 
-    def __init__(self, class_name, class_features, product, n_abrupt_phases, summary=True):
+    def __init__(self, class_name, class_config, product, n_abrupt_phases, summary=True):
         """
         :param class_name: name of the class
         :param class_features: binary features of the class
@@ -17,7 +19,7 @@ class Class:
         :param summary: boolean to print the summary of the information of the class
         """
         self.name = class_name
-        self.features = class_features
+        self.features = class_config
 
         self.product = product
         self.n_abrupt_phases = n_abrupt_phases
@@ -33,45 +35,37 @@ class Class:
             Creating dictionary to store the abrupt phases
         :return:
         """
-        list_conv_rates = [self.get_conversion_rate(self.product.base_price, self.product.max_price) for _ in
-                           range(self.n_abrupt_phases)]
         self.conv_rates = {}
-        for phase_i, conv_rate in enumerate(list_conv_rates):
-            self.conv_rates[f'phase_{phase_i}'] = conv_rate
+        for phase_i in range(self.n_abrupt_phases):
+            phase_name = f'phase_{phase_i}'
+            self.conv_rates[phase_name] = self.load_or_design_function(self.name, phase_name)
 
-    def get_conversion_rate(self, product_base_price, product_max_price, n_steps=5, polynomial_rank=5):
+    def get_filename(self, class_name, phase):
+        return f'{class_name}_{phase}.npy'
+
+    def load_or_design_function(self, class_name, phase):
         """
-            Function to generate the conversion rate of the class
-        :param product_base_price: minimum price of the product
-        :param product_max_price: maximum price of the product
-        :param n_steps: number of intervals to keep the same convertion rate
-        :param polynomial_rank: rank of the polynomial for the approximation of the steps, to obtain a curve
-        :return: tuple containing the x-axis: prices and the y-axis: conversion rate
+            load data from directory if available, otherwise you have to design the function
+        :param class_name:
+        :param phase:
+        :return:
         """
-        prices = np.linspace(product_base_price, product_max_price, product_max_price - product_base_price)
-        y = np.zeros(shape=prices.shape)
-
-        steps_idx = [int(i * prices.shape[0] / n_steps) for i in
-                     range(n_steps)]  # np.sort(np.random.randint(0, prices.shape[0], n_steps))
-        last_step_idx = 0
-        last_value = 0.90
-        for step_idx in steps_idx:
-            value = np.random.uniform(last_value / 2, last_value)
-            y[last_step_idx:step_idx] = value
-            last_value = value
-            last_step_idx = step_idx
-
-        probabilities = polynomial(y, rank=polynomial_rank)
-        # using the polynomial approximation sometime the curve can oscillate near zero
-        # to avoid this problem we find the first zero and set all the next values equal to zero
-        first_zero = np.where(probabilities <= 0)[0]
-        if first_zero.shape[0] > 0:
-            probabilities[first_zero[0]:] = 0
-
-        # to rescale between 0 and 1
-        # probabilities = probabilities / np.max(probabilities)
-
-        return {'prices': np.asarray(prices), 'probabilities': np.asarray(probabilities)}
+        check_if_dir_exists(demand_path, create=True)
+        fname = self.get_filename(class_name, phase)
+        path_file = os.path.join(demand_path, fname)
+        exists = check_if_file_exists(path_file, create=False)
+        if exists:
+            x, y = load_function(path_file)
+        else:
+            print(f'Draw for: {class_name.upper()} - {phase}')
+            x, y = design_function(x_interval=[self.product.base_price, self.product.max_price],
+                                   y_interval=[0, 1],  # probability
+                                   density=1,
+                                   poly_apprx=True,
+                                   rank=10,
+                                   plot_result=True)
+            save_function(x, y, path_file)
+        return {'prices': x, 'probabilities': y}
 
     def plot_conversion_rate(self):
         """

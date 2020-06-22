@@ -1,6 +1,6 @@
 import numpy as np
 
-from project.dia_pckg.Config import features_space, classes
+from project.dia_pckg.Config import features_space, classes_config
 
 
 # for each user we can observe the value of two binary features
@@ -23,8 +23,8 @@ class User():
             to generate an user with random parameters
         :return:
         """
-        self.features = self.features  # to be implemented
-        self.class_name = np.random.choice(list(classes.keys()))
+        self.class_name = np.random.choice(list(classes_config.keys()))
+        self.features = classes_config[self.class_name]
 
     def get_features_meaning(self):
         """
@@ -39,5 +39,5 @@ class User():
 
 if __name__ == '__main__':
     # example
-    user = User([1, 1])
+    user = User(random=True)
     print(user.get_features_meaning())
