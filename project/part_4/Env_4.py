@@ -59,7 +59,7 @@ class Env_4(Environment):
         optimal_revenue = opt['price'] * opt['probability']
 
         reward = np.random.binomial(1, probability)
-        return (reward, optimal_revenue)
+        return reward, optimal_revenue
 
     def reset(self):
         """

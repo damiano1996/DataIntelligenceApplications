@@ -1,6 +1,6 @@
 import numpy as np
 
-from project.dia_pckg.Config import features_space, classes_config
+from project.dia_pckg.Config import classes_config
 from project.part_5.ContextGenerator import ContextGenerator
 
 
@@ -12,7 +12,8 @@ class CampaignScheduler(ContextGenerator):
         # total reward: cumulative price
         # n_purchases: number of times that users bought with the corresponding feature
         # n_users: number of times users arrived with the corresponding feature
-        self.counters = {(feat[0], feat[1]): {'total_reward': 0, 'n_purchases': 0, 'n_users': 0, 'rewards':[]} for feat in
+        self.counters = {(feat[0], feat[1]): {'total_reward': 0, 'n_purchases': 0, 'n_users': 0, 'rewards': []} for feat
+                         in
                          list(classes_config.values())}
         self.week_contexts = {}
         self.collected_rewards = np.array([])
@@ -22,7 +23,8 @@ class CampaignScheduler(ContextGenerator):
             Resetting variables
         :return: None
         """
-        self.counters = {(feat[0], feat[1]): {'total_reward': 0, 'n_purchases': 0, 'n_users': 0, 'rewards':[]} for feat in
+        self.counters = {(feat[0], feat[1]): {'total_reward': 0, 'n_purchases': 0, 'n_users': 0, 'rewards': []} for feat
+                         in
                          list(classes_config.values())}
         self.week_contexts = {}
         self.collected_rewards = np.array([])
@@ -32,7 +34,8 @@ class CampaignScheduler(ContextGenerator):
             Updating the context
         :return: None
         """
-        self.week_contexts = self.get_weekly_contexts_v2(last_contexts=self.week_contexts, rewards_counters=self.counters)
+        self.week_contexts = self.get_weekly_contexts_v2(last_contexts=self.week_contexts,
+                                                         rewards_counters=self.counters)
 
     def pull_arm_from_user(self, user):
         """

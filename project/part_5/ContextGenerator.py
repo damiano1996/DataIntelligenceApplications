@@ -1,12 +1,11 @@
-import copy
 import math
-import operator
+
 import numpy as np
 import scipy
 
-from project.dia_pckg.Config import features_space, classes_config
+from project.dia_pckg.Config import classes_config
 from project.part_5.Context import Context
-from project.part_4.TS_Learner import TS_Learner
+
 
 class ContextGenerator:
 
@@ -40,23 +39,23 @@ class ContextGenerator:
             if best_son_low_bound > father_low_bound:
                 son_rewards = self.get_rewards_from_features([[[0, 0]], [[0, 1]], [[1, 1]]], rewards_counters)
                 son_low_bound = self.get_context_low_bound(son_rewards, delta)
-                
-                #split feature -> split feature
+
+                # split feature -> split feature
                 if son_low_bound > best_son_low_bound:
                     new_context_features = [[[0, 0]], [[0, 1]], [[1, 1]]]
                     self.report += '3 contexts '
-                
+
                 else:
-                    #split feature 1 -> no split feature 2
+                    # split feature 1 -> no split feature 2
                     if best_son_low_bound == son1_low_bound:
                         new_context_features = [[[0, 0]], [[0, 1]], [[1, 1]]]
                         self.report += '2 contexts '
-                    #split feature 2 -> no split feature 1
+                    # split feature 2 -> no split feature 1
                     else:
                         new_context_features = [[[0, 0], [0, 1]], [[1, 1]]]
                         self.report += '2 contexts '
 
-            #no split feature 1 or 2
+            # no split feature 1 or 2
             else:
                 new_context_features = [[[0, 0], [0, 1], [1, 1]]]
                 self.report += 'aggregate '
@@ -73,8 +72,8 @@ class ContextGenerator:
         father_low_bound = self.get_context_low_bound(father_rewards, delta)
         son_low_bound = self.get_context_low_bound(son_rewards, delta)
 
-        #print('father: ' + str(father_low_bound), 'son: ' + str(son_low_bound))
-        #print()
+        # print('father: ' + str(father_low_bound), 'son: ' + str(son_low_bound))
+        # print()
 
         return True if son_low_bound >= father_low_bound else False
 
@@ -85,7 +84,7 @@ class ContextGenerator:
             prob_low_bound = self.get_bernoullian_low_bound(rewards,
                                                             delta)  # Lower bound on the probability of the context
             expected_low_bound += prob_low_bound * reward_low_bound
-            #print(prob_low_bound, reward_low_bound)
+            # print(prob_low_bound, reward_low_bound)
         return expected_low_bound
 
     def get_bernoullian_low_bound(self, rewards, delta):
@@ -121,13 +120,14 @@ class ContextGenerator:
         """
         new_contexts = {}
 
-        #Non capisco perchè, ma sembra che quando cambi i contexts è meglio resettare tutto
+        # Non capisco perchè, ma sembra che quando cambi i contexts è meglio resettare tutto
         if (len(last_contexts) != len(new_context_features)):
             for i in range(len(new_context_features)):
-                new_contexts['context_' + str(i)] = Context(features=new_context_features[i], mab_algorithm=self.mab_algorithm,
-                                         mab_args=self.mab_args)
+                new_contexts['context_' + str(i)] = Context(features=new_context_features[i],
+                                                            mab_algorithm=self.mab_algorithm,
+                                                            mab_args=self.mab_args)
 
-        #Non funziona bene se si diminuisce il numero di contexts tra una settimana e l'altra
+        # Non funziona bene se si diminuisce il numero di contexts tra una settimana e l'altra
         else:
             for i in range(len(new_context_features)):
                 for comb in new_context_features[i]:
