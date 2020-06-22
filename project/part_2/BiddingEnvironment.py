@@ -1,10 +1,13 @@
 import numpy as np
+
 from project.dia_pckg.Environment import Environment
+
+
 # from project.dia_pckg import SubCampaign
 
 
 class BiddingEnvironment(Environment):
-#TODO define bid in subCampaign
+    # TODO define bid in subCampaign
     def __init__(self, bids, max, sigma):
         self.bids = bids
         self.sigma = sigma

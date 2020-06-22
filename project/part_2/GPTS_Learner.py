@@ -2,6 +2,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from sklearn.gaussian_process import GaussianProcessRegressor
 from sklearn.gaussian_process.kernels import RBF, ConstantKernel as C
+
 from project.dia_pckg.Learner import Learner
 
 
@@ -90,5 +91,3 @@ class GPTS_Learner(Learner):
         plt.ylabel('$n(x)$')
         plt.legend(loc='lower right')
         plt.show()
-
-
