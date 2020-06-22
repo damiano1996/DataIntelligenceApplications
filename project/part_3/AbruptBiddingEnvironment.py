@@ -18,34 +18,34 @@ class AbruptBiddingEnvironment(BiddingEnvironment):
     def phase(self):
         return (self.day / self.phaselen) % self.n_phases
 
-    # def bid_sub1(self, x, phase=-1):
-    #     phase = self.phase if phase == -1 else phase
-    #     if int(phase) == 0:
-    #         return np.ceil(self.max * (1.0 - np.exp(-4 * x)))
-    #     elif int(phase) == 1:
-    #         return np.ceil(self.max * (1.0 - np.exp(-20 * x)))
-    #     elif int(phase) == 2:
-    #         return np.ceil(self.max * (1.0 - np.exp(-9 * x)))
-    #
-    # def bid_sub2(self, x, phase=-1):
-    #     phase = self.phase if phase == -1 else phase
-    #
-    #     if int(phase) == 0:
-    #         return x - x  # self.max * (1.0 - np.exp(-5 * x))
-    #     elif int(phase) == 1:
-    #         return np.ceil(self.max * (1.0 - np.exp(-1 * x)))
-    #     elif int(phase) == 2:
-    #         return np.ceil(self.max * (1.0 - np.exp(-2 * x)))
-    #
-    # def bid_sub3(self, x, phase=-1):
-    #     phase = self.phase if phase == -1 else phase
-    #
-    #     if int(phase) == 0:
-    #         return np.ceil(self.max * (1.0 - np.exp(-10 * x)))
-    #     elif int(phase) == 1:
-    #         return np.ceil(self.max * (1.0 - np.exp(-1 * x)))
-    #     elif int(phase) == 2:
-    #         return x - x  # self.max * (1.0 - np.exp(-6 * x))
+    def bid_sub1(self, x, phase=-1):
+        phase = self.phase if phase == -1 else phase
+        if int(phase) == 0:
+            return np.ceil(self.max * (1.0 - np.exp(-4 * x)))
+        elif int(phase) == 1:
+            return np.ceil(self.max * (1.0 - np.exp(-20 * x)))
+        elif int(phase) == 2:
+            return np.ceil(self.max * (1.0 - np.exp(-9 * x)))
+
+    def bid_sub2(self, x, phase=-1):
+        phase = self.phase if phase == -1 else phase
+
+        if int(phase) == 0:
+            return x - x  # self.max * (1.0 - np.exp(-5 * x))
+        elif int(phase) == 1:
+            return np.ceil(self.max * (1.0 - np.exp(-1 * x)))
+        elif int(phase) == 2:
+            return np.ceil(self.max * (1.0 - np.exp(-2 * x)))
+
+    def bid_sub3(self, x, phase=-1):
+        phase = self.phase if phase == -1 else phase
+
+        if int(phase) == 0:
+            return np.ceil(self.max * (1.0 - np.exp(-10 * x)))
+        elif int(phase) == 1:
+            return np.ceil(self.max * (1.0 - np.exp(-1 * x)))
+        elif int(phase) == 2:
+            return x - x  # self.max * (1.0 - np.exp(-6 * x))
 
     def round(self, pulled_arm1, pulled_arm2, pulled_arm3):
         self.phase = (self.day / self.phaselen) % self.n_phases
