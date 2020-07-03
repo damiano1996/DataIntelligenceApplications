@@ -12,8 +12,9 @@ class User():
         :param class_name: name of the class of the user
         :param random: to create a user with random params
         """
-        self.features = features
         self.class_name = class_name
+        if (features is None and class_name is not None):
+            self.features = classes_config[self.class_name]
 
         if random:
             self.generate_random()
