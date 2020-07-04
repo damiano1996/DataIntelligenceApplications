@@ -1,7 +1,8 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[1]:
+import sys
+sys.path.append('C:\\Users\\Andrea\\Desktop\\DataIntelligenceApplications')
 
 
 import numpy as np
@@ -9,16 +10,14 @@ import pandas as pd
 
 from project.dia_pckg.plot_style.cb91visuals import *
 from project.part_2.BiddingEnvironment import BiddingEnvironment
-from project.part_2.GPTS_Learner import Learner
+from project.part_2.GPTS_Learner import GPTS_Learner
 from project.part_2.Optimizer import fit_table
 
 # # EXPLORATION PHASE
 
-# In[2]:
-
 np.random.seed(72)
 n_obs = 100
-n_obs_exploration = round(n_obs * 2 / 3)
+n_obs_exploration = round(n_obs * 1 / 3)
 n_obs_exploitation = n_obs - n_obs_exploration
 n_subcamp = 3
 max_bid = 1
@@ -35,9 +34,7 @@ env = BiddingEnvironment(bids, max_clicks, noise_std)
 
 learners = []
 for i in range(0, n_subcamp):
-    learners.append(Learner(n_arms, bids))
-
-# In[3]:
+    learners.append(GPTS_Learner(n_arms, bids))
 
 
 for i in range(0, n_obs_exploration):
@@ -49,9 +46,11 @@ for i in range(0, n_obs_exploration):
     ### N.B. This behaviour works only for arms linearly distributed  over the array_bids
     first = i % 3
     pulled = [0, 0, 0]
+
     pulled[first] = learners[first].pull_arm()
     pulled[(first + 1) % 3] = np.random.randint(0, n_arms - pulled[first])
     pulled[(first + 2) % 3] = n_arms - pulled[first] - pulled[(first + 1) % 3] - 1
+
 
     clicks = env.round(pulled[0], pulled[1], pulled[2])
 
@@ -66,13 +65,10 @@ for i in range(0, n_obs_exploration):
         "click3": clicks[2]
     }, ignore_index=True)
 
-# In[4]:
 
 
 for s in range(0, n_subcamp):
     learners[s].plot(env.subs[s])
-
-# In[5]:
 
 
 table_all_Subs = np.ndarray(shape=(0, len(bids)), dtype=float)
@@ -80,14 +76,13 @@ for l in learners:
     table_all_Subs = np.append(table_all_Subs, np.atleast_2d(l.means.T), 0)
 
 print(table_all_Subs)
-print(fit_table(table_all_Subs))
+best = fit_table(table_all_Subs)
+print(best[0])
 
 # # EXPLOITATION PHASE
 
-# In[ ]:
 
-
-for i in range(0, n_obs_exploitation):
+for i in range(0, n_obs):
     clicks = []
 
     pulled = fit_table(table_all_Subs)[0]
@@ -115,15 +110,11 @@ for i in range(0, n_obs_exploitation):
 for s in range(0, n_subcamp):
     learners[s].plot(env.subs[s])
 
-# In[ ]:
-
 
 print(fit_table(table_all_Subs))
 
+
 # ## Regret Computation
-
-# In[ ]:
-
 
 all_optimal_subs = np.ndarray(shape=(0, len(bids)), dtype=float)
 for i in range(0, n_subcamp):
@@ -132,7 +123,7 @@ for i in range(0, n_subcamp):
 print(all_optimal_subs)
 print(fit_table(all_optimal_subs))
 
-# In[ ]:
+
 
 
 # list of the collected reward

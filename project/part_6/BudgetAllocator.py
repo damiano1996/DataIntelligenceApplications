@@ -1,25 +1,42 @@
+from project.part_2.Optimizer import fit_table
+from project.part_6.TemporaryConfig import max_bid
+
+import numpy as np
+
 class BudgetAllocator():
 
-    def __init__(self, multi_subcampaign_handler):
+    def __init__(self, n_arms_advertising, n_subcampaigns):
         """
-        :param multi_subcampaign_handler: MultiSubCampaignHandler Object
+        :param n_arms_advertising
+        :param n_subcampaigns
         """
-        # we can update the subcampaigns directly from here or from another super class...
-        self.msh = multi_subcampaign_handler
+        self.n_arms_advertising = n_arms_advertising
+        self.bids = np.linspace(0, max_bid, n_arms_advertising)
+        self.n_subcampaigns = n_subcampaigns
 
+        self.day_zero_initialization()
+
+    #To optimize and change when budget constraint is inserted
     def day_zero_initialization(self):
-        pass
+        self.best_allocation = []
+        for _ in range (self.n_subcampaigns):
+            self.best_allocation.append(int(self.n_arms_advertising / self.n_subcampaigns))
+        
 
-    def update(self):
+    def update_v1(self, learners):
         """
-            Here we update n_j, v_j and the total regret
+            Here we update the best budget allocation given only advertising problem (maximize number of clicks)
         :return:
         """
-        pass
+        table_all_Subs = np.ndarray(shape=(0, len(self.bids)), dtype=float)
+        for l in learners:
+            table_all_Subs = np.append(table_all_Subs, np.atleast_2d(l.means.T), 0)
 
-    def get_best_budgets(self):
+        self.best_allocation = fit_table(table_all_Subs)[0]
+
+    def get_best_allocations(self):
         """
-            Calcutate the best budget for the subcampaigns
+            Returns the best budget allocations for the subcampaigns
         :return:
         """
-        pass
+        return self.best_allocation

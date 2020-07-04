@@ -13,13 +13,19 @@ class Pricing:
         self.n_arms = n_arms
         self.class_name = class_name
 
+        # ts_learner = SWTS_Learner(n_arms=n_arms, arm_prices=env.arm_prices['prices'], window_size=2000)
         self.ts_learner = TS_Learner(n_arms=n_arms, arm_prices=self.get_candidate_prices()['prices'])
 
 
-    def get_daily_collected_reward(self, n_daily_clicks): #to change n_arms
+    def get_daily_reward(self, n_daily_clicks): #to change n_arms
         """
             Get the daily reward and the optimal one
         """
+        optimal_revenues = np.array([])
+        collected_revenues = np.array([])
+
+        if (n_daily_clicks == 0):
+            return optimal_revenues, collected_revenues
         
         #Generate an environment for a day simulation
         env = Env_4(initial_date='20200101',
@@ -29,10 +35,6 @@ class Pricing:
                 n_arms=self.n_arms)
 
         _, done = env.reset()
-        
-        # ts_learner = SWTS_Learner(n_arms=n_arms, arm_prices=env.arm_prices['prices'], window_size=2000)
-        optimal_revenues = np.array([])
-        collected_revenues = np.array([])
 
         while not done:
             user = User(class_name=self.class_name)

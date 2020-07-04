@@ -20,7 +20,6 @@ from project.dia_pckg.Environment import Environment
 from project.part_6.MultiSubCampaignHandler import MultiSubCampaignHandler
 
 np.random.seed(0)
-n_arms = 20
 
 
 def excecute_experiment(args):
@@ -29,19 +28,14 @@ def excecute_experiment(args):
     mch = args['multiclasshandler']
 
     handler = MultiSubCampaignHandler(mch)
-    #Create and initialize budget allocator
 
     _ , done = env.reset()
 
     while not done:
-        #Get the budget from budget allocator
-
-        #Handler solve the advertising and pricing
+        #Handler solve the problem for current day
         handler.update_all()
 
         #Handler return the regret of the day
-
-        #Update the budget allocatore
 
         _, done = env.step()
 
@@ -68,7 +62,7 @@ if __name__ == '__main__':
 
     mch = MultiClassHandler(class_1, class_2, class_3)
 
-    base_env = Environment(initial_date=initial_date, n_days=4)
+    base_env = Environment(initial_date=initial_date, n_days=20)
 
 
     for class_ in mch.classes:

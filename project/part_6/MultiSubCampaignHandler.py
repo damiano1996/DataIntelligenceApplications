@@ -1,32 +1,52 @@
 from project.part_4.MultiClassHandler import MultiClassHandler
 from project.part_6.SubCampaignHandler import SubCampaignHandler
+from project.part_6.BudgetAllocator import BudgetAllocator
+
+
+
 
 class MultiSubCampaignHandler:
-    """
-        As we have created the part_4.MultiClassHandler,
-        here we handle the SubCampaignHandler
-    """
 
     def __init__(self, multi_class_handler):
         """
         :param subcampaign_handlers: undefined number of SubCampaignHandler objects
         """
         self.mch = multi_class_handler
+
+        self.n_arms_pricing = 20
+        self.n_arms_advertising = 11
+
+        self.budget_allocator = BudgetAllocator(self.n_arms_advertising, len(self.mch.classes))
         
         self.sub_campaigns = list()
         for classe in self.mch.classes:
-            self.sub_campaigns.append(SubCampaignHandler(classe.name, self.mch))
+            self.sub_campaigns.append(SubCampaignHandler(classe.name, self.mch, self.n_arms_pricing, self.n_arms_advertising))
        
 
-    def update_all(self, *budgets):
+    def update_all(self):
         """
-        :param budgets: list of tuples (learned_budget_allocation, real_budget_allocation)
+        Execute one day round:
+        Select the best budget allocation from the previous day
+        Update advertising and pricing model
+        Update budget allocation
         :return:
         """
-        #For test, use only one subcampaign
-        #for sub_campaign in self.sub_campaigns:
-            #sub_campaign.daily_update(5,5)
-        self.sub_campaigns[0].daily_update(5,5) # for test
+        #Get the best budget allocation from the information of the previous day
+        allocations = self.budget_allocator.get_best_allocations()
+        
+        print ('best allocations: ', allocations)
+
+        #Learn about data of the current day, given the budget allocations
+        learners = []
+        for i in range(len(self.sub_campaigns)):
+            learner = self.sub_campaigns[i].daily_update(allocations[i]) 
+            learners.append(learner)
+
+        #Update the budget allocations for the next day
+        self.budget_allocator.update_v1(learners)
+
+        print ()
+
 
         """
         results = []
