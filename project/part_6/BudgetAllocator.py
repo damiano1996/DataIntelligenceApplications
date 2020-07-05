@@ -22,7 +22,7 @@ class BudgetAllocator():
         for _ in range (self.n_subcampaigns):
             self.best_allocation.append(int(self.n_arms_advertising / self.n_subcampaigns))
         
-
+    #Not best update, keeps in consideration only advertising problem
     def update_v1(self, learners):
         """
             Here we update the best budget allocation given only advertising problem (maximize number of clicks)

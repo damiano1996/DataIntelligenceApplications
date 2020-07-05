@@ -1,6 +1,7 @@
 from project.part_2.BiddingEnvironment import BiddingEnvironment
 from project.part_6.TemporaryConfig import max_bid, max_clicks
 from project.part_2.GPTS_Learner import GPTS_Learner
+from project.part_2.Optimizer import fit_table
 
 import numpy as np
 
@@ -29,11 +30,23 @@ class Advertising:
         """
         round_clicks = self.env.single_round(learned_budget_allocation, self.sub)
 
-        pulled = self.learner.pull_arm()
+        pulled = self.learner.pull_arm_v2()
         clicks = self.env.single_round(pulled, self.sub)
         self.learner.update(pulled, clicks)
 
-        return round_clicks
+        optimal_arm = self.get_optimal_clicks()
+        optimal_clicks = self.env.single_round(optimal_arm, self.sub)
+
+        return round_clicks, optimal_clicks
 
     def get_learner (self):
         return self.learner
+
+    #Da cambiare
+    def get_optimal_clicks (self):
+        all_optimal_subs = np.ndarray(shape=(0, len(self.bids)), dtype=float)
+        for i in range(0, 3):
+            all_optimal_subs = np.append(all_optimal_subs, np.atleast_2d(self.env.subs[i](self.bids)), 0)
+
+        optimals = fit_table(all_optimal_subs)[0]
+        return optimals[self.sub]

@@ -17,7 +17,7 @@ from project.part_2.Optimizer import fit_table
 
 np.random.seed(72)
 n_obs = 100
-n_obs_exploration = round(n_obs * 1 / 3)
+n_obs_exploration = round(n_obs * 2 / 3)
 n_obs_exploitation = n_obs - n_obs_exploration
 n_subcamp = 3
 max_bid = 1

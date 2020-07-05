@@ -21,11 +21,11 @@ class Pricing:
         """
             Get the daily reward and the optimal one
         """
-        optimal_revenues = np.array([])
+        optimal_revenue = self.get_optimal_revenue()
         collected_revenues = np.array([])
 
         if (n_daily_clicks == 0):
-            return optimal_revenues, collected_revenues
+            return collected_revenues, optimal_revenue
         
         #Generate an environment for a day simulation
         env = Env_4(initial_date='20200101',
@@ -41,14 +41,14 @@ class Pricing:
 
             pulled_arm = self.ts_learner.pull_arm_revenue()  # optimize by revenue
 
-            reward, _, done, opt_revenue = env.round(pulled_arm, user)
+            reward, _, done, _ = env.round(pulled_arm, user)
 
             self.ts_learner.update(pulled_arm, reward)
             
-            optimal_revenues = np.append(optimal_revenues, opt_revenue)
+            #optimal_revenues = np.append(optimal_revenues, opt_revenue)
             collected_revenues = np.append(collected_revenues, self.ts_learner.get_real_reward(pulled_arm, reward))
 
-        return collected_revenues, optimal_revenues
+        return collected_revenues, optimal_revenue
 
 
 
@@ -63,3 +63,10 @@ class Pricing:
         idx = [int(arm_distance * arm) for arm in range(self.n_arms)]
         prices = self.mch.aggregate_demand_curve['prices'][idx]
         return {'indices': idx, 'prices': prices}
+
+    
+    def get_optimal_revenue (self):
+        opt = self.mch.get_optimal(class_name=self.class_name)
+        optimal_revenue = opt['price'] * opt['probability']
+
+        return optimal_revenue

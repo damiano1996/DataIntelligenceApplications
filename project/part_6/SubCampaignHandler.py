@@ -29,42 +29,34 @@ class SubCampaignHandler:
         """
 
         # number of clicks of the current day
-        n_daily_clicks = self.advertising.get_num_clicks(budget_allocation)
+        collected_daily_clicks, optimal_daily_clicks = self.advertising.get_num_clicks(budget_allocation)
 
         # extracting the daily reward from the TS
-        collected_rewards, optimal_rewards = self.pricing.get_daily_reward(n_daily_clicks) 
+        collected_rewards, optimal_reward = self.pricing.get_daily_reward(collected_daily_clicks) 
         
-        print ('class:', self.class_name, 'budget allocation (arm):', budget_allocation, 'clicks:', n_daily_clicks)
+        print ('class:', self.class_name, 'budget allocation (arm):', budget_allocation, 
+                'collected clicks:', collected_daily_clicks, 'optimal clicks:', optimal_daily_clicks,
+                'collected revenue:', int(np.sum(collected_rewards)), 'optimal revenue:', int(optimal_reward * optimal_daily_clicks))
         
-        # Below the regret computed knowing the optimal for each user
-        plt.plot(np.cumsum(optimal_rewards - collected_rewards), label='Regret of the true evaluation ' + self.class_name)
-        plt.xlabel('Time')
-        plt.ylabel('Regret')
-        plt.legend()
-        plt.show()
+        #For viewing purpose
+        import time
+        time.sleep(1)
+        
+        daily_regret = self.get_daily_regret(optimal_daily_clicks, optimal_reward, collected_rewards)
+        
+        return daily_regret
 
-        return self.advertising.learner
-
-
+    #Da modificare con ottimo unito adv+pricing
+    def get_daily_regret(self, optimal_daily_clicks, optimal_reward, collected_rewards):
         """
-        daily_regret = self.get_daily_regret(n_daily_clicks_real,
-                                             real_budget_allocation, learned_budget_allocation,
-                                             best_daily_reward, learned_daily_reward)
+        :param optimal_daily_clicks: 
+        :param optimal_reward: 
+        :param collected_rewards:
+        :return: regret of the current day
         """
-        #return n_daily_clicks_learned, daily_regret  # , v_j
-
-    def get_daily_regret(self,
-                         n_daily_clicks_real,
-                         real_budget_allocation, learned_budget_allocation,
-                         best_daily_reward, learned_daily_reward):
-        """
-        :param n_daily_clicks_real: 
-        :param real_budget_allocation: 
-        :param learned_budget_allocation: 
-        :param best_daily_reward: 
-        :param learned_daily_reward: 
-        :return: 
-        """
-        best = n_daily_clicks_real * real_budget_allocation * best_daily_reward
-        learned = n_daily_clicks_real * learned_budget_allocation * learned_daily_reward
+        best = optimal_daily_clicks * optimal_reward
+        learned = np.sum(collected_rewards)
         return best - learned
+
+    def get_update_parameters (self):
+        return self.advertising.learner

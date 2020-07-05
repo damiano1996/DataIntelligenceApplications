@@ -35,14 +35,11 @@ def excecute_experiment(args):
         #Handler solve the problem for current day
         handler.update_all()
 
-        #Handler return the regret of the day
-
         _, done = env.step()
 
     print(str(index) + ' has ended')
 
-    #return The optimals and the collected rewards
-    return None
+    return {'daily_regrets': handler.results}
 
 
 if __name__ == '__main__':
@@ -85,8 +82,7 @@ if __name__ == '__main__':
 
 
     n_experiments = 1  # the number is small to do a raw test, otherwise set it to 1000
-    rewards_per_experiment = []  # collect all the rewards achieved from the TS
-    optimals_per_experiment = []  # collect all the optimals of the users generated
+    regrets_per_experiment = []  # collect all the regrets achieved 
     args = [{'environment': copy.deepcopy(base_env), 'index': idx, 'multiclasshandler': mch}
             for idx in range(n_experiments)]  # create arguments for the experiment
 
@@ -94,35 +90,10 @@ if __name__ == '__main__':
         results = pool.map(excecute_experiment, args, chunksize=1)
 
     for result in results:
-        rewards_per_experiment.append(result['collected_rewards'])
-        optimals_per_experiment.append(result['optimal_revenues'])
+        regrets_per_experiment.append(result['daily_regrets'])
 
-
-
-"""
-    # to plot every 7 days a vertical line
-    # note: the lines may not match with the generation of a new context since the generation depends by the week day
-    idx = np.arange(0, int(n_days * avg_users_per_day), int(7 * avg_users_per_day))
-    for i in idx:
-        plt.axvline(i, 0, 1, alpha=0.1, color='k')
-
-    # for opt_class_name, opt in mch.classes_opt.items():
-    #     area = opt['price'] * opt['probability']
-    #     plt.plot(np.cumsum(np.mean(area - rewards_per_experiment, axis=0)),
-    #              label='Regret of the ' + opt_class_name.upper() + ' model')
-
-    # Regret computed UN-knowing the class of the users
-    area_aggregate = mch.aggregate_opt['price'] * mch.aggregate_opt['probability']
-    plt.plot(np.cumsum(np.mean(area_aggregate - rewards_per_experiment, axis=0)),
-             label='Regret of the aggregate model')
-
-    # Below the regret computed knowing the optimal for each user
-    plt.plot(np.cumsum(np.mean(optimals_per_experiment, axis=0) - np.mean(rewards_per_experiment, axis=0)),
-             label='Regret of the true evaluation')
-
+    plt.plot(np.cumsum(np.mean(regrets_per_experiment, axis=0)))
     plt.xlabel('Time')
     plt.ylabel('Regret')
     plt.legend()
     plt.show()
-
-"""
