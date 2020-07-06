@@ -1,5 +1,6 @@
 import numpy as np
 from project.part_4.TS_Learner import TS_Learner
+from project.part_4.SWTS_Learner import SWTS_Learner
 from project.part_4.Env_4 import Env_4
 from project.dia_pckg.User import User
 
@@ -13,7 +14,7 @@ class Pricing:
         self.n_arms = n_arms
         self.class_name = class_name
 
-        # ts_learner = SWTS_Learner(n_arms=n_arms, arm_prices=env.arm_prices['prices'], window_size=2000)
+        #self.ts_learner = SWTS_Learner(n_arms=n_arms, arm_prices=self.get_candidate_prices()['prices'], window_size=5000)
         self.ts_learner = TS_Learner(n_arms=n_arms, arm_prices=self.get_candidate_prices()['prices'])
 
 

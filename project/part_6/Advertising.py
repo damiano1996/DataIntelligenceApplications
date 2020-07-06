@@ -28,14 +28,15 @@ class Advertising:
         then update the distribution to search for best allocations
         :param learned_budget_allocation
         """
+        #Get curret number of clicks and optimal number of clicks
+        optimal_arm = self.get_optimal_arm()
         round_clicks = self.env.single_round(learned_budget_allocation, self.sub)
+        optimal_clicks = self.env.single_round(optimal_arm, self.sub)
 
+        #Update GPTS learner
         pulled = self.learner.pull_arm_v2()
         clicks = self.env.single_round(pulled, self.sub)
         self.learner.update(pulled, clicks)
-
-        optimal_arm = self.get_optimal_clicks()
-        optimal_clicks = self.env.single_round(optimal_arm, self.sub)
 
         return round_clicks, optimal_clicks
 
@@ -43,7 +44,7 @@ class Advertising:
         return self.learner
 
     #Da cambiare
-    def get_optimal_clicks (self):
+    def get_optimal_arm (self):
         all_optimal_subs = np.ndarray(shape=(0, len(self.bids)), dtype=float)
         for i in range(0, 3):
             all_optimal_subs = np.append(all_optimal_subs, np.atleast_2d(self.env.subs[i](self.bids)), 0)

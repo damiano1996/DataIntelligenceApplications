@@ -40,11 +40,12 @@ class SubCampaignHandler:
         
         #For viewing purpose
         import time
-        time.sleep(1)
+        #time.sleep(1)
         
         daily_regret = self.get_daily_regret(optimal_daily_clicks, optimal_reward, collected_rewards)
+        daily_revenue = int(np.sum(collected_rewards))
         
-        return daily_regret
+        return daily_regret, daily_revenue
 
     #Da modificare con ottimo unito adv+pricing
     def get_daily_regret(self, optimal_daily_clicks, optimal_reward, collected_rewards):

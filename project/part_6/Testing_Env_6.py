@@ -29,16 +29,21 @@ def excecute_experiment(args):
 
     handler = MultiSubCampaignHandler(mch)
 
-    _ , done = env.reset()
+    current_day , done = env.reset()
 
     while not done:
+        print ('day:', current_day)
+
         #Handler solve the problem for current day
         handler.update_all()
 
-        _, done = env.step()
+        #Day step
+        current_day, done = env.step()
+        print()
 
+    print ('Total revenue:', handler.total_revenue)
     print(str(index) + ' has ended')
-
+    
     return {'daily_regrets': handler.results}
 
 
