@@ -27,9 +27,6 @@ class SubCampaignHandler:
         :param budget_allocation: Learned best budget allocation
         :return:
         """
-
-        a = classes_config[self.class_name]
-
         # number of clicks of the current day
         collected_daily_clicks, optimal_daily_clicks = self.advertising.get_num_clicks(budget_allocation)
 
