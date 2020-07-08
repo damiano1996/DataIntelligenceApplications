@@ -1,6 +1,3 @@
-import sys
-sys.path.append('C:\\Users\\Andrea\\Desktop\\DataIntelligenceApplications')
-
 import copy
 import multiprocessing
 from multiprocessing import Pool
@@ -64,7 +61,7 @@ if __name__ == '__main__':
 
     mch = MultiClassHandler(class_1, class_2, class_3)
 
-    base_env = Environment(initial_date=initial_date, n_days=20)
+    base_env = Environment(initial_date=initial_date, n_days=50)
 
 
     for class_ in mch.classes:

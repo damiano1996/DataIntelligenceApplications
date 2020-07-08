@@ -28,6 +28,8 @@ class SubCampaignHandler:
         :return:
         """
 
+        a = classes_config[self.class_name]
+
         # number of clicks of the current day
         collected_daily_clicks, optimal_daily_clicks = self.advertising.get_num_clicks(budget_allocation)
 
@@ -37,10 +39,6 @@ class SubCampaignHandler:
         print ('class:', self.class_name, 'budget allocation (arm):', budget_allocation, 
                 'collected clicks:', collected_daily_clicks, 'optimal clicks:', optimal_daily_clicks,
                 'collected revenue:', int(np.sum(collected_rewards)), 'optimal revenue:', int(optimal_reward * optimal_daily_clicks))
-        
-        #For viewing purpose
-        import time
-        #time.sleep(1)
         
         daily_regret = self.get_daily_regret(optimal_daily_clicks, optimal_reward, collected_rewards)
         daily_revenue = int(np.sum(collected_rewards))

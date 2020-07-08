@@ -69,6 +69,12 @@ class GPTS_Learner(Learner):
         #sampled_values = np.random.normal(self.means, self.sigmas)
         return np.argmax(self.sigmas)
 
+    def pull_arm_v3(self, availables):
+        return np.argmax(self.sigmas[0:availables]) if (len(self.sigmas[0:availables]) > 0) else 0
+
+    def get_sigma_sum (self):
+        return np.sum(self.sigmas)
+
     # For each sub-campaign we plot:
     # - the real function nr.clicks w.r.t. the bid value
     # - the observed click (one at each round)

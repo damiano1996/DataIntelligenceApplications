@@ -24,8 +24,8 @@ class Advertising:
 
     def get_num_clicks(self, learned_budget_allocation):
         """
-        Retrieve the number of clicks of the corresponding learned budget allocation, 
-        then update the distribution to search for best allocations
+        Retrieve the number of clicks of the corresponding learned and optimal budget allocation, 
+        then update the distribution
         :param learned_budget_allocation
         """
         #Get curret number of clicks and optimal number of clicks
@@ -34,9 +34,7 @@ class Advertising:
         optimal_clicks = self.env.single_round(optimal_arm, self.sub)
 
         #Update GPTS learner
-        pulled = self.learner.pull_arm_v2()
-        clicks = self.env.single_round(pulled, self.sub)
-        self.learner.update(pulled, clicks)
+        self.learner.update(learned_budget_allocation, round_clicks)
 
         return round_clicks, optimal_clicks
 

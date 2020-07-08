@@ -51,3 +51,7 @@ class MultiSubCampaignHandler:
 
         #Update the budget allocations for the next day
         self.budget_allocator.update_v1(learners)
+
+        #For viewing purpose
+        import time
+        time.sleep(2)
