@@ -18,7 +18,7 @@ np.random.seed(0)
 n_arms = 20
 
 
-def excecute_experiment(args):
+def execute_experiment(args):
     index = args['index']
     env = args['environment']
 
@@ -63,7 +63,7 @@ if __name__ == '__main__':
     env = Env_4(initial_date=initial_date,
                 n_days=n_days,
                 users_per_day=avg_users_per_day,
-                mutli_class_handler=mch,
+                multi_class_handler=mch,
                 n_arms=n_arms)
 
     for class_ in mch.classes:
@@ -90,7 +90,7 @@ if __name__ == '__main__':
             range(n_experiments)]  # create arguments for the experiment
 
     with Pool(processes=multiprocessing.cpu_count()) as pool:
-        results = pool.map(excecute_experiment, args, chunksize=1)
+        results = pool.map(execute_experiment, args, chunksize=1)
 
     for result in results:
         rewards_per_experiment.append(result['collected_rewards'])

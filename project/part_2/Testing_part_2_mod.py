@@ -25,7 +25,6 @@ total_click_each_day = pd.DataFrame(columns=['bid_sub1', 'bid_sub2', 'bid_sub3',
 noise_std = 6.0
 env = BiddingEnvironment(bids, max_clicks, noise_std)
 
-
 all_optimal_subs = np.ndarray(shape=(0, len(bids)), dtype=float)
 for i in range(0, n_subcamp):
     all_optimal_subs = np.append(all_optimal_subs, np.atleast_2d(env.subs[i](bids)), 0)
@@ -34,7 +33,6 @@ optimal_bids = fit_table(all_optimal_subs)[0]
 learners = []
 for i in range(0, n_subcamp):
     learners.append(GPTS_Learner(n_arms, bids))
-
 
 for i in range(0, n_obs):
     clicks = []
@@ -48,43 +46,46 @@ for i in range(0, n_obs):
 
     pulled[first] = learners[first].pull_arm_v2()
     pulled[(first + 1) % 3] = learners[(first + 1) % 3].pull_arm_v3(n_arms - pulled[first])
-    pulled[(first + 2) % 3] = learners[(first + 2) % 3].pull_arm_v3(n_arms - pulled[first] - pulled[(first + 1) % 3] - 1) 
-    
+    pulled[(first + 2) % 3] = learners[(first + 2) % 3].pull_arm_v3(
+        n_arms - pulled[first] - pulled[(first + 1) % 3] - 1)
+
     clicks = env.round(pulled[0], pulled[1], pulled[2])
     optimal_clicks = env.round(optimal_bids[0], optimal_bids[1], optimal_bids[2])
 
-
     for x in range(0, n_subcamp):
         learners[x].update(pulled[x], clicks[x])
-    
+
         total_click_each_day = total_click_each_day.append({
-        'bid_sub1': pulled[0],
-        'bid_sub2': pulled[1],
-        'bid_sub3': pulled[2],
-        "click1": clicks[0],
-        "click2": clicks[1],
-        "click3": clicks[2]
+            'bid_sub1': pulled[0],
+            'bid_sub2': pulled[1],
+            'bid_sub3': pulled[2],
+            "click1": clicks[0],
+            "click2": clicks[1],
+            "click3": clicks[2]
         }, ignore_index=True)
 
-    print (i)
-    print ('bid', pulled[0], 'clicks', clicks[0], 'optimal bid', optimal_bids[0], 'optimal clicks', optimal_clicks[0],'sigma sum', learners[0].get_sigma_sum(), '\n'
-        'bid', pulled[1], 'clicks', clicks[1], 'optimal bid', optimal_bids[1], 'optimal clicks', optimal_clicks[1],'sigma sum', learners[1].get_sigma_sum(), '\n'
-        'bid', pulled[2], 'clicks', clicks[2], 'optimal bid', optimal_bids[2], 'optimal clicks', optimal_clicks[2],'sigma sum', learners[2].get_sigma_sum(), '\n'
-        'regret', sum(optimal_clicks)-sum(clicks))
+    print(i)
+    print('bid', pulled[0], 'clicks', clicks[0], 'optimal bid', optimal_bids[0], 'optimal clicks', optimal_clicks[0],
+          'sigma sum', learners[0].get_sigma_sum(), '\n'
+                                                    'bid', pulled[1], 'clicks', clicks[1], 'optimal bid',
+          optimal_bids[1], 'optimal clicks', optimal_clicks[1], 'sigma sum', learners[1].get_sigma_sum(), '\n'
+                                                                                                          'bid',
+          pulled[2], 'clicks', clicks[2], 'optimal bid', optimal_bids[2], 'optimal clicks', optimal_clicks[2],
+          'sigma sum', learners[2].get_sigma_sum(), '\n'
+                                                    'regret', sum(optimal_clicks) - sum(clicks))
 
-    if (learners[0].get_sigma_sum() < 70 and learners[1].get_sigma_sum() < 70 and learners[2].get_sigma_sum() < 70 and i>0):
+    if (learners[0].get_sigma_sum() < 70 and learners[1].get_sigma_sum() < 70 and learners[
+        2].get_sigma_sum() < 70 and i > 0):
         break
 
     import time
+
     time.sleep(2)
 
     print()
-    
-
 
 for s in range(0, n_subcamp):
     learners[s].plot(env.subs[s])
-
 
 table_all_Subs = np.ndarray(shape=(0, len(bids)), dtype=float)
 for l in learners:
@@ -94,8 +95,6 @@ print(table_all_Subs)
 best = fit_table(table_all_Subs)
 print(best)
 
-
-
 # ## Regret Computation
 
 all_optimal_subs = np.ndarray(shape=(0, len(bids)), dtype=float)
@@ -104,9 +103,6 @@ for i in range(0, n_subcamp):
 
 print(all_optimal_subs)
 print(fit_table(all_optimal_subs))
-
-
-
 
 # list of the collected reward
 rewards_per_experiment = []

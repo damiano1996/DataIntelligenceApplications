@@ -134,6 +134,7 @@ class ContextGenerator:
                     for context in last_contexts:
                         if (comb in last_contexts[context].features):
                             new_contexts['context_' + str(i)] = Context(features=new_context_features[i])
-                            new_contexts['context_' + str(i)].initialize_learner(last_contexts[context].learner)
+                            new_contexts['context_' + str(i)].initialize_learner(
+                                last_contexts[context].advertising_learner)
 
         return new_contexts

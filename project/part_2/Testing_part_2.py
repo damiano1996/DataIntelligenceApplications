@@ -1,24 +1,24 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-import sys
-sys.path.append('C:\\Users\\Andrea\\Desktop\\DataIntelligenceApplications')
+# In[1]:
 
 
-import numpy as np
 import pandas as pd
 
 from project.dia_pckg.plot_style.cb91visuals import *
 from project.part_2.BiddingEnvironment import BiddingEnvironment
 from project.part_2.GPTS_Learner import GPTS_Learner
-from project.part_2.Optimizer import fit_table
+from project.part_2.Optimizer import *
 
-# # EXPLORATION PHASE
+# In[2]:
 
-np.random.seed(72)
+
+np.random.seed(88)
 n_obs = 100
-n_obs_exploration = round(n_obs * 2 / 3)
-n_obs_exploitation = n_obs - n_obs_exploration
+# n_obs_exploration = round(n_obs*2/3)
+# n_obs_exploitation = n_obs-n_obs_exploration
+regret_threshold = 3000
 n_subcamp = 3
 max_bid = 1
 max_clicks = 100
@@ -36,9 +36,31 @@ learners = []
 for i in range(0, n_subcamp):
     learners.append(GPTS_Learner(n_arms, bids))
 
+# # CLAIRVOYANT REWARD
 
-for i in range(0, n_obs_exploration):
+# In[3]:
+
+
+all_optimal_subs = np.ndarray(shape=(0, len(bids)), dtype=float)
+for i in range(0, n_subcamp):
+    all_optimal_subs = np.append(all_optimal_subs, np.atleast_2d(env.subs[i](bids)), 0)
+
+print(all_optimal_subs)
+print(fit_table(all_optimal_subs))
+opt = fit_table(all_optimal_subs)[1]
+
+# # EXPLORATION PHASE
+
+# In[4]:
+
+
+n_obs_exploration = 0
+daily_regret = 0
+
+# for i in range(0, n_obs_exploration):
+while (daily_regret < regret_threshold) and n_obs_exploration < round(n_obs * 2 / 3):
     clicks = []
+    n_obs_exploration = n_obs_exploration + 1
 
     # Pull an arm for each sub-campaign:
     # It is pulled the arm belonging to the sub-campaign (i%3) which has the maximum variance
@@ -46,11 +68,9 @@ for i in range(0, n_obs_exploration):
     ### N.B. This behaviour works only for arms linearly distributed  over the array_bids
     first = i % 3
     pulled = [0, 0, 0]
-
     pulled[first] = learners[first].pull_arm()
     pulled[(first + 1) % 3] = np.random.randint(0, n_arms - pulled[first])
     pulled[(first + 2) % 3] = n_arms - pulled[first] - pulled[(first + 1) % 3] - 1
-
 
     clicks = env.round(pulled[0], pulled[1], pulled[2])
 
@@ -65,10 +85,30 @@ for i in range(0, n_obs_exploration):
         "click3": clicks[2]
     }, ignore_index=True)
 
+    reward = []
+    for i in range(0, n_obs_exploration):
+        num_clicks_day_i = total_click_each_day.values[i][3] + total_click_each_day.values[i][4] + \
+                           total_click_each_day.values[i][5]
+
+        reward.append(num_clicks_day_i)
+
+    daily_regret = np.sum(opt - reward)
+
+# In[5]:
+
+
+print("lAST Regret: ", daily_regret)
+
+print("Days used for exploration: ", n_obs_exploration)
+n_obs_exploitation = n_obs - n_obs_exploration
+
+# In[6]:
 
 
 for s in range(0, n_subcamp):
     learners[s].plot(env.subs[s])
+
+# In[7]:
 
 
 table_all_Subs = np.ndarray(shape=(0, len(bids)), dtype=float)
@@ -76,13 +116,14 @@ for l in learners:
     table_all_Subs = np.append(table_all_Subs, np.atleast_2d(l.means.T), 0)
 
 print(table_all_Subs)
-best = fit_table(table_all_Subs)
-print(best[0])
+print(fit_table(table_all_Subs))
 
 # # EXPLOITATION PHASE
 
+# In[8]:
 
-for i in range(0, n_obs):
+
+for i in range(0, n_obs_exploitation):
     clicks = []
 
     pulled = fit_table(table_all_Subs)[0]
@@ -104,26 +145,21 @@ for i in range(0, n_obs):
     for l in learners:
         table_all_Subs = np.append(table_all_Subs, np.atleast_2d(l.means.T), 0)
 
-# In[ ]:
+# In[9]:
 
 
 for s in range(0, n_subcamp):
     learners[s].plot(env.subs[s])
 
+# In[10]:
+
 
 print(fit_table(table_all_Subs))
 
-
 # ## Regret Computation
+# 
 
-all_optimal_subs = np.ndarray(shape=(0, len(bids)), dtype=float)
-for i in range(0, n_subcamp):
-    all_optimal_subs = np.append(all_optimal_subs, np.atleast_2d(env.subs[i](bids)), 0)
-
-print(all_optimal_subs)
-print(fit_table(all_optimal_subs))
-
-
+# In[11]:
 
 
 # list of the collected reward

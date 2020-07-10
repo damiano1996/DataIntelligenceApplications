@@ -12,14 +12,14 @@ from project.dia_pckg.User import User
 from project.dia_pckg.plot_style.cb91visuals import *
 from project.part_4.MultiClassHandler import MultiClassHandler
 from project.part_4.SWTS_Learner import SWTS_Learner
-from project.part_5.CampaignScheduler import CampaignScheduler
+from project.part_5.CampaignScheduler_5 import CampaignScheduler_5
 from project.part_5.Env_5 import Env_5
 
 np.random.seed(0)
 n_arms = 20
 
 
-def excecute_experiment(args):
+def execute_experiment(args):
     index = args['index']
     env = args['environment']
     campaign_scheduler = args['campaign_scheduler']
@@ -66,10 +66,10 @@ if __name__ == '__main__':
     env = Env_5(initial_date=initial_date,
                 n_days=n_days,
                 users_per_day=avg_users_per_day,
-                mutli_class_handler=mch,
+                multi_class_handler=mch,
                 n_arms=n_arms)
 
-    campaign_scheduler = CampaignScheduler(mch, SWTS_Learner, n_arms, env.arm_prices['prices'], 5000)
+    campaign_scheduler = CampaignScheduler_5(mch, SWTS_Learner, n_arms, env.arm_prices['prices'], 5000)
 
     for class_ in mch.classes:
         plt.plot(class_.conv_rates['phase_0']['prices'],
@@ -95,7 +95,7 @@ if __name__ == '__main__':
             for idx in range(n_experiments)]  # create arguments for the experiment
 
     with Pool(processes=multiprocessing.cpu_count()) as pool:
-        results = pool.map(excecute_experiment, args, chunksize=1)
+        results = pool.map(execute_experiment, args, chunksize=1)
 
     for result in results:
         rewards_per_experiment.append(result['collected_rewards'])

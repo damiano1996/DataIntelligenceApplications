@@ -5,12 +5,12 @@ from project.dia_pckg.Environment import Environment
 
 class Env_4(Environment):
 
-    def __init__(self, initial_date, n_days, users_per_day, mutli_class_handler, n_arms):
+    def __init__(self, initial_date, n_days, users_per_day, multi_class_handler, n_arms):
         """
         :param initial_date: when the campaign begins
         :param n_days: number of days of the campaign
         :param users_per_day: number of users per day
-        :param mutli_class_handler: MultiClassHandler object
+        :param multi_class_handler: MultiClassHandler object
         :param n_arms: number of arms of the Thomson Sampling algorithm
         """
         super().__init__(initial_date, n_days)
@@ -18,7 +18,7 @@ class Env_4(Environment):
         self.round_per_day = users_per_day
         self.count_rounds_today = 0
 
-        self.mch = mutli_class_handler
+        self.mch = multi_class_handler
 
         self.n_arms = n_arms
         self.arm_prices = self.get_candidate_prices()

@@ -1,57 +1,55 @@
-from project.part_4.MultiClassHandler import MultiClassHandler
 from project.part_6.SubCampaignHandler import SubCampaignHandler
-from project.part_6.BudgetAllocator import BudgetAllocator
-
-
+from project.part_6.TemporaryConfig import classes_config
 
 
 class MultiSubCampaignHandler:
 
-    def __init__(self, multi_class_handler):
+    def __init__(self,
+                 multi_class_handler,
+                 n_arms_pricing,
+                 n_arms_advertising):
         """
-        :param subcampaign_handlers: undefined number of SubCampaignHandler objects
+        :param multi_class_handler:
+        :param n_arms_pricing:
+        :param n_arms_advertising:
         """
         self.mch = multi_class_handler
 
-        self.n_arms_pricing = 20
-        self.n_arms_advertising = 11
+        self.n_arms_pricing = n_arms_pricing
+        self.n_arms_advertising = n_arms_advertising
 
-        self.budget_allocator = BudgetAllocator(self.n_arms_advertising, len(self.mch.classes))
-        
-        self.sub_campaigns = list()
-        for classe in self.mch.classes:
-            self.sub_campaigns.append(SubCampaignHandler(classe.name, self.mch, self.n_arms_pricing, self.n_arms_advertising))
-       
+        self.subcampaigns_handlers = []
+        for class_ in self.mch.classes:
+            subcampaign_handler = SubCampaignHandler(class_name=class_.name,
+                                                     multi_class_handler=self.mch,
+                                                     subcampaign_name=classes_config[class_.name],
+                                                     n_arms_pricing=self.n_arms_pricing,
+                                                     n_arms_advertising=self.n_arms_advertising)
+            self.subcampaigns_handlers.append(subcampaign_handler)
+
         self.results = []
         self.total_revenue = 0
 
-    def update_all(self):
+    def update_all(self, allocations):
         """
-        Execute one day round:
-        Select the best budget allocation from the previous day
-        Update advertising and pricing model
-        Update budget allocation
+            Execute one day round:
+            Update advertising and pricing model
+            Update budget allocation
         :return:
         """
-        #Get the best budget allocation from the information of the previous day
-        allocations = self.budget_allocator.get_best_allocations()
 
-        #Learn about data of the current day, given the budget allocations
+        # Learn about data of the current day, given the budget allocations
         learners = []
         regrets = []
-        for i in range(len(self.sub_campaigns)):
-            regret, revenue = self.sub_campaigns[i].daily_update(allocations[i]) 
-            learner = self.sub_campaigns[i].get_update_parameters()
-            learners.append(learner)
-            regrets.append(regret)
-            self.total_revenue += revenue
+        for subcampaign_handler, allocation in zip(self.subcampaigns_handlers, allocations):
+            daily_regret, daily_revenue = subcampaign_handler.daily_update(allocation)
+            learner = subcampaign_handler.get_update_parameters()
 
-        #Save daily regret
+            learners.append(learner)
+            regrets.append(daily_regret)
+            self.total_revenue += daily_revenue
+
+        # Save daily regret
         self.results.append(sum(regrets))
 
-        #Update the budget allocations for the next day
-        self.budget_allocator.update_v1(learners)
-
-        #For viewing purpose
-        import time
-        time.sleep(2)
+        return learners

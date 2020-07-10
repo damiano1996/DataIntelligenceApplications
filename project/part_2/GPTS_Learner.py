@@ -66,13 +66,13 @@ class GPTS_Learner(Learner):
         return np.argmax(sampled_values)
 
     def pull_arm_v2(self):
-        #sampled_values = np.random.normal(self.means, self.sigmas)
+        # sampled_values = np.random.normal(self.means, self.sigmas)
         return np.argmax(self.sigmas)
 
     def pull_arm_v3(self, availables):
         return np.argmax(self.sigmas[0:availables]) if (len(self.sigmas[0:availables]) > 0) else 0
 
-    def get_sigma_sum (self):
+    def get_sigma_sum(self):
         return np.sum(self.sigmas)
 
     # For each sub-campaign we plot:

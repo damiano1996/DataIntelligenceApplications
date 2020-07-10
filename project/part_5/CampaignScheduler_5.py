@@ -4,7 +4,7 @@ from project.dia_pckg.Config import classes_config
 from project.part_5.ContextGenerator import ContextGenerator
 
 
-class CampaignScheduler(ContextGenerator):
+class CampaignScheduler_5(ContextGenerator):
 
     def __init__(self, multi_class_handler, mab_algorithm, *mab_args):
         super().__init__(multi_class_handler, mab_algorithm, mab_args)
@@ -45,7 +45,7 @@ class CampaignScheduler(ContextGenerator):
         """
         for context_name, context_obj in self.week_contexts.items():
             if context_obj.is_user_belonging(user):
-                return context_obj.learner.pull_arm_revenue()
+                return context_obj.advertising_learner.pull_arm_revenue()
 
     def update_rewards_counters(self, reward, user):
         """
@@ -71,7 +71,7 @@ class CampaignScheduler(ContextGenerator):
 
         for context_name, context_obj in self.week_contexts.items():
             if context_obj.is_user_belonging(user):
-                context_obj.learner.update(pulled_arm, reward)
-                real_reward = context_obj.learner.get_real_reward(pulled_arm, reward)
+                context_obj.advertising_learner.update(pulled_arm, reward)
+                real_reward = context_obj.advertising_learner.get_real_reward(pulled_arm, reward)
                 self.update_rewards_counters(real_reward, user)
                 self.collected_rewards = np.append(self.collected_rewards, real_reward)

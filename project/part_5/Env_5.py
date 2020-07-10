@@ -3,8 +3,8 @@ from project.part_4.Env_4 import Env_4
 
 class Env_5(Env_4):
 
-    def __init__(self, initial_date, n_days, users_per_day, mutli_class_handler, n_arms):
-        super().__init__(initial_date, n_days, users_per_day, mutli_class_handler, n_arms)
+    def __init__(self, initial_date, n_days, users_per_day, multi_class_handler, n_arms):
+        super().__init__(initial_date, n_days, users_per_day, multi_class_handler, n_arms)
 
     def reset(self):
         """

@@ -7,41 +7,40 @@ import numpy as np
 from project.dia_pckg.Campaign import Campaign
 from project.dia_pckg.Class import Class
 from project.dia_pckg.Config import *
+from project.dia_pckg.Environment import Environment
 from project.dia_pckg.Product import Product
-from project.dia_pckg.User import User
 from project.dia_pckg.plot_style.cb91visuals import *
 from project.part_4.MultiClassHandler import MultiClassHandler
-from project.part_4.SWTS_Learner import SWTS_Learner
-from project.part_5.CampaignScheduler import CampaignScheduler
-from project.dia_pckg.Environment import Environment
-from project.part_6.MultiSubCampaignHandler import MultiSubCampaignHandler
+from project.part_6.BudgetAllocator import BudgetAllocator
 
 np.random.seed(0)
 
 
-def excecute_experiment(args):
+def execute_experiment(args):
     index = args['index']
     env = args['environment']
     mch = args['multiclasshandler']
 
-    handler = MultiSubCampaignHandler(mch)
+    budget_allocator = BudgetAllocator(multi_class_handler=mch,
+                                       n_arms_pricing=20,
+                                       n_arms_advertising=11)
 
-    current_day , done = env.reset()
+    current_day, done = env.reset()
 
     while not done:
-        print ('day:', current_day)
+        print('day:', current_day)
 
-        #Handler solve the problem for current day
-        handler.update_all()
+        # Handler solve the problem for current day
+        budget_allocator.update()
 
-        #Day step
+        # Day step
         current_day, done = env.step()
         print()
 
-    print ('Total revenue:', handler.total_revenue)
+    print('Total revenue:', budget_allocator.total_revenue)
     print(str(index) + ' has ended')
-    
-    return {'daily_regrets': handler.results}
+
+    return {'daily_regrets': budget_allocator.results}
 
 
 if __name__ == '__main__':
@@ -63,7 +62,6 @@ if __name__ == '__main__':
 
     base_env = Environment(initial_date=initial_date, n_days=50)
 
-
     for class_ in mch.classes:
         plt.plot(class_.conv_rates['phase_0']['prices'],
                  class_.conv_rates['phase_0']['probabilities'], label=class_.name.upper(), linestyle='--')
@@ -81,15 +79,13 @@ if __name__ == '__main__':
     plt.legend()
     plt.show()
 
-
-
     n_experiments = 1  # the number is small to do a raw test, otherwise set it to 1000
     regrets_per_experiment = []  # collect all the regrets achieved 
     args = [{'environment': copy.deepcopy(base_env), 'index': idx, 'multiclasshandler': mch}
             for idx in range(n_experiments)]  # create arguments for the experiment
 
     with Pool(processes=multiprocessing.cpu_count()) as pool:
-        results = pool.map(excecute_experiment, args, chunksize=1)
+        results = pool.map(execute_experiment, args, chunksize=1)
 
     for result in results:
         regrets_per_experiment.append(result['daily_regrets'])

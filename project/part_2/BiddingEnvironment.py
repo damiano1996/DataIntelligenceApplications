@@ -36,8 +36,8 @@ class BiddingEnvironment(Environment):
 
         return rewards
 
-    #returns the reward of the given subcampaign and the pulled arm
-    def single_round (self, pulled_arm, sub):
+    # returns the reward of the given subcampaign and the pulled arm
+    def single_round(self, pulled_arm, sub):
         r = 0 if pulled_arm == 0 else np.maximum(0, np.ceil(np.random.normal(
-                self.subs[sub](self.bids[pulled_arm]), self.sigma)))
+            self.subs[sub](self.bids[pulled_arm]), self.sigma)))
         return r
