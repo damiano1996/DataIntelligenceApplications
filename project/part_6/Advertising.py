@@ -23,21 +23,24 @@ class Advertising:
 
         self.advertising_learner = GPTS_Learner(n_arms_advertising, self.bids)
 
+        self.daily_clicks = 0
+        self.optimal_daily_clicks = 0
+
     def get_daily_clicks(self, learned_budget_allocation):
         """
-        Retrieve the number of clicks of the corresponding learned and optimal budget allocation, 
-        then update the distribution
+            Retrieve the number of clicks of the corresponding learned and optimal budget allocation,
+            then update the distribution
         :param learned_budget_allocation
         """
-        # Get curret number of clicks and optimal number of clicks
+        # Get current number of clicks and optimal number of clicks
         optimal_arm = self.get_optimal_arm()
-        round_clicks = self.env.single_round(learned_budget_allocation, self.sub)
-        optimal_clicks = self.env.single_round(optimal_arm, self.sub)
+        self.daily_clicks = self.env.single_round(learned_budget_allocation, self.sub)
+        self.optimal_daily_clicks = self.env.single_round(optimal_arm, self.sub)
 
         # Update GPTS learner
-        self.advertising_learner.update(learned_budget_allocation, round_clicks)
+        self.advertising_learner.update(learned_budget_allocation, self.daily_clicks)
 
-        return round_clicks, optimal_clicks
+        return self.daily_clicks, self.optimal_daily_clicks
 
     # Da cambiare
     def get_optimal_arm(self):

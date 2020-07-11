@@ -30,7 +30,7 @@ class MultiSubCampaignHandler:
         self.results = []
         self.total_revenue = 0
 
-    def update_all(self, allocations):
+    def update_all_subcampaign_handlers(self, allocations):
         """
             Execute one day round:
             Update advertising and pricing model
@@ -43,8 +43,7 @@ class MultiSubCampaignHandler:
         regrets = []
         for subcampaign_handler, allocation in zip(self.subcampaigns_handlers, allocations):
             daily_regret, daily_revenue = subcampaign_handler.daily_update(allocation)
-            learner = subcampaign_handler.get_update_parameters()
-
+            learner = subcampaign_handler.get_updated_parameters()
             learners.append(learner)
             regrets.append(daily_regret)
             self.total_revenue += daily_revenue

@@ -27,6 +27,9 @@ class SubCampaignHandler(Pricing):
                                                  n_arms_pricing=n_arms_pricing,
                                                  n_arms_advertising=n_arms_advertising)
 
+        self.daily_regret = 0
+        self.daily_revenue = 0
+
     def daily_update(self, budget_allocation):
         """
             Daily update
@@ -34,24 +37,27 @@ class SubCampaignHandler(Pricing):
         :return:
         """
         # extracting the daily reward from the TS
-        collected_revenues, optimal_revenue, round_clicks, optimal_clicks = self.get_daily_reward(budget_allocation)
+        daily_collected_revenues, optimal_daily_revenue = self.get_daily_collected_revenues(budget_allocation)
 
-        daily_regret = self.get_daily_regret(optimal_clicks, optimal_revenue, collected_revenues)
-        daily_revenue = int(np.sum(collected_revenues))
+        self.daily_revenue = int(np.sum(daily_collected_revenues))
 
-        return daily_regret, daily_revenue
+        self.daily_regret = self.get_daily_regret(self.daily_clicks, self.optimal_daily_clicks,
+                                                  self.daily_revenue, optimal_daily_revenue)
 
-    # Da modificare con ottimo unito adv+pricing
-    def get_daily_regret(self, optimal_daily_clicks, optimal_reward, collected_rewards):
+        return self.daily_regret, self.daily_revenue
+
+    def get_daily_regret(self, daily_clicks, optimal_daily_clicks, daily_revenue, optimal_daily_revenue):
         """
-        :param optimal_daily_clicks: 
-        :param optimal_reward: 
-        :param collected_rewards:
-        :return: regret of the current day
+        :param daily_clicks:
+        :param optimal_daily_clicks:
+        :param daily_revenue:
+        :param optimal_daily_revenue:
+        :return:
         """
-        best = optimal_daily_clicks * optimal_reward
-        learned = np.sum(collected_rewards)
+        best = optimal_daily_clicks * optimal_daily_revenue
+        learned = daily_clicks * daily_revenue
+        print(best, learned)
         return best - learned
 
-    def get_update_parameters(self):
+    def get_updated_parameters(self):
         return self.advertising_learner

@@ -32,23 +32,26 @@ class Pricing(Advertising):
         # self.pricing_learner = SWTS_Learner(n_arms=n_arms, arm_prices=self.get_candidate_prices()['prices'], window_size=5000)
         self.pricing_learner = TS_Learner(n_arms=self.n_arms_pricing, arm_prices=self.get_candidate_prices()['prices'])
 
-    def get_daily_reward(self, learned_budget_allocation):  # to change n_arms
+        self.daily_collected_revenues = 0
+        self.optimal_daily_revenue = 0
+
+    def get_daily_collected_revenues(self, learned_budget_allocation):  # to change n_arms
         """
             Get the daily reward and the optimal one
         """
         # from the super class
-        round_clicks, optimal_clicks = self.get_daily_clicks(learned_budget_allocation)
+        daily_clicks, optimal_daily_clicks = self.get_daily_clicks(learned_budget_allocation)
 
-        optimal_revenue = self.get_optimal_revenue()
-        collected_revenues = np.array([])
+        self.optimal_daily_revenue = self.get_optimal_revenue()
+        self.daily_collected_revenues = np.array([])
 
-        if round_clicks == 0:
-            return collected_revenues, optimal_revenue, round_clicks, optimal_clicks
+        if daily_clicks == 0:
+            return self.daily_collected_revenues, self.optimal_daily_revenue
 
         # Generate an environment for a day simulation
         env = Env_4(initial_date='20200101',
                     n_days=1,
-                    users_per_day=round_clicks,
+                    users_per_day=daily_clicks,
                     multi_class_handler=self.mch,
                     n_arms=self.n_arms_pricing)
 
@@ -64,9 +67,10 @@ class Pricing(Advertising):
             self.pricing_learner.update(pulled_arm, reward)
 
             # optimal_revenues = np.append(optimal_revenues, opt_revenue)
-            collected_revenues = np.append(collected_revenues, self.pricing_learner.get_real_reward(pulled_arm, reward))
+            self.daily_collected_revenues = np.append(self.daily_collected_revenues,
+                                                      self.pricing_learner.get_real_reward(pulled_arm, reward))
 
-        return collected_revenues, optimal_revenue, round_clicks, optimal_clicks
+        return self.daily_collected_revenues, self.optimal_daily_revenue
 
     def get_candidate_prices(self):
         """

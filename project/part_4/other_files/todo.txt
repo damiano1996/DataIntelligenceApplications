@@ -1,2 +1,0 @@
-2)aggiungere n_arms al Configuration.py
-4)parametrizzare la creazione delle conv_rate (impostare max demand_curve), cercare un set di curve con un comportamento reale ed interessante

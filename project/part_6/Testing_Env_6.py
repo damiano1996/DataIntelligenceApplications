@@ -93,5 +93,5 @@ if __name__ == '__main__':
     plt.plot(np.cumsum(np.mean(regrets_per_experiment, axis=0)))
     plt.xlabel('Time')
     plt.ylabel('Regret')
-    plt.legend()
+    # plt.legend()
     plt.show()

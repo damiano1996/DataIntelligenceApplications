@@ -26,7 +26,7 @@ class BudgetAllocator(MultiSubCampaignHandler):
 
         self.day_zero_initialization()
 
-    # TODO optimize, now gives [3,3,3]
+    # TODO optimize, now gives [3, 3, 3]
     def day_zero_initialization(self):
         """
             Inizialize allocations for day zero
@@ -41,7 +41,7 @@ class BudgetAllocator(MultiSubCampaignHandler):
         :return:
         """
         # from the super class
-        learners = self.update_all(self.get_best_allocations())
+        learners = self.update_all_subcampaign_handlers(self.get_best_allocations())
 
         # Exploration phase
         if not self.is_exploiting_phase(learners):
@@ -60,13 +60,21 @@ class BudgetAllocator(MultiSubCampaignHandler):
         # TODO knapsack problem solver to keep in consideration both pricing and advertising
         else:
             table_all_subs = np.ndarray(shape=(0, len(self.subcampaigns_handlers[0].bids)), dtype=float)
-            for l in learners:
-                table_all_subs = np.append(table_all_subs, np.atleast_2d(l.means.T), 0)
+            for subcampaign_handler in self.subcampaigns_handlers:
+                learner_clicks = subcampaign_handler.get_updated_parameters().means
+                revenue = subcampaign_handler.daily_revenue
+                n_clicks = subcampaign_handler.daily_clicks
+                v = revenue / n_clicks
+
+                revenue_clicks = learner_clicks * v
+
+                table_all_subs = np.append(table_all_subs, np.atleast_2d(revenue_clicks.T), 0)
 
             self.best_allocation = fit_table(table_all_subs)[0]
+            print('BEST ALLOCATION:', self.best_allocation)
 
     # TODO search for the best switch phase parameters, possibly not those constants
-    def is_exploiting_phase(self, learners, sigma_exploiting=150, sigma_exploring=160):
+    def is_exploiting_phase(self, learners, sigma_exploiting=140, sigma_exploring=150):
         """
             Decide whether to explore or exploit.
         """
