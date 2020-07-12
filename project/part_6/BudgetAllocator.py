@@ -76,11 +76,11 @@ class BudgetAllocator:
             print('BEST ALLOCATION:', self.best_allocation)
 
     # TODO search for the best switch phase parameters, possibly not those constants
-    def is_exploiting_phase(self, learners, sigma_exploiting=140, sigma_exploring=150):
+    def is_exploiting_phase(self, learners, sigma_exploiting=135, sigma_exploring=140):
         """
             Decide whether to explore or exploit.
         """
-        # print (learners[0].get_sigma_sum(), learners[1].get_sigma_sum(), learners[2].get_sigma_sum())
+        print(learners[0].get_sigma_sum(), learners[1].get_sigma_sum(), learners[2].get_sigma_sum())
         # If the variances on the GP curves is not enough confident, keep explore. Otherwise exploit.
         if not self.is_exploiting:
             if (
