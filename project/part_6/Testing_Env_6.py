@@ -37,10 +37,10 @@ def execute_experiment(args):
         current_day, done = env.step()
         print()
 
-    print('Total revenue:', budget_allocator.total_revenue)
+    print('Total revenue:', budget_allocator.msh.total_revenue)
     print(str(index) + ' has ended')
 
-    return {'daily_regrets': budget_allocator.results}
+    return {'daily_regrets': budget_allocator.msh.results}
 
 
 if __name__ == '__main__':

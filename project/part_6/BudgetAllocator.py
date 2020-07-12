@@ -4,7 +4,7 @@ from project.part_2.Optimizer import fit_table
 from project.part_6.MultiSubCampaignHandler import MultiSubCampaignHandler
 
 
-class BudgetAllocator(MultiSubCampaignHandler):
+class BudgetAllocator:
 
     def __init__(self,
                  multi_class_handler,
@@ -15,11 +15,14 @@ class BudgetAllocator(MultiSubCampaignHandler):
         :param n_arms_pricing:
         :param n_arms_advertising:
         """
-        super(BudgetAllocator, self).__init__(multi_class_handler=multi_class_handler,
-                                              n_arms_pricing=n_arms_pricing,
-                                              n_arms_advertising=n_arms_advertising)
 
-        self.n_subcampaigns = len(self.subcampaigns_handlers)
+        self.msh = MultiSubCampaignHandler(multi_class_handler=multi_class_handler,
+                                           n_arms_pricing=n_arms_pricing,
+                                           n_arms_advertising=n_arms_advertising)
+
+        self.n_arms_pricing = self.msh.subcampaigns_handlers[0].pricing.n_arms
+        self.n_arms_advertising = self.msh.subcampaigns_handlers[0].advertising.n_arms
+        self.n_subcampaigns = len(self.msh.subcampaigns_handlers)
 
         self.exploration_iteration = 0
         self.is_exploiting = False
@@ -40,8 +43,7 @@ class BudgetAllocator(MultiSubCampaignHandler):
             Here we update the best budget allocation given only advertising problem (maximize number of clicks)
         :return:
         """
-        # from the super class
-        learners = self.update_all_subcampaign_handlers(self.get_best_allocations())
+        learners = self.msh.update_all_subcampaign_handlers(self.get_best_allocations())
 
         # Exploration phase
         if not self.is_exploiting_phase(learners):
@@ -59,11 +61,11 @@ class BudgetAllocator(MultiSubCampaignHandler):
             # Exploitation phase
         # TODO knapsack problem solver to keep in consideration both pricing and advertising
         else:
-            table_all_subs = np.ndarray(shape=(0, len(self.subcampaigns_handlers[0].bids)), dtype=float)
-            for subcampaign_handler in self.subcampaigns_handlers:
+            table_all_subs = np.ndarray(shape=(0, len(self.msh.subcampaigns_handlers[0].advertising.bids)), dtype=float)
+            for subcampaign_handler in self.msh.subcampaigns_handlers:
                 learner_clicks = subcampaign_handler.get_updated_parameters().means
                 revenue = subcampaign_handler.daily_revenue
-                n_clicks = subcampaign_handler.daily_clicks
+                n_clicks = subcampaign_handler.advertising.daily_clicks
                 v = revenue / n_clicks
 
                 revenue_clicks = learner_clicks * v

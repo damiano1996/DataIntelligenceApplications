@@ -11,17 +11,19 @@ class Advertising:
         This class is an extension of parts 2 and 3
     """
 
-    def __init__(self, n_arms_advertising, subcampaign_name):  # sub da togliere
+    def __init__(self, n_arms, subcampaign_name):  # sub da togliere
         """
-        :param n_arms_advertising:
+        :param n_arms:
         :param subcampaign_name:
         """
+        self.n_arms = n_arms
+
         self.sub = subcampaign_name  # Da togliere quando ci sarà l'unione dei config
 
-        self.bids = np.linspace(0, max_bid, n_arms_advertising)
+        self.bids = np.linspace(0, max_bid, self.n_arms)
         self.env = BiddingEnvironment(self.bids, max_clicks, sigma=6.0)
 
-        self.advertising_learner = GPTS_Learner(n_arms_advertising, self.bids)
+        self.learner = GPTS_Learner(self.n_arms, self.bids)
 
         self.daily_clicks = 0
         self.optimal_daily_clicks = 0
@@ -38,7 +40,7 @@ class Advertising:
         self.optimal_daily_clicks = self.env.single_round(optimal_arm, self.sub)
 
         # Update GPTS learner
-        self.advertising_learner.update(learned_budget_allocation, self.daily_clicks)
+        self.learner.update(learned_budget_allocation, self.daily_clicks)
 
         return self.daily_clicks, self.optimal_daily_clicks
 
