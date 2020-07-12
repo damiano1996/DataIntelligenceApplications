@@ -54,10 +54,12 @@ class SubCampaignHandler:
         :param optimal_daily_revenue:
         :return:
         """
-        best = optimal_daily_clicks * optimal_daily_revenue
-        learned = daily_clicks * daily_revenue
-        print(best, learned)
-        return best - learned
+        best_value_per_click = optimal_daily_revenue  # optimal_daily_revenue is the best price
+        if daily_clicks != 0:
+            learned_value_per_click = daily_revenue / daily_clicks  # daily_revenue is the total profit
+        else:
+            learned_value_per_click = 0
+        return best_value_per_click - learned_value_per_click
 
     def get_updated_parameters(self):
         return self.advertising.learner
