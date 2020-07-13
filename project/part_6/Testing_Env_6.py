@@ -22,7 +22,7 @@ def execute_experiment(args):
     mch = args['multiclasshandler']
 
     budget_allocator = BudgetAllocator(multi_class_handler=mch,
-                                       n_arms_pricing=20,
+                                       n_arms_pricing=40,
                                        n_arms_advertising=11)
 
     current_day, done = env.reset()
@@ -39,6 +39,10 @@ def execute_experiment(args):
 
     print('Total revenue:', budget_allocator.msh.total_revenue)
     print(str(index) + ' has ended')
+
+    for i, subcampaignhandler in enumerate(budget_allocator.msh.subcampaigns_handlers):
+        learner = subcampaignhandler.get_updated_parameters()
+        learner.plot(subcampaignhandler.advertising.env.subs[i])
 
     return {'daily_regrets': budget_allocator.msh.results}
 

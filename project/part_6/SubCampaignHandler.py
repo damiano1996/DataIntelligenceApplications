@@ -23,11 +23,13 @@ class SubCampaignHandler:
         :param n_arms_advertising:
         """
 
+        self.class_name = class_name
+
         self.pricing = Pricing(class_name=class_name, multi_class_handler=multi_class_handler, n_arms=n_arms_pricing)
         self.advertising = Advertising(n_arms=n_arms_advertising, subcampaign_name=subcampaign_name)
 
         self.daily_regret = 0
-        self.daily_revenue = 0
+        self.daily_total_revenue = 0
 
     def daily_update(self, budget_allocation):
         """
@@ -39,12 +41,12 @@ class SubCampaignHandler:
         daily_clicks, optimal_daily_clicks = self.advertising.get_daily_clicks(budget_allocation)
         daily_collected_revenues, optimal_daily_revenue = self.pricing.get_daily_collected_revenues(daily_clicks)
 
-        self.daily_revenue = int(np.sum(daily_collected_revenues))
+        self.daily_total_revenue = int(np.sum(daily_collected_revenues))
 
         self.daily_regret = self.get_daily_regret(daily_clicks, optimal_daily_clicks,
-                                                  self.daily_revenue, optimal_daily_revenue)
+                                                  self.daily_total_revenue, optimal_daily_revenue)
 
-        return self.daily_regret, self.daily_revenue
+        return self.daily_regret, self.daily_total_revenue
 
     def get_daily_regret(self, daily_clicks, optimal_daily_clicks, daily_revenue, optimal_daily_revenue):
         """

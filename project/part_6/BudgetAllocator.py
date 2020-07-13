@@ -64,10 +64,10 @@ class BudgetAllocator:
             table_all_subs = np.ndarray(shape=(0, len(self.msh.subcampaigns_handlers[0].advertising.bids)), dtype=float)
             for subcampaign_handler in self.msh.subcampaigns_handlers:
                 learner_clicks = subcampaign_handler.get_updated_parameters().means
-                revenue = subcampaign_handler.daily_revenue
+                revenue = subcampaign_handler.daily_total_revenue
                 n_clicks = subcampaign_handler.advertising.daily_clicks
                 v = revenue / n_clicks
-
+                print('subcampaign:', subcampaign_handler.class_name, 'V:', v)
                 revenue_clicks = learner_clicks * v
 
                 table_all_subs = np.append(table_all_subs, np.atleast_2d(revenue_clicks.T), 0)
@@ -76,7 +76,7 @@ class BudgetAllocator:
             print('BEST ALLOCATION:', self.best_allocation)
 
     # TODO search for the best switch phase parameters, possibly not those constants
-    def is_exploiting_phase(self, learners, sigma_exploiting=135, sigma_exploring=140):
+    def is_exploiting_phase(self, learners, sigma_exploiting=100, sigma_exploring=110):
         """
             Decide whether to explore or exploit.
         """
