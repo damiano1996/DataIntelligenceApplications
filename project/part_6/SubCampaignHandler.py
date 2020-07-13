@@ -31,6 +31,9 @@ class SubCampaignHandler:
         self.daily_regret = 0
         self.daily_total_revenue = 0
 
+        self.total_revenue = 0
+        self.total_clicks = 0
+
     def daily_update(self, budget_allocation):
         """
             Daily update
@@ -45,6 +48,9 @@ class SubCampaignHandler:
 
         self.daily_regret = self.get_daily_regret(daily_clicks, optimal_daily_clicks,
                                                   self.daily_total_revenue, optimal_daily_revenue)
+
+        self.total_revenue += self.daily_total_revenue
+        self.total_clicks += daily_clicks
 
         return self.daily_regret, self.daily_total_revenue
 

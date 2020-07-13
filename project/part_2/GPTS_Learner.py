@@ -21,12 +21,12 @@ class GPTS_Learner(Learner):
         self.sigmas = np.ones(n_arms) * 10
         self.pulled_arms = []
 
-        alpha = 10.0
+        alpha = 5.0  # 10.0
         kernel = C(1.0, (1e-3, 1e3)) * RBF(1.0, (1e-3, 1e3))
         self.gp = GaussianProcessRegressor(kernel=kernel,
                                            alpha=alpha ** 2,
-                                           normalize_y=True,
-                                           n_restarts_optimizer=9)
+                                           # normalize_y=True,
+                                           n_restarts_optimizer=10)
 
     # update the values of the pulled arms and of the collected rewards
     def update_observations(self, arm_idx, reward):
@@ -66,7 +66,7 @@ class GPTS_Learner(Learner):
         return np.argmax(self.sigmas[0:availables]) if (len(self.sigmas[0:availables]) > 0) else 0
 
     def get_sigma_sum(self):
-        return np.sum(self.sigmas)
+        return np.sum(self.sigmas)  # / max_clicks
 
     # For each sub-campaign we plot:
     # - the real function nr.clicks w.r.t. the bid value
