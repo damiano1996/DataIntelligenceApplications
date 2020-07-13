@@ -14,16 +14,19 @@ from project.dia_pckg.Learner import Learner
 class GPTS_Learner(Learner):
 
     def __init__(self, n_arms, arms):
-        self.n_arms = n_arms
-
-        self.t = 0
-        self.rewards_per_arm = x = [[] for _ in range(n_arms)]
-        self.collected_rewards = np.array([])
+        super(GPTS_Learner, self).__init__(n_arms=n_arms)
 
         self.arms = arms
         self.means = np.zeros(n_arms)
         self.sigmas = np.ones(n_arms) * 10
         self.pulled_arms = []
+
+        alpha = 10.0
+        kernel = C(1.0, (1e-3, 1e3)) * RBF(1.0, (1e-3, 1e3))
+        self.gp = GaussianProcessRegressor(kernel=kernel,
+                                           alpha=alpha ** 2,
+                                           normalize_y=True,
+                                           n_restarts_optimizer=9)
 
     # update the values of the pulled arms and of the collected rewards
     def update_observations(self, arm_idx, reward):
@@ -33,25 +36,15 @@ class GPTS_Learner(Learner):
 
     # update the GP estimation and the parameters (mean and sigma) after each round
     def update_model(self):
-        alpha = 10.0
-        kernel = C(1.0, (1e-3, 1e3)) * RBF(1.0, (1e-3, 1e3))
-        gp = GaussianProcessRegressor(kernel=kernel,
-                                      alpha=alpha ** 2,
-                                      normalize_y=True,
-                                      n_restarts_optimizer=9)
-        # self.gp = GaussianProcessRegressor(normalize_y=True,
-        #                                  n_restarts_optimizer=9)
-
         x = np.atleast_2d(self.pulled_arms).T
         y = self.collected_rewards
 
-        try:
-            gp.fit(x, y)
-            self.means, self.sigmas = gp.predict(np.atleast_2d(self.arms).T, return_std=True)
-            self.sigmas = np.maximum(self.sigmas, 1e-2)
-        except:
-            self.means = [0]
-            self.sigmas = [0]
+        if y.shape[0] == 1:
+            return
+
+        self.gp.fit(x, y)
+        self.means, self.sigmas = self.gp.predict(np.atleast_2d(self.arms).T, return_std=True)
+        self.sigmas = np.maximum(self.sigmas, 1e-2)
 
     # given the pulled arm and the reward, update the observations and the model
     def update(self, pulled_arm, reward):
@@ -80,7 +73,6 @@ class GPTS_Learner(Learner):
     # - the observed click (one at each round)
     # - the prediction model
     def plot(self, env_sub):
-
         x_pred = np.atleast_2d(self.arms).T
 
         X = self.pulled_arms
