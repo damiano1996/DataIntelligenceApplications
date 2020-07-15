@@ -61,8 +61,8 @@ class GPTS_Learner(Learner):
     # The learner choose which arm to pull at each round
     # it returns the index of the maximum value drawn from the normal distribution of the arms
     def pull_arm(self):
-        sampled_values = np.random.normal(self.means, self.sigmas)
-        return np.argmax(sampled_values)
+        #sampled_values = np.random.normal(self.means, self.sigmas)
+        return 10#np.argmax(sampled_values)
 
     # For each sub-campaign we plot:
     # - the real function nr.clicks w.r.t. the bid value
