@@ -1,5 +1,8 @@
+import numpy as np
+
+from project.dia_pckg.Utils import find_nearest
 from project.part_6.SubCampaignHandler import SubCampaignHandler
-from project.part_6.TemporaryConfig import classes_config
+from project.part_6.TemporaryConfig import classes_config, max_bid
 
 
 class MultiSubCampaignHandler:
@@ -42,7 +45,12 @@ class MultiSubCampaignHandler:
         learners = []
         regrets = []
         for subcampaign_handler, allocation in zip(self.subcampaigns_handlers, allocations):
-            daily_regret, daily_revenue = subcampaign_handler.daily_update(allocation)
+            # conversion from percentage to arm index
+            allocation_bid = allocation * max_bid
+            nearest_allocation = find_nearest(subcampaign_handler.advertising.bids, allocation_bid)
+            pulled_arm = np.where(subcampaign_handler.advertising.bids == nearest_allocation)[0][0]
+
+            daily_regret, daily_revenue = subcampaign_handler.daily_update(pulled_arm)
             learner = subcampaign_handler.get_updated_parameters()
             learners.append(learner)
             regrets.append(daily_regret)

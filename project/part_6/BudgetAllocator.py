@@ -29,15 +29,15 @@ class BudgetAllocator:
 
         self.day_zero_initialization()
 
-    # TODO optimize, now gives [3, 3, 3]
     def day_zero_initialization(self):
         """
             Initialize allocations for day zero
         """
-        self.best_allocation = []
-        for _ in range(self.n_subcampaigns):
-            self.best_allocation.append(int(self.n_arms_advertising / self.n_subcampaigns))
+        avg = 1 / self.n_subcampaigns
+        self.best_allocation = [avg, avg, avg]
+        print('BEST ALLOCATION:', self.best_allocation, 'sum:', sum(self.best_allocation))
 
+    # TODO: Le prime allocazioni hanno somma < 1.0
     def update(self):
         """
             Here we update the best budget allocation given only advertising problem (maximize number of clicks)
@@ -56,7 +56,7 @@ class BudgetAllocator:
                 self.n_arms_advertising - pulled[first] - pulled[(first + 1) % 3] - 1)
 
             self.exploration_iteration += 1
-            self.best_allocation = pulled
+            self.best_allocation = [pull / (self.n_arms_advertising - 1) for pull in pulled]
 
             # Exploitation phase
         # TODO knapsack problem solver to keep in consideration both pricing and advertising
@@ -81,10 +81,11 @@ class BudgetAllocator:
                 table_all_subs = np.append(table_all_subs, np.atleast_2d(revenue_clicks.T), 0)
 
             self.best_allocation = fit_table(table_all_subs)[0]
-            print('BEST ALLOCATION:', self.best_allocation)
+
+        print('BEST ALLOCATION:', self.best_allocation, 'sum:', sum(self.best_allocation))
 
     # TODO search for the best switch phase parameters, possibly not those constants
-    def is_exploiting_phase(self, learners, sigma_tradeoff=200):
+    def is_exploiting_phase(self, learners, sigma_tradeoff=220):
         """
             Decide whether to explore or exploit.
         """

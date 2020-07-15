@@ -23,7 +23,7 @@ def execute_experiment(args):
 
     budget_allocator = BudgetAllocator(multi_class_handler=mch,
                                        n_arms_pricing=40,
-                                       n_arms_advertising=11)
+                                       n_arms_advertising=40)
 
     current_day, done = env.reset()
 

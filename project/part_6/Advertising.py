@@ -1,5 +1,6 @@
 import numpy as np
 
+from project.dia_pckg.Utils import find_nearest
 from project.part_2.BiddingEnvironment import BiddingEnvironment
 from project.part_2.GPTS_Learner import GPTS_Learner
 from project.part_2.Optimizer import fit_table
@@ -28,27 +29,34 @@ class Advertising:
         self.daily_clicks = 0
         self.optimal_daily_clicks = 0
 
-    def get_daily_clicks(self, learned_budget_allocation):
+    def get_daily_clicks(self, pulled_arm):
         """
             Retrieve the number of clicks of the corresponding learned and optimal budget allocation,
             then update the distribution
-        :param learned_budget_allocation
+        :param pulled_arm
         """
         # Get current number of clicks and optimal number of clicks
         optimal_arm = self.get_optimal_arm()
-        self.daily_clicks = self.env.single_round(learned_budget_allocation, self.sub)
+        self.daily_clicks = self.env.single_round(pulled_arm, self.sub)
         self.optimal_daily_clicks = self.env.single_round(optimal_arm, self.sub)
 
         # Update GPTS learner
-        self.learner.update(learned_budget_allocation, self.daily_clicks)
+        self.learner.update(pulled_arm, self.daily_clicks)
 
         return self.daily_clicks, self.optimal_daily_clicks
 
     # Da cambiare
+    # Si può calcolare una volta sola... Da ottimizzare. Intanto sistemo per quello che mi serve.
     def get_optimal_arm(self):
         all_optimal_subs = np.ndarray(shape=(0, len(self.bids)), dtype=float)
         for i in range(0, 3):
             all_optimal_subs = np.append(all_optimal_subs, np.atleast_2d(self.env.subs[i](self.bids)), 0)
 
         optimals = fit_table(all_optimal_subs)[0]
-        return optimals[self.sub]
+        opt_allocation = optimals[self.sub]
+
+        # conversion from percentage to arm
+        allocation_bid = opt_allocation * max_bid
+        nearest_allocation = find_nearest(self.bids, allocation_bid)
+        optimal_pulled_arm = np.where(self.bids == nearest_allocation)[0][0]
+        return optimal_pulled_arm

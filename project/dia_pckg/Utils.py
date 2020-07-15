@@ -51,3 +51,9 @@ def check_if_file_exists(path, create=False):
         return False
     else:
         return True
+
+
+def find_nearest(array, value):
+    array = np.asarray(array)
+    idx = (np.abs(array - value)).argmin()
+    return array[idx]

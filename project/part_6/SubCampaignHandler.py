@@ -34,14 +34,14 @@ class SubCampaignHandler:
         self.total_revenue = 0
         self.total_clicks = 0
 
-    def daily_update(self, budget_allocation):
+    def daily_update(self, pulled_arm):
         """
             Daily update
-        :param budget_allocation: Learned best budget allocation
+        :param pulled_arm: Learned best budget allocation
         :return:
         """
         # extracting the daily reward from the TS
-        daily_clicks, optimal_daily_clicks = self.advertising.get_daily_clicks(budget_allocation)
+        daily_clicks, optimal_daily_clicks = self.advertising.get_daily_clicks(pulled_arm)
         daily_collected_revenues, optimal_daily_revenue = self.pricing.get_daily_collected_revenues(daily_clicks)
 
         self.daily_total_revenue = int(np.sum(daily_collected_revenues))
