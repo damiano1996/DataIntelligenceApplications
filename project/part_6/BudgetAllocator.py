@@ -52,8 +52,7 @@ class BudgetAllocator:
 
             pulled[first] = learners[first].pull_arm_v2()
             pulled[(first + 1) % 3] = learners[(first + 1) % 3].pull_arm_v3(self.n_arms_advertising - pulled[first])
-            pulled[(first + 2) % 3] = learners[(first + 2) % 3].pull_arm_v3(
-                self.n_arms_advertising - pulled[first] - pulled[(first + 1) % 3] - 1)
+            pulled[(first + 2) % 3] = learners[(first + 2) % 3].pull_arm_v4(self.n_arms_advertising - pulled[first] - pulled[(first + 1) % 3] - 1)
 
             self.exploration_iteration += 1
             self.best_allocation = [pull / (self.n_arms_advertising - 1) for pull in pulled]
@@ -75,30 +74,35 @@ class BudgetAllocator:
                 else:
                     v = 0
 
-                print('subcampaign:', subcampaign_handler.class_name, 'V:', v)
-                revenue_clicks = learner_clicks * v
+                #print('subcampaign:', subcampaign_handler.class_name, 'V:', v)
+                revenue_clicks = learner_clicks #* v
 
                 table_all_subs = np.append(table_all_subs, np.atleast_2d(revenue_clicks.T), 0)
 
             self.best_allocation = fit_table(table_all_subs)[0]
 
+        if (sum(self.best_allocation) > 1):
+            raise "Allocation unfeasible"
+
+        print()
         print('BEST ALLOCATION:', self.best_allocation, 'sum:', sum(self.best_allocation))
 
     # TODO search for the best switch phase parameters, possibly not those constants
-    def is_exploiting_phase(self, learners, sigma_tradeoff=220):
+    def is_exploiting_phase(self, learners, confidence_exploiting = 0.95, confidence_exploring=0.93):
         """
             Decide whether to explore or exploit.
         """
-        print('Sigmas',
-              learners[0].get_sigma_sum(),
-              learners[1].get_sigma_sum(),
-              learners[2].get_sigma_sum())
+        print('Confidences',
+              learners[0].get_confidence_sum(),
+              learners[1].get_confidence_sum(),
+              learners[2].get_confidence_sum())
+
         # If the variances on the GP curves is not enough confident, keep explore. Otherwise exploit.
         if not self.is_exploiting:
             if (
-                    learners[0].get_sigma_sum() < sigma_tradeoff and
-                    learners[1].get_sigma_sum() < sigma_tradeoff and
-                    learners[2].get_sigma_sum() < sigma_tradeoff and
+                    learners[0].get_confidence_sum() > confidence_exploiting and
+                    learners[1].get_confidence_sum() > confidence_exploiting and
+                    learners[2].get_confidence_sum() > confidence_exploiting and
                     self.exploration_iteration > 0
             ):
                 self.is_exploiting = True
@@ -106,9 +110,9 @@ class BudgetAllocator:
         # If the variances on the gp curves raise too much, turn back to explore. Otherwise exploit.
         else:
             if (
-                    learners[0].get_sigma_sum() > sigma_tradeoff or
-                    learners[1].get_sigma_sum() > sigma_tradeoff or
-                    learners[2].get_sigma_sum() > sigma_tradeoff
+                    learners[0].get_confidence_sum() < confidence_exploring or
+                    learners[1].get_confidence_sum() < confidence_exploring or
+                    learners[2].get_confidence_sum() < confidence_exploring
             ):
                 self.is_exploiting = False
                 print('--> EXPLORING!')

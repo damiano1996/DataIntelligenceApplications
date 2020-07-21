@@ -32,6 +32,7 @@ class MultiSubCampaignHandler:
 
         self.results = []
         self.total_revenue = 0
+        self.total_regret = 0
 
     def update_all_subcampaign_handlers(self, allocations):
         """
@@ -55,6 +56,8 @@ class MultiSubCampaignHandler:
             learners.append(learner)
             regrets.append(daily_regret)
             self.total_revenue += daily_revenue
+            self.total_regret += daily_regret
+            
 
         # Save daily regret
         self.results.append(sum(regrets))

@@ -5,8 +5,8 @@ from project.dia_pckg.plot_style.cb91visuals import *
 from project.part_2.BiddingEnvironment import BiddingEnvironment
 from project.part_2.GPTS_Learner import GPTS_Learner
 from project.part_2.Optimizer import fit_table
+from project.part_2.Optimizer import fit_table_orig
 
-# # EXPLORATION PHASE
 
 np.random.seed(72)
 n_obs = 100
@@ -14,7 +14,7 @@ n_obs_exploration = round(n_obs * 1 / 3)
 n_obs_exploitation = n_obs - n_obs_exploration
 n_subcamp = 3
 max_bid = 1
-max_clicks = 100
+max_clicks = 1000
 n_arms = 11
 
 bids = np.linspace(0, max_bid, n_arms)
@@ -25,14 +25,23 @@ total_click_each_day = pd.DataFrame(columns=['bid_sub1', 'bid_sub2', 'bid_sub3',
 noise_std = 6.0
 env = BiddingEnvironment(bids, max_clicks, noise_std)
 
-all_optimal_subs = np.ndarray(shape=(0, len(bids)), dtype=float)
-for i in range(0, n_subcamp):
-    all_optimal_subs = np.append(all_optimal_subs, np.atleast_2d(env.subs[i](bids)), 0)
-optimal_bids = fit_table(all_optimal_subs)[0]
-
 learners = []
 for i in range(0, n_subcamp):
     learners.append(GPTS_Learner(n_arms, bids))
+
+cumulative_regrets = np.array([])
+
+
+# Best allocation calculation
+
+all_optimal_subs = np.ndarray(shape=(0, len(bids)), dtype=float)
+for i in range(0, n_subcamp):
+    all_optimal_subs = np.append(all_optimal_subs, np.atleast_2d(env.subs[i](bids)), 0)
+optimal_bids = fit_table_orig(all_optimal_subs)[0]
+
+
+
+# EXPLORATION PHASE
 
 for i in range(0, n_obs):
     clicks = []
@@ -65,24 +74,27 @@ for i in range(0, n_obs):
         }, ignore_index=True)
 
     print(i)
-    print('bid', pulled[0], 'clicks', clicks[0], 'optimal bid', optimal_bids[0], 'optimal clicks', optimal_clicks[0],
-          'sigma sum', learners[0].get_sigma_sum(), '\n'
-                                                    'bid', pulled[1], 'clicks', clicks[1], 'optimal bid',
-          optimal_bids[1], 'optimal clicks', optimal_clicks[1], 'sigma sum', learners[1].get_sigma_sum(), '\n'
-                                                                                                          'bid',
-          pulled[2], 'clicks', clicks[2], 'optimal bid', optimal_bids[2], 'optimal clicks', optimal_clicks[2],
-          'sigma sum', learners[2].get_sigma_sum(), '\n'
-                                                    'regret', sum(optimal_clicks) - sum(clicks))
+    print('bid', pulled[0], 'clicks', clicks[0], 'optimal bid', optimal_bids[0], 'optimal clicks', optimal_clicks[0],'confidence sum', learners[0].get_confidence_sum(), '\n'
+          'bid', pulled[1], 'clicks', clicks[1], 'optimal bid',optimal_bids[1], 'optimal clicks', optimal_clicks[1], 'confidence sum', learners[1].get_confidence_sum(), '\n'
+          'bid', pulled[2], 'clicks', clicks[2], 'optimal bid', optimal_bids[2], 'optimal clicks', optimal_clicks[2],'confidence sum', learners[2].get_confidence_sum(), '\n'
+          'regret', sum(optimal_clicks) - sum(clicks))
 
-    if (learners[0].get_sigma_sum() < 70 and learners[1].get_sigma_sum() < 70 and learners[
-        2].get_sigma_sum() < 70 and i > 0):
+    cumulative_regrets = np.append(cumulative_regrets, sum(optimal_clicks) - sum(clicks))
+
+    if (learners[0].get_confidence_sum() > 0.982 and learners[1].get_confidence_sum() > 0.982 and learners[2].get_confidence_sum() > 0.982 and i > 0):
         break
+
+    #print(learners[0].means, learners[0].sigmas)
 
     import time
 
-    time.sleep(2)
+    #time.sleep(2)
 
     print()
+
+
+
+# Print allocation found
 
 for s in range(0, n_subcamp):
     learners[s].plot(env.subs[s])
@@ -91,20 +103,24 @@ table_all_Subs = np.ndarray(shape=(0, len(bids)), dtype=float)
 for l in learners:
     table_all_Subs = np.append(table_all_Subs, np.atleast_2d(l.means.T), 0)
 
-print(table_all_Subs)
-best = fit_table(table_all_Subs)
-print(best)
+best_found = fit_table_orig(table_all_Subs)[0]
 
-# ## Regret Computation
+print('Best allocation found:', best_found, 'Optimal allocation:', optimal_bids)
 
-all_optimal_subs = np.ndarray(shape=(0, len(bids)), dtype=float)
-for i in range(0, n_subcamp):
-    all_optimal_subs = np.append(all_optimal_subs, np.atleast_2d(env.subs[i](bids)), 0)
 
-print(all_optimal_subs)
-print(fit_table(all_optimal_subs))
+# EXPLOITATION PHASE
+
+
+#miss
+
+
+
+
+
+#Regret calculation
 
 # list of the collected reward
+"""
 rewards_per_experiment = []
 opt = fit_table(all_optimal_subs)[1]
 print(opt)
@@ -118,4 +134,12 @@ plt.figure(0)
 plt.ylabel("Regret")
 plt.xlabel("t")
 plt.plot(np.cumsum(opt - rewards_per_experiment, axis=0), 'r')
+plt.show()
+"""
+
+
+plt.figure(0)
+plt.ylabel("Regret")
+plt.xlabel("t")
+plt.plot(np.cumsum(cumulative_regrets, axis=0), 'r')
 plt.show()

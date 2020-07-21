@@ -49,6 +49,10 @@ class SubCampaignHandler:
         self.daily_regret = self.get_daily_regret(daily_clicks, optimal_daily_clicks,
                                                   self.daily_total_revenue, optimal_daily_revenue)
 
+        print ('class: ', self.class_name,
+                'optimal clicks: ', int(optimal_daily_clicks), 'collected clicks: ', int(daily_clicks),
+                'optimal revenue: ', int(optimal_daily_revenue * optimal_daily_clicks), 'collected revenue: ', int(self.daily_total_revenue) )
+
         self.total_revenue += self.daily_total_revenue
         self.total_clicks += daily_clicks
 

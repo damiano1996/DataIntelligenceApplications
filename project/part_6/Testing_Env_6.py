@@ -23,7 +23,7 @@ def execute_experiment(args):
 
     budget_allocator = BudgetAllocator(multi_class_handler=mch,
                                        n_arms_pricing=20,
-                                       n_arms_advertising=20)
+                                       n_arms_advertising=11)
 
     current_day, done = env.reset()
 
@@ -33,16 +33,23 @@ def execute_experiment(args):
         # Handler solve the problem for current day
         budget_allocator.update()
 
+        #For viewing purpose
+        #import time
+        #time.sleep(5)
+
         # Day step
         current_day, done = env.step()
-        print()
 
-    print('Total revenue:', budget_allocator.msh.total_revenue)
+
+    print('Total revenue:', int(budget_allocator.msh.total_revenue),
+            'Cumulative regret:', int(budget_allocator.msh.total_regret),
+            'Final loss:', budget_allocator.msh.total_regret / budget_allocator.msh.total_revenue)
+    
     print(str(index) + ' has ended')
 
-    for i, subcampaignhandler in enumerate(budget_allocator.msh.subcampaigns_handlers):
-        learner = subcampaignhandler.get_updated_parameters()
-        learner.plot(subcampaignhandler.advertising.env.subs[i])
+    #for i, subcampaignhandler in enumerate(budget_allocator.msh.subcampaigns_handlers):
+        #learner = subcampaignhandler.get_updated_parameters()
+        #learner.plot(subcampaignhandler.advertising.env.subs[i])
 
     return {'daily_regrets': budget_allocator.msh.results}
 
