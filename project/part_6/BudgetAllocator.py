@@ -57,7 +57,7 @@ class BudgetAllocator:
             self.exploration_iteration += 1
             self.best_allocation = [pull / (self.n_arms_advertising - 1) for pull in pulled]
 
-            # Exploitation phase
+        # Exploitation phase
         # TODO knapsack problem solver to keep in consideration both pricing and advertising
         else:
 
@@ -75,7 +75,7 @@ class BudgetAllocator:
                     v = 0
 
                 #print('subcampaign:', subcampaign_handler.class_name, 'V:', v)
-                revenue_clicks = learner_clicks #* v
+                revenue_clicks = learner_clicks * v
 
                 table_all_subs = np.append(table_all_subs, np.atleast_2d(revenue_clicks.T), 0)
 
