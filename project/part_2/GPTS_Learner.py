@@ -5,6 +5,7 @@ from sklearn.gaussian_process.kernels import RBF, ConstantKernel as C
 from project.dia_pckg.Learner import Learner
 
 
+
 # we estimate the expected reward given by a bid value
 # at each round the learner fit a GP with the chosen bids as inputs
 # the targets of the GP are the observed number of clicks

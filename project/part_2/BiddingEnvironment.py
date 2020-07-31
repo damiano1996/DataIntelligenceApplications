@@ -4,7 +4,6 @@ from project.dia_pckg.SubCampaign import SubCampaign
 
 
 class BiddingEnvironment(Environment):
-#TODO define bid in subCampaign
     def __init__(self, bids, max, sigma):
         self.bids = bids
         self.sigma = sigma
@@ -13,14 +12,14 @@ class BiddingEnvironment(Environment):
         self.subs = [SubCampaign(max), SubCampaign(max), SubCampaign(max)]
 
 
-    def bid_sub1(self, x):
-        return np.ceil(self.max * (1.0 - np.exp(-4 * x)))
-
-    def bid_sub2(self, x):
-        return np.ceil(self.max * (1.0 - np.exp(-5 * x)))
-
-    def bid_sub3(self, x):
-        return np.ceil(self.max * (1.0 - np.exp(-7 * x)))
+    # def bid_sub1(self, x):
+    #     return np.ceil(self.max * (1.0 - np.exp(-4 * x)))
+    #
+    # def bid_sub2(self, x):
+    #     return np.ceil(self.max * (1.0 - np.exp(-5 * x)))
+    #
+    # def bid_sub3(self, x):
+    #     return np.ceil(self.max * (1.0 - np.exp(-7 * x)))
 
     # for each sub-campaign, given the index of the pulled arm (i.e. the index of the bid chosen by the Learner)
     # returns the reward
