@@ -10,28 +10,10 @@ from project.part_2.GPTS_Learner import GPTS_Learner as Learner
 from project.part_3.AbruptBiddingEnvironment import AbruptBiddingEnvironment
 from project.part_3.DynamicLearner import DynamicLearner
 from project.part_3.Learning_experiment import execute_experiment
-
+from project.dia_pckg.Config import *
 
 
 np.random.seed(72)
-n_phases = 3
-len_window = 40
-phaselen = 60
-n_obs = 180 #3 abrupt phase
-print_span = 60 #ogni quanti giorni printare i grafici
-
-init_days = 1 #primi giorni si pullano gli arm in modo casuale senza pensare al reward massimo
-random_sampling = 5
-
-n_subcamp = 3
-
-max_bid = 1
-max_clicks = 100
-n_arms = 11
-
-noise_std = 0.0
-
-
 
 if __name__ == '__main__':
     bids = np.linspace(0, max_bid, n_arms)
