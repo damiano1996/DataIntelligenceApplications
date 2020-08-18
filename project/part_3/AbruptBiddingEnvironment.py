@@ -2,14 +2,12 @@ import numpy as np
 
 from project.dia_pckg.SubCampaign import SubCampaign
 from project.part_2.BiddingEnvironment import BiddingEnvironment
-
+from project.dia_pckg.Config import *
 
 class AbruptBiddingEnvironment(BiddingEnvironment):
 
-    def __init__(self, bids, max, sigma, phaselen=60, n_phases=3):
+    def __init__(self, bids, phaselen=60, n_phases=3):
         self.bids = bids
-        self.sigma = sigma
-        self.max = max
         #self.subs = [self.bid_sub1, self.bid_sub2, self.bid_sub3]
         self.subs_objects = [SubCampaign(max),SubCampaign(max),SubCampaign(max)]
         self.subs = [self.subs_objects[0].bid, self.subs_objects[1].bid, self.subs_objects[2].bid]
@@ -60,8 +58,9 @@ class AbruptBiddingEnvironment(BiddingEnvironment):
         pulled_arms = [pulled_arm1, pulled_arm2, pulled_arm3]
         rewards = np.array([])
         for i in range(0, len(pulled_arms)):
+            avg_clicks = self.subs[i](self.bids[pulled_arms[i]], self.phase)
             reward = 0 if pulled_arms[i] == 0 else np.maximum(0, np.ceil(np.random.normal(
-                self.subs[i](self.bids[pulled_arms[i]], self.phase), self.sigma)))
+                avg_clicks, avg_clicks*noise_percentage)))
             rewards = np.append(rewards, reward)
         self.day = self.day + 1
         return rewards

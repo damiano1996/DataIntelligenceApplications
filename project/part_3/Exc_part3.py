@@ -17,7 +17,7 @@ np.random.seed(72)
 
 if __name__ == '__main__':
     bids = np.linspace(0, max_bid, n_arms)
-    env = AbruptBiddingEnvironment(bids, max_clicks, noise_std, phaselen, n_phases)
+    env = AbruptBiddingEnvironment(bids, phaselen, n_phases)
     args1 = {}
     args1['learner'] = Learner
     args1['environment'] = env

@@ -45,11 +45,9 @@ print_span = 60 #How often we want to print the graphs
 n_subcamp = 3
 
 max_bid = 1
-max_clicks = 100
 n_arms = 11
 
-noise_std = 3.0
+noise_percentage = 0.2
 
-n_obs_exploration = 3
 
 

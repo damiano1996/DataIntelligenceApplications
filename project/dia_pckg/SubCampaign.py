@@ -1,11 +1,12 @@
 import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.figure import figaspect
+from project.dia_pckg.Config import *
 
 
 class SubCampaign:
 
-    def __init__(self,max, class_obj = None, product= None, campaign = None):
+    def __init__(self, class_obj = None, product= None, campaign = None):
         """
         :param class_obj: Class object
         :param product: Product object
@@ -21,7 +22,6 @@ class SubCampaign:
         #                                             random_params=True)
         self.param_for_phase = np.random.random_integers(10,200,3)/10
         self.max_click_phase = np.minimum(np.random.random_integers(30,200,3)/100,[1,1,1])
-        self.max = max
         print(self.param_for_phase)
         print(self.max_click_phase)
 
@@ -29,7 +29,7 @@ class SubCampaign:
         phase = 0 if phase == -1 else int(phase)
         percentage_value = (self.max_click_phase[phase] - np.exp(-self.param_for_phase[phase] * x))
 
-        return np.ceil(self.max * percentage_value)
+        return np.ceil(max_n_clicks * percentage_value)
 
 
     # def get_clicks_over_budget(self, max_budget, max_n_clicks, m=1, q=0, random_params=False):
