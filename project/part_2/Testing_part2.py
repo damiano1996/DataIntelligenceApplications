@@ -62,8 +62,8 @@ def exploration(total_click, learners, env):
 
     print("Days used for exploration: ", n_obs_exploration)
 
-    for s in range(0, len(learners)):
-        learners[s].plot(env.subs[s].bid)
+    #for s in range(0, len(learners)):
+        #learners[s].plot(env.subs[s].bid)
 
     return n_obs_exploration, total_click
 

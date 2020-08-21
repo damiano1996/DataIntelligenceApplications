@@ -70,6 +70,7 @@ class GPTS_Learner(Learner):
     # - the observed click (one at each round)
     # - the prediction model
     def plot(self, env_sub):
+        print(self.sigmas)
 
         x_pred = np.atleast_2d(self.arms).T
 
@@ -83,8 +84,8 @@ class GPTS_Learner(Learner):
 
         plt.plot(x_pred, self.means, linestyle='-', label=f'Predicted Clicks {self.t}')
         plt.fill(np.concatenate([x_pred, x_pred[::-1]]),
-                 np.concatenate([self.means - 1.96 * self.sigmas,
-                                 (self.means + 1.96 * self.sigmas)[::-1]]),
+                 np.concatenate([self.means - 196 * self.sigmas,
+                                 (self.means + 196 * self.sigmas)[::-1]]),
                  alpha=.2, fc='C2', ec='None', label='95% conf interval')
 
         plt.xlabel('$x$')
