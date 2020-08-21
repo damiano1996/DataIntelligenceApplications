@@ -4,9 +4,7 @@ import pandas as pd
 from project.dia_pckg.plot_style.cb91visuals import *
 from project.part_2.BiddingEnvironment import BiddingEnvironment
 from project.part_2.GPTS_Learner import GPTS_Learner
-from project.part_2.Optimizer import fit_table
 from project.part_2.Optimizer import fit_table_orig
-
 
 np.random.seed(72)
 n_obs = 100
@@ -31,15 +29,12 @@ for i in range(0, n_subcamp):
 
 cumulative_regrets = np.array([])
 
-
 # Best allocation calculation
 
 all_optimal_subs = np.ndarray(shape=(0, len(bids)), dtype=float)
 for i in range(0, n_subcamp):
     all_optimal_subs = np.append(all_optimal_subs, np.atleast_2d(env.subs[i](bids)), 0)
 optimal_bids = fit_table_orig(all_optimal_subs)[0]
-
-
 
 # EXPLORATION PHASE
 
@@ -74,25 +69,26 @@ for i in range(0, n_obs):
         }, ignore_index=True)
 
     print(i)
-    print('bid', pulled[0], 'clicks', clicks[0], 'optimal bid', optimal_bids[0], 'optimal clicks', optimal_clicks[0],'confidence sum', learners[0].get_confidence_sum(), '\n'
-          'bid', pulled[1], 'clicks', clicks[1], 'optimal bid',optimal_bids[1], 'optimal clicks', optimal_clicks[1], 'confidence sum', learners[1].get_confidence_sum(), '\n'
-          'bid', pulled[2], 'clicks', clicks[2], 'optimal bid', optimal_bids[2], 'optimal clicks', optimal_clicks[2],'confidence sum', learners[2].get_confidence_sum(), '\n'
-          'regret', sum(optimal_clicks) - sum(clicks))
+    print('bid', pulled[0], 'clicks', clicks[0], 'optimal bid', optimal_bids[0], 'optimal clicks', optimal_clicks[0],
+          'confidence sum', learners[0].get_confidence_sum(), '\n'
+                                                              'bid', pulled[1], 'clicks', clicks[1], 'optimal bid',
+          optimal_bids[1], 'optimal clicks', optimal_clicks[1], 'confidence sum', learners[1].get_confidence_sum(), '\n'
+                                                                                                                    'bid',
+          pulled[2], 'clicks', clicks[2], 'optimal bid', optimal_bids[2], 'optimal clicks', optimal_clicks[2],
+          'confidence sum', learners[2].get_confidence_sum(), '\n'
+                                                              'regret', sum(optimal_clicks) - sum(clicks))
 
     cumulative_regrets = np.append(cumulative_regrets, sum(optimal_clicks) - sum(clicks))
 
-    if (learners[0].get_confidence_sum() > 0.982 and learners[1].get_confidence_sum() > 0.982 and learners[2].get_confidence_sum() > 0.982 and i > 0):
+    if (learners[0].get_confidence_sum() > 0.982 and learners[1].get_confidence_sum() > 0.982 and learners[
+        2].get_confidence_sum() > 0.982 and i > 0):
         break
 
-    #print(learners[0].means, learners[0].sigmas)
+    # print(learners[0].means, learners[0].sigmas)
 
-    import time
-
-    #time.sleep(2)
+    # time.sleep(2)
 
     print()
-
-
 
 # Print allocation found
 
@@ -107,17 +103,13 @@ best_found = fit_table_orig(table_all_Subs)[0]
 
 print('Best allocation found:', best_found, 'Optimal allocation:', optimal_bids)
 
-
 # EXPLOITATION PHASE
 
 
-#miss
+# miss
 
 
-
-
-
-#Regret calculation
+# Regret calculation
 
 # list of the collected reward
 """
@@ -136,7 +128,6 @@ plt.xlabel("t")
 plt.plot(np.cumsum(opt - rewards_per_experiment, axis=0), 'r')
 plt.show()
 """
-
 
 plt.figure(0)
 plt.ylabel("Regret")

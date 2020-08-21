@@ -15,6 +15,8 @@ from project.part_6.BudgetAllocator import BudgetAllocator
 
 np.random.seed(0)
 
+enable_pricing = False
+
 
 def execute_experiment(args):
     index = args['index']
@@ -22,8 +24,9 @@ def execute_experiment(args):
     mch = args['multiclasshandler']
 
     budget_allocator = BudgetAllocator(multi_class_handler=mch,
-                                       n_arms_pricing=20,
-                                       n_arms_advertising=11)
+                                       n_arms_pricing=10,
+                                       n_arms_advertising=10,
+                                       enable_pricing=enable_pricing)
 
     current_day, done = env.reset()
 
@@ -33,23 +36,22 @@ def execute_experiment(args):
         # Handler solve the problem for current day
         budget_allocator.update()
 
-        #For viewing purpose
-        #import time
-        #time.sleep(5)
+        # For viewing purpose
+        # import time
+        # time.sleep(5)
 
         # Day step
         current_day, done = env.step()
 
-
     print('Total revenue:', int(budget_allocator.msh.total_revenue),
-            'Cumulative regret:', int(budget_allocator.msh.total_regret),
-            'Final loss:', budget_allocator.msh.total_regret / budget_allocator.msh.total_revenue)
-    
+          'Cumulative regret:', int(budget_allocator.msh.total_regret),
+          'Final loss:', budget_allocator.msh.total_regret / budget_allocator.msh.total_revenue)
+
     print(str(index) + ' has ended')
 
-    #for i, subcampaignhandler in enumerate(budget_allocator.msh.subcampaigns_handlers):
-        #learner = subcampaignhandler.get_updated_parameters()
-        #learner.plot(subcampaignhandler.advertising.env.subs[i])
+    # for i, subcampaignhandler in enumerate(budget_allocator.msh.subcampaigns_handlers):
+    # learner = subcampaignhandler.get_updated_parameters()
+    # learner.plot(subcampaignhandler.advertising.env.subs[i])
 
     return {'daily_regrets': budget_allocator.msh.results}
 
@@ -71,7 +73,7 @@ if __name__ == '__main__':
 
     mch = MultiClassHandler(class_1, class_2, class_3)
 
-    base_env = Environment(initial_date=initial_date, n_days=50)
+    base_env = Environment(initial_date=initial_date, n_days=n_days)
 
     for class_ in mch.classes:
         plt.plot(class_.conv_rates['phase_0']['prices'],
@@ -101,8 +103,14 @@ if __name__ == '__main__':
     for result in results:
         regrets_per_experiment.append(result['daily_regrets'])
 
-    plt.plot(np.cumsum(np.mean(regrets_per_experiment, axis=0)))
+    title_txt = ' & Pricing' if enable_pricing else ''
+    title = f'Testing_Env_6 - Advertising{title_txt} - Regret on Revenue'
+    plt.title(title)
+    for regret_per_experiment in regrets_per_experiment:
+        plt.plot(np.cumsum(regret_per_experiment), alpha=0.05, c='C2')
+    plt.plot(np.cumsum(np.mean(regrets_per_experiment, axis=0)), label='Mean Regret')
     plt.xlabel('Time')
     plt.ylabel('Regret')
-    # plt.legend()
+    plt.legend()
+    plt.savefig('other_files/' + title + '.png')
     plt.show()

@@ -65,11 +65,11 @@ class GPTS_Learner(Learner):
     def pull_arm_v3(self, availables):
         return np.argmax(self.sigmas[0:availables]) if (len(self.sigmas[0:availables]) > 0) else 0
 
-    def pull_arm_v4 (self, availables):
+    def pull_arm_v4(self, availables):
         sampled_values = np.random.normal(self.means[0:availables], self.sigmas[0:availables])
         return np.argmax(sampled_values) if (len(sampled_values) > 0) else 0
 
-    def get_confidence_sum (self):
+    def get_confidence_sum(self):
         """
             Returns the mean of the accuracy over the entire GP, with a confidence bound of 95% (1.96).
             The first element is excluded since gives only noise
@@ -78,7 +78,6 @@ class GPTS_Learner(Learner):
             return ((self.means[1:] - (1.96 * self.sigmas[1:])) / self.means[1:]).mean()
         else:
             return 0
-
 
     # For each sub-campaign we plot:
     # - the real function nr.clicks w.r.t. the bid value

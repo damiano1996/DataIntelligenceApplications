@@ -31,8 +31,7 @@ def fit_table(table_all_subs):
     return best_allocation, np.max(algorithm_table[rows - 1])
 
 
-
-def fit_table_orig (table_all_subs):
+def fit_table_orig(table_all_subs):
     rows, cols = table_all_subs.shape
 
     algorithm_table = np.zeros(shape=table_all_subs.shape)
@@ -57,7 +56,6 @@ def fit_table_orig (table_all_subs):
             allocations_table[i][j] = poss_allocation[max_index]
 
     return allocations_table[rows - 1][cols - 1], max(algorithm_table[rows - 1])
-
 
 
 """

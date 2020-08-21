@@ -57,7 +57,6 @@ class MultiSubCampaignHandler:
             regrets.append(daily_regret)
             self.total_revenue += daily_revenue
             self.total_regret += daily_regret
-            
 
         # Save daily regret
         self.results.append(sum(regrets))

@@ -9,7 +9,8 @@ class BudgetAllocator:
     def __init__(self,
                  multi_class_handler,
                  n_arms_pricing,
-                 n_arms_advertising):
+                 n_arms_advertising,
+                 enable_pricing=True):
         """
         :param multi_class_handler:
         :param n_arms_pricing:
@@ -19,6 +20,8 @@ class BudgetAllocator:
         self.msh = MultiSubCampaignHandler(multi_class_handler=multi_class_handler,
                                            n_arms_pricing=n_arms_pricing,
                                            n_arms_advertising=n_arms_advertising)
+
+        self.enable_pricing = enable_pricing
 
         self.n_arms_pricing = self.msh.subcampaigns_handlers[0].pricing.n_arms
         self.n_arms_advertising = self.msh.subcampaigns_handlers[0].advertising.n_arms
@@ -52,13 +55,13 @@ class BudgetAllocator:
 
             pulled[first] = learners[first].pull_arm_v2()
             pulled[(first + 1) % 3] = learners[(first + 1) % 3].pull_arm_v3(self.n_arms_advertising - pulled[first])
-            pulled[(first + 2) % 3] = learners[(first + 2) % 3].pull_arm_v4(self.n_arms_advertising - pulled[first] - pulled[(first + 1) % 3] - 1)
+            pulled[(first + 2) % 3] = learners[(first + 2) % 3].pull_arm_v4(
+                self.n_arms_advertising - pulled[first] - pulled[(first + 1) % 3] - 1)
 
             self.exploration_iteration += 1
             self.best_allocation = [pull / (self.n_arms_advertising - 1) for pull in pulled]
 
         # Exploitation phase
-        # TODO knapsack problem solver to keep in consideration both pricing and advertising
         else:
 
             table_all_subs = np.ndarray(shape=(0, len(self.msh.subcampaigns_handlers[0].advertising.bids)),
@@ -69,26 +72,22 @@ class BudgetAllocator:
 
                 n_clicks = subcampaign_handler.total_clicks
 
-                if n_clicks != 0:
-                    v = subcampaign_handler.total_revenue / n_clicks
-                else:
-                    v = 0
+                v = subcampaign_handler.total_revenue / n_clicks if n_clicks != 0 else 0
 
-                #print('subcampaign:', subcampaign_handler.class_name, 'V:', v)
-                revenue_clicks = learner_clicks * v
+                revenue_clicks = learner_clicks * v if self.enable_pricing else learner_clicks
 
                 table_all_subs = np.append(table_all_subs, np.atleast_2d(revenue_clicks.T), 0)
 
             self.best_allocation = fit_table(table_all_subs)[0]
 
-        if (sum(self.best_allocation) > 1):
-            raise "Allocation unfeasible"
+        if sum(self.best_allocation) > 1:
+            raise Exception("Allocation unfeasible")
 
         print()
         print('BEST ALLOCATION:', self.best_allocation, 'sum:', sum(self.best_allocation))
 
     # TODO search for the best switch phase parameters, possibly not those constants
-    def is_exploiting_phase(self, learners, confidence_exploiting = 0.95, confidence_exploring=0.93):
+    def is_exploiting_phase(self, learners, confidence_exploiting=0.95, confidence_exploring=0.93):
         """
             Decide whether to explore or exploit.
         """
