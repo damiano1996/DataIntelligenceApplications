@@ -15,7 +15,7 @@ from project.part_6.BudgetAllocator import BudgetAllocator
 
 np.random.seed(0)
 
-enable_pricing = False
+enable_pricing = True
 
 
 def execute_experiment(args):
@@ -53,7 +53,7 @@ def execute_experiment(args):
     # learner = subcampaignhandler.get_updated_parameters()
     # learner.plot(subcampaignhandler.advertising.env.subs[i])
 
-    return {'daily_regrets': budget_allocator.msh.results}
+    return {'agnostic_regret': budget_allocator.msh.regret, 'regret': budget_allocator.regret}
 
 
 if __name__ == '__main__':
@@ -93,7 +93,8 @@ if __name__ == '__main__':
     plt.show()
 
     n_experiments = 1  # the number is small to do a raw test, otherwise set it to 1000
-    regrets_per_experiment = []  # collect all the regrets achieved 
+    agnostic_regret_per_experiment = []  # collect all the regrets achieved
+    regret_per_experiment = []
     args = [{'environment': copy.deepcopy(base_env), 'index': idx, 'multiclasshandler': mch}
             for idx in range(n_experiments)]  # create arguments for the experiment
 
@@ -101,16 +102,34 @@ if __name__ == '__main__':
         results = pool.map(execute_experiment, args, chunksize=1)
 
     for result in results:
-        regrets_per_experiment.append(result['daily_regrets'])
+        agnostic_regret_per_experiment.append(result['agnostic_regret'])
+        regret_per_experiment.append(result['regret'])
 
-    title_txt = ' & Pricing' if enable_pricing else ''
-    title = f'Testing_Env_6 - Advertising{title_txt} - Regret on Revenue'
-    plt.title(title)
-    for regret_per_experiment in regrets_per_experiment:
-        plt.plot(np.cumsum(regret_per_experiment), alpha=0.05, c='C2')
-    plt.plot(np.cumsum(np.mean(regrets_per_experiment, axis=0)), label='Mean Regret')
-    plt.xlabel('Time')
-    plt.ylabel('Regret')
-    plt.legend()
-    plt.savefig('other_files/' + title + '.png')
-    plt.show()
+    # PLOTS
+    fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(12, 10))
+
+    title = ' & Pricing' if enable_pricing else ''
+    title = f'Testing_Env_6 - Advertising{title}'
+    fig.suptitle(title, fontsize=20)
+
+    ax1.set_title('Regret on Revenue (Advertising <=!=> Pricing)')
+    for agnostic_regret in agnostic_regret_per_experiment:
+        ax1.plot(np.cumsum(agnostic_regret), alpha=0.05, c='C2')
+    ax1.plot(np.cumsum(np.mean(agnostic_regret_per_experiment, axis=0)), label='Mean Regret')
+    ax1.set_xlabel('Time')
+    ax1.set_ylabel('Regret')
+    ax1.legend()
+
+    ax2.set_title('Regret on Revenue (Advertising <==> Pricing)')
+    for regret in regret_per_experiment:
+        ax2.plot(np.cumsum(regret), alpha=0.05, c='C2')
+    ax2.plot(np.cumsum(np.mean(regret_per_experiment, axis=0)), label='Mean Regret')
+    ax2.set_xlabel('Time')
+    ax2.set_ylabel('Regret')
+    ax2.legend()
+
+    fig.tight_layout()
+    fig.subplots_adjust(top=0.9)
+
+    fig.savefig('other_files/' + title + '.png')
+    fig.show()

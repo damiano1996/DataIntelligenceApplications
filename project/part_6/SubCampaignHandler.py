@@ -28,13 +28,10 @@ class SubCampaignHandler:
         self.pricing = Pricing(class_name=class_name, multi_class_handler=multi_class_handler, n_arms=n_arms_pricing)
         self.advertising = Advertising(n_arms=n_arms_advertising, subcampaign_name=subcampaign_name)
 
-        self.daily_regret = 0
-        self.daily_total_revenue = 0
-
         self.total_revenue = 0
         self.total_clicks = 0
 
-    def daily_update(self, pulled_arm):
+    def daily_update(self, pulled_arm, opt=False):
         """
             Daily update
         :param pulled_arm: Learned best budget allocation
@@ -42,22 +39,26 @@ class SubCampaignHandler:
         """
         # extracting the daily reward from the TS
         daily_clicks, optimal_daily_clicks = self.advertising.get_daily_clicks(pulled_arm)
-        daily_collected_revenues, optimal_daily_revenue = self.pricing.get_daily_collected_revenues(daily_clicks)
+        daily_collected_revenues, optimal_daily_revenue = self.pricing.get_daily_revenues(daily_clicks)
 
-        self.daily_total_revenue = int(np.sum(daily_collected_revenues))
+        daily_revenue = np.sum(daily_collected_revenues)
 
-        self.daily_regret = self.get_daily_regret(daily_clicks, optimal_daily_clicks,
-                                                  self.daily_total_revenue, optimal_daily_revenue)
+        daily_regret = self.get_daily_regret(daily_clicks, optimal_daily_clicks,
+                                             daily_revenue, optimal_daily_revenue)
 
         print('class: ', self.class_name,
-              'optimal clicks: ', int(optimal_daily_clicks), 'collected clicks: ', int(daily_clicks),
-              'optimal revenue: ', int(optimal_daily_revenue * optimal_daily_clicks), 'collected revenue: ',
-              int(self.daily_total_revenue))
+              'optimal clicks: ', int(optimal_daily_clicks),
+              'collected clicks: ', int(daily_clicks),
+              'optimal revenue: ', int(optimal_daily_revenue * optimal_daily_clicks),
+              'collected revenue: ', int(daily_revenue))
 
-        self.total_revenue += self.daily_total_revenue
-        self.total_clicks += daily_clicks
+        # To update the total revenue in case of optimality, we have to multiply the optimal_daily_revenue
+        # by the number of daily_clicks since the number of daily_clicks can be greater than optimal_daily_clicks.
+        self.total_revenue += daily_revenue if not opt else optimal_daily_revenue * daily_clicks
+        # For the same reason above, we don't need the optimal_daily_clicks in case of optimality
+        self.total_clicks += daily_clicks  # if not opt else optimal_daily_clicks
 
-        return self.daily_regret, self.daily_total_revenue
+        return daily_regret, daily_revenue
 
     def get_daily_regret(self, daily_clicks, optimal_daily_clicks, daily_revenue, optimal_daily_revenue):
         """

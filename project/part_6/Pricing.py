@@ -27,19 +27,16 @@ class Pricing:
         # self.pricing_learner = SWTS_Learner(n_arms=n_arms, arm_prices=self.get_candidate_prices()['prices'], window_size=5000)
         self.learner = TS_Learner(n_arms=self.n_arms, arm_prices=self.get_candidate_prices()['prices'])
 
-        self.daily_collected_revenues = 0
-        self.optimal_daily_revenue = 0
-
-    def get_daily_collected_revenues(self, daily_clicks):  # to change n_arms
+    def get_daily_revenues(self, daily_clicks):  # to change n_arms
         """
             Get the daily reward and the optimal one
         """
 
-        self.optimal_daily_revenue = self.get_optimal_revenue()
-        self.daily_collected_revenues = np.array([])
+        optimal_daily_revenue = self.get_optimal_revenue()
+        daily_collected_revenues = np.asarray([])
 
         if daily_clicks == 0:
-            return self.daily_collected_revenues, self.optimal_daily_revenue
+            return daily_collected_revenues, optimal_daily_revenue
 
         # Generate an environment for a day simulation
         env = Env_4(initial_date='20200101',
@@ -60,10 +57,10 @@ class Pricing:
             self.learner.update(pulled_arm, reward)
 
             # optimal_revenues = np.append(optimal_revenues, opt_revenue)
-            self.daily_collected_revenues = np.append(self.daily_collected_revenues,
-                                                      self.learner.get_real_reward(pulled_arm, reward))
+            daily_collected_revenues = np.append(daily_collected_revenues,
+                                                 self.learner.get_real_reward(pulled_arm, reward))
 
-        return self.daily_collected_revenues, self.optimal_daily_revenue
+        return daily_collected_revenues, optimal_daily_revenue
 
     def get_candidate_prices(self):
         """

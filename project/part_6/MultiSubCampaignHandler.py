@@ -30,11 +30,11 @@ class MultiSubCampaignHandler:
                                                      n_arms_advertising=self.n_arms_advertising)
             self.subcampaigns_handlers.append(subcampaign_handler)
 
-        self.results = []
+        self.regret = []
         self.total_revenue = 0
         self.total_regret = 0
 
-    def update_all_subcampaign_handlers(self, allocations):
+    def update_all_subcampaign_handlers(self, allocations, opt=False):
         """
             Execute one day round:
             Update advertising and pricing model
@@ -44,21 +44,21 @@ class MultiSubCampaignHandler:
 
         # Learn about data of the current day, given the budget allocations
         learners = []
-        regrets = []
+        total_daily_regret = 0
         for subcampaign_handler, allocation in zip(self.subcampaigns_handlers, allocations):
             # conversion from percentage to arm index
             allocation_bid = allocation * max_bid
             nearest_allocation = find_nearest(subcampaign_handler.advertising.bids, allocation_bid)
             pulled_arm = np.where(subcampaign_handler.advertising.bids == nearest_allocation)[0][0]
 
-            daily_regret, daily_revenue = subcampaign_handler.daily_update(pulled_arm)
+            daily_regret, daily_revenue = subcampaign_handler.daily_update(pulled_arm, opt=opt)
             learner = subcampaign_handler.get_updated_parameters()
             learners.append(learner)
-            regrets.append(daily_regret)
+            total_daily_regret += daily_regret
             self.total_revenue += daily_revenue
-            self.total_regret += daily_regret
 
+        self.total_regret += total_daily_regret
         # Save daily regret
-        self.results.append(sum(regrets))
+        self.regret.append(total_daily_regret)
 
         return learners
