@@ -1,5 +1,5 @@
 
-# Data intelligence Applications
+# Data Intelligence Applications
 ---
 
 ## Team 15

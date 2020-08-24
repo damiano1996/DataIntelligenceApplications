@@ -1,17 +1,14 @@
-import numpy as np
-import pandas as pd
-
-import multiprocessing
 from multiprocessing import Pool
 
+import numpy as np
+
+from project.dia_pckg.Config import *
 from project.dia_pckg.plot_style.cb91visuals import *
-from project.part_2.Optimizer import fit_table
 from project.part_2.GP_Learner import GP_Learner as Learner
+from project.part_2.Optimizer import fit_table
 from project.part_3.AbruptBiddingEnvironment import AbruptBiddingEnvironment
 from project.part_3.DynamicLearner import DynamicLearner
 from project.part_3.Learning_experiment import execute_experiment
-from project.dia_pckg.Config import *
-
 
 np.random.seed(8972)
 
@@ -37,7 +34,7 @@ if __name__ == '__main__':
     args2['print_span'] = print_span
 
     with Pool(2) as p:
-        basic_total_click_each_day,sw_total_click_each_day = p.map(execute_experiment, [args1, args2])
+        basic_total_click_each_day, sw_total_click_each_day = p.map(execute_experiment, [args1, args2])
 
     clicks_opt = np.array([])
 
@@ -69,6 +66,3 @@ if __name__ == '__main__':
 
     print("\n\nWITHOUT SLIDING WINDOWS")
     print(sum(basic_clicks_obtained))
-
-
-

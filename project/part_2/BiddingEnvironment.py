@@ -1,7 +1,8 @@
 import numpy as np
+
+from project.dia_pckg.Config import *
 from project.dia_pckg.Environment import Environment
 from project.dia_pckg.SubCampaign import SubCampaign
-from project.dia_pckg.Config import *
 
 
 class BiddingEnvironment(Environment):
