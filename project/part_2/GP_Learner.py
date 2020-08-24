@@ -41,7 +41,7 @@ class GP_Learner(Learner):
         """
         Update the GP estimation and the parameters (mean and sigma) after each round
         """
-        alpha = 10.0
+        alpha = 1.0
         kernel = C(1.0, (1e-3, 1e3)) * RBF(1.0, (1e-3, 1e3))
         gp = GaussianProcessRegressor(kernel=kernel,
                                       alpha=alpha ** 2,
@@ -68,7 +68,7 @@ class GP_Learner(Learner):
         @param reward: reward associated to the pulled arm
         """
         self.t += 1
-        self.update_observations(pulled_arm, 100 * reward / max_n_clicks)
+        self.update_observations(pulled_arm, 10 * reward / max_n_clicks)
         self.update_model()
 
     def plot(self, env_sub):
@@ -82,17 +82,17 @@ class GP_Learner(Learner):
         x_pred = np.atleast_2d(self.arms).T
 
         X = self.pulled_arms
-        Y = self.collected_rewards * max_n_clicks / 100
+        Y = self.collected_rewards * max_n_clicks / 10
 
         plt.figure()
 
         plt.plot(x_pred, env_sub(x_pred), ':', label=r'$n(x)$')
         plt.scatter(X, Y, marker='o', label=r'Observed Clicks')
 
-        plt.plot(x_pred, self.means * max_n_clicks / 100, linestyle='-', label=f'Predicted Clicks {self.t}')
+        plt.plot(x_pred, self.means * max_n_clicks / 10, linestyle='-', label=f'Predicted Clicks {self.t}')
         plt.fill(np.concatenate([x_pred, x_pred[::-1]]),
                  np.concatenate([self.means - 1.96 * self.sigmas,
-                                 (self.means + 1.96 * self.sigmas)[::-1]]) * max_n_clicks / 100,
+                                 (self.means + 1.96 * self.sigmas)[::-1]]) * max_n_clicks / 10,
                  alpha=.2, fc='C2', ec='None', label='95% conf interval')
 
         plt.xlabel('$x$')

@@ -13,7 +13,7 @@ from project.part_3.Learning_experiment import execute_experiment
 from project.dia_pckg.Config import *
 
 
-np.random.seed(72)
+np.random.seed(8972)
 
 if __name__ == '__main__':
     bids = np.linspace(0, max_bid, n_arms)

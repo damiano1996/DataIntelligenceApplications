@@ -30,7 +30,7 @@ class AbruptBiddingEnvironment(BiddingEnvironment):
         for i in range(0, len(pulled_arms)):
             avg_clicks = self.subs[i](self.bids[pulled_arms[i]], self.phase())
             reward = 0 if pulled_arms[i] == 0 else np.maximum(0, np.ceil(np.random.normal(
-                avg_clicks, avg_clicks * noise_percentage)))
+                np.abs(avg_clicks), np.abs(avg_clicks * noise_percentage))))
             rewards = np.append(rewards, reward)
         self.day = self.day + 1
         return rewards

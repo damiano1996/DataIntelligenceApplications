@@ -26,10 +26,10 @@ def execute_experiment(args):
         # per i primi init_days giorni si pullano in modo causale, successivamente si usa la tabella
         if init_days > 0:  # or d % random_sampling == 0: #or d % int(len_window/2) == 0:
             init_days = init_days - 1
-            first = d % 3
-            pulled[first] = 9  # learners[first].pull_arm()
-            pulled[(first + 1) % 3] = 9  # np.random.randint(0,n_arms - pulled[first])
-            pulled[(first + 2) % 3] = 9  # n_arms - pulled[first] - pulled[(first + 1 )% 3] - 1
+
+            pulled[0] = 9
+            pulled[1] = 9
+            pulled[2] = 9
         else:
             # uso l'algoritmo della tabella per selezionare gli arm che mi danno un reward massimo
             table_all_Subs = np.ndarray(shape=(0, len(bids)), dtype=float)
@@ -53,6 +53,11 @@ def execute_experiment(args):
 
         if (d + 1) % print_span == 0:
             # TIME TO PRINT THE PLOTS
+            try:
+                for s in range(0, len(learners)):
+                    learners[s].plot(env.subs[s])
+            except:
+                print(f"not able to plot {learners[0].name}")
             print(f"DAY: {d}\nPULLED:{pulled}\nCLICKS: {clicks}\nTOT: {clicks.sum()}\n")
 
     return click_each_day
