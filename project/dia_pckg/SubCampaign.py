@@ -5,7 +5,7 @@ from project.dia_pckg.Config import *
 
 
 class SubCampaign:
-
+     # test
     def __init__(self, class_obj = None, product= None, campaign = None):
         """
         :param class_obj: Class object
