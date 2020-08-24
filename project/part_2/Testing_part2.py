@@ -17,8 +17,7 @@ def compute_Clairvoyant(bids, n_subcamp, env):
     for i in range(0, n_subcamp):
         all_optimal_subs = np.append(all_optimal_subs, np.atleast_2d(env.subs[i].bid(bids)), 0)
 
-    print(all_optimal_subs)
-    print(fit_table(all_optimal_subs))
+    print(f"Best bidding clairvoyant (arms, reward): {fit_table(all_optimal_subs)}")
     return fit_table(all_optimal_subs)[1]
 
 # EXPLORATION PHASE
@@ -62,9 +61,6 @@ def exploration(total_click, learners, env):
 
     print("Days used for exploration: ", n_obs_exploration)
 
-    #for s in range(0, len(learners)):
-        #learners[s].plot(env.subs[s].bid)
-
     return n_obs_exploration, total_click
 
 # EXPLOITATION PHASE
@@ -96,7 +92,7 @@ def exploitation(total_click, learners, env, n_obs_exploitation):
     for s in range(0, len(learners)):
         learners[s].plot(env.subs[s].bid)
 
-    print(fit_table(table_all_Subs))
+    print(f"Best bidding computed (arms, reward): {fit_table(table_all_Subs)}")
 
     return total_click
 
@@ -117,18 +113,19 @@ def plot_Regret(total_click, opt):
     plt.plot(np.cumsum(opt - rewards_per_experiment, axis=0), 'r')
     plt.show()
 
-    print(np.sum(rewards_per_experiment))
+    print(f"total reward:{np.sum(rewards_per_experiment)}")
+    print(f"avarage daily reward:{np.sum(rewards_per_experiment)/n_obs}")
 
 
 
 if __name__ == '__main__':
 
     bids = np.linspace(0, max_bid, n_arms)
-    print(bids)
+    print(f"arms: {bids}")
 
     total_click_each_day = pd.DataFrame(columns=['bid_sub1', 'bid_sub2', 'bid_sub3', "click1", "click2", "click3"])
 
-    env = BiddingEnvironment(bids, max_n_clicks)
+    env = BiddingEnvironment(bids)
 
     learners = []
     # one learner for each sub campaign

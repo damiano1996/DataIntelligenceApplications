@@ -47,7 +47,7 @@ n_subcamp = 3
 max_bid = 1
 n_arms = 11
 
-noise_percentage = 0.2
+noise_percentage = 0.05
 
 
 

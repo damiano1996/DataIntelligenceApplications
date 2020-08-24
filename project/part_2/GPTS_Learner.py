@@ -3,7 +3,7 @@ import numpy as np
 from sklearn.gaussian_process import GaussianProcessRegressor
 from sklearn.gaussian_process.kernels import RBF, ConstantKernel as C
 from project.dia_pckg.Learner import Learner
-
+from project.dia_pckg.Config import *
 
 
 # we estimate the expected reward given by a bid value
@@ -56,36 +56,28 @@ class GPTS_Learner(Learner):
     # given the pulled arm and the reward, update the observations and the model
     def update(self, pulled_arm, reward):
         self.t += 1
-        self.update_observations(pulled_arm, reward)
+        self.update_observations(pulled_arm, 100 * reward / max_n_clicks )
         self.update_model()
-
-    # The learner choose which arm to pull at each round
-    # it returns the index of the maximum value drawn from the normal distribution of the arms
-    def pull_arm(self):
-        #sampled_values = np.random.normal(self.means, self.sigmas)
-        return 10#np.argmax(sampled_values)
 
     # For each sub-campaign we plot:
     # - the real function nr.clicks w.r.t. the bid value
     # - the observed click (one at each round)
     # - the prediction model
     def plot(self, env_sub):
-        print(self.sigmas)
-
         x_pred = np.atleast_2d(self.arms).T
 
         X = self.pulled_arms
-        Y = self.collected_rewards
+        Y = self.collected_rewards * max_n_clicks / 100
 
         plt.figure()
 
         plt.plot(x_pred, env_sub(x_pred), ':', label=r'$n(x)$')
         plt.scatter(X, Y, marker='o', label=r'Observed Clicks')
 
-        plt.plot(x_pred, self.means, linestyle='-', label=f'Predicted Clicks {self.t}')
+        plt.plot(x_pred, self.means* max_n_clicks / 100, linestyle='-', label=f'Predicted Clicks {self.t}')
         plt.fill(np.concatenate([x_pred, x_pred[::-1]]),
-                 np.concatenate([self.means - 196 * self.sigmas,
-                                 (self.means + 196 * self.sigmas)[::-1]]),
+                 np.concatenate([self.means - 1.96 * self.sigmas,
+                                 (self.means + 1.96 * self.sigmas)[::-1]])* max_n_clicks / 100,
                  alpha=.2, fc='C2', ec='None', label='95% conf interval')
 
         plt.xlabel('$x$')
