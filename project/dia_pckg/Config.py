@@ -35,3 +35,19 @@ classes_config = {
 n_abrupts = 3
 # directory to store the curves
 demand_path = 'demand_curves'
+
+n_phases = 3
+len_window = 40
+phaselen = 60
+n_obs = 180 #3 abrupt phase
+print_span = 60 #How often we want to print the graphs
+
+n_subcamp = 3
+
+max_bid = 1
+n_arms = 11
+
+noise_percentage = 0.05
+
+
+

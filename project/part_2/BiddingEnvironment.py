@@ -1,43 +1,31 @@
 import numpy as np
-
 from project.dia_pckg.Environment import Environment
-
-
-# from project.dia_pckg import SubCampaign
+from project.dia_pckg.SubCampaign import SubCampaign
+from project.dia_pckg.Config import *
 
 
 class BiddingEnvironment(Environment):
-    # TODO define bid in subCampaign
-    def __init__(self, bids, max, sigma):
+
+    def __init__(self, bids):
         self.bids = bids
-        self.sigma = sigma
-        self.max = max
-        self.subs = [self.bid_sub1, self.bid_sub2, self.bid_sub3]
+        self.subs = [SubCampaign(), SubCampaign(), SubCampaign()]
 
-    def bid_sub1(self, x):
-        return np.ceil(self.max * (1.0 - np.exp(-4 * x)))
-
-    def bid_sub2(self, x):
-        return np.ceil(self.max * (1.0 - np.exp(-5 * x)))
-
-    def bid_sub3(self, x):
-        return np.ceil(self.max * (1.0 - np.exp(-7 * x)))
-
-    # for each sub-campaign, given the index of the pulled arm (i.e. the index of the bid chosen by the Learner)
-    # returns the reward
     def round(self, pulled_arm1, pulled_arm2, pulled_arm3):
+        """
+        For each sub-campaign, given the index of the pulled arm, i.e. the index of the bid chosen by the Learner,
+        returns the reward
+        @param pulled_arm1: index of pulled arm for sub-campaign 1
+        @param pulled_arm2: index of pulled arm for sub-campaign 2
+        @param pulled_arm3: index of pulled arm for sub-campaign 3
+        @return: array of the rewards, one for each sub-campaign
+        """
         rewards = np.array([])
         pulledarms = [pulled_arm1, pulled_arm2, pulled_arm3]
 
         for i in range(0, len(pulledarms)):
-            r = 0 if pulledarms[i] == 0 else np.maximum(0, np.ceil(np.random.normal(
-                self.subs[i](self.bids[pulledarms[i]]), self.sigma)))
+            avg_clicks = self.subs[i].bid(self.bids[pulledarms[i]])
+            r = 0 if pulledarms[i] <= 0 else np.maximum(0, np.ceil(np.random.normal(
+                avg_clicks, np.abs(avg_clicks * noise_percentage))))
             rewards = np.append(rewards, r)
 
         return rewards
-
-    # returns the reward of the given subcampaign and the pulled arm
-    def single_round(self, pulled_arm, sub):
-        r = 0 if pulled_arm == 0 else np.maximum(0, np.ceil(np.random.normal(
-            self.subs[sub](self.bids[pulled_arm]), self.sigma)))
-        return r
