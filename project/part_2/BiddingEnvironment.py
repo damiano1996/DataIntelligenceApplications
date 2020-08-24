@@ -5,13 +5,20 @@ from project.dia_pckg.Config import *
 
 
 class BiddingEnvironment(Environment):
+
     def __init__(self, bids):
         self.bids = bids
         self.subs = [SubCampaign(), SubCampaign(), SubCampaign()]
 
-    # for each sub-campaign, given the index of the pulled arm (i.e. the index of the bid chosen by the Learner)
-    # returns the reward
     def round(self, pulled_arm1, pulled_arm2, pulled_arm3):
+        """
+        For each sub-campaign, given the index of the pulled arm, i.e. the index of the bid chosen by the Learner,
+        returns the reward
+        @param pulled_arm1: index of pulled arm for sub-campaign 1
+        @param pulled_arm2: index of pulled arm for sub-campaign 2
+        @param pulled_arm3: index of pulled arm for sub-campaign 3
+        @return: array of the rewards, one for each sub-campaign
+        """
         rewards = np.array([])
         pulledarms = [pulled_arm1, pulled_arm2, pulled_arm3]
 
