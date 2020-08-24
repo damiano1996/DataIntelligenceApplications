@@ -1,11 +1,10 @@
-import numpy as np
 import pandas as pd
 
+from project.dia_pckg.Config import *
 from project.dia_pckg.plot_style.cb91visuals import *
 from project.part_2.BiddingEnvironment import BiddingEnvironment
 from project.part_2.GP_Learner import GP_Learner
 from project.part_2.Optimizer import *
-from project.dia_pckg.Config import *
 
 # %%
 

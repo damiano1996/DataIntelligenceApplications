@@ -5,9 +5,8 @@ import numpy as np
 # maximization of the number of clicks solved as a variation of the Multi-Choice Knapsack Problem
 
 def fit_table(table_all_Subs):
-
-    rows = table_all_Subs.shape[0]      # sub-campaigns
-    cols = table_all_Subs.shape[1]      # budget allocations
+    rows = table_all_Subs.shape[0]  # sub-campaigns
+    cols = table_all_Subs.shape[1]  # budget allocations
     algorithm_table = np.ndarray(shape=(0, cols), dtype=float)
 
     # initialization

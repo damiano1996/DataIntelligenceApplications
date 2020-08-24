@@ -1,9 +1,9 @@
 import numpy as np
 import pandas as pd
+from project.part_2.GPTS_Learner import GPTS_Learner
 
 from project.dia_pckg.plot_style.cb91visuals import *
 from project.part_2.BiddingEnvironment import BiddingEnvironment
-from project.part_2.GPTS_Learner import GPTS_Learner
 from project.part_2.Optimizer import fit_table_orig
 
 np.random.seed(72)

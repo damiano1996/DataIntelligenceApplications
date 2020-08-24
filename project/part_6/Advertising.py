@@ -1,8 +1,8 @@
 import numpy as np
+from project.part_2.GPTS_Learner import GPTS_Learner
 
 from project.dia_pckg.Utils import find_nearest
 from project.part_2.BiddingEnvironment import BiddingEnvironment
-from project.part_2.GPTS_Learner import GPTS_Learner
 from project.part_2.Optimizer import fit_table
 from project.part_6.TemporaryConfig import max_bid, max_clicks
 

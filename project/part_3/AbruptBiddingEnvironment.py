@@ -1,8 +1,9 @@
 import numpy as np
 
+from project.dia_pckg.Config import *
 from project.dia_pckg.SubCampaign import SubCampaign
 from project.part_2.BiddingEnvironment import BiddingEnvironment
-from project.dia_pckg.Config import *
+
 
 # AbruptBiddingEnvironment is an extension of the BiddingEnvironment class
 # It works in a scenario of multiple abrupt phases:
@@ -24,7 +25,6 @@ class AbruptBiddingEnvironment(BiddingEnvironment):
         return (self.day / phaselen) % n_phases
 
     def round(self, pulled_arm1, pulled_arm2, pulled_arm3):
-
         pulled_arms = [pulled_arm1, pulled_arm2, pulled_arm3]
         rewards = np.array([])
         for i in range(0, len(pulled_arms)):

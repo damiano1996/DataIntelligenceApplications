@@ -2,8 +2,9 @@ import matplotlib.pyplot as plt
 import numpy as np
 from sklearn.gaussian_process import GaussianProcessRegressor
 from sklearn.gaussian_process.kernels import RBF, ConstantKernel as C
-from project.dia_pckg.Learner import Learner
+
 from project.dia_pckg.Config import *
+from project.dia_pckg.Learner import Learner
 
 
 class GP_Learner(Learner):
