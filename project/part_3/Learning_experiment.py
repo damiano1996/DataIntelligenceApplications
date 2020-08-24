@@ -20,6 +20,7 @@ def execute_experiment(args):
     for i in range(0, n_subcamp):
         learners.append(learner(n_arms, bids))
 
+    # todo
     for d in range(0, n_obs):
         pulled = [0, 0, 0]
         # per i primi init_days giorni si pullano in modo causale, successivamente si usa la tabella

@@ -6,7 +6,7 @@ from multiprocessing import Pool
 
 from project.dia_pckg.plot_style.cb91visuals import *
 from project.part_2.Optimizer import fit_table
-from project.part_2.GPTS_Learner import GPTS_Learner as Learner
+from project.part_2.GP_Learner import GP_Learner as Learner
 from project.part_3.AbruptBiddingEnvironment import AbruptBiddingEnvironment
 from project.part_3.DynamicLearner import DynamicLearner
 from project.part_3.Learning_experiment import execute_experiment

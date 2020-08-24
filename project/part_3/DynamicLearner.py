@@ -1,9 +1,10 @@
 import numpy as np
-from project.part_2.GPTS_Learner import GPTS_Learner
+from project.part_2.GP_Learner import GP_Learner
 from project.dia_pckg.Config import *
 
-
-class DynamicLearner(GPTS_Learner):
+# Extension of the standard GP_Learner for implementing a sliding-window combinatorial
+# bandit algorithm due to the presence of multiple abrupt phases
+class DynamicLearner(GP_Learner):
     def __init__(self, n_arms, arms, len_window = len_window):
         super().__init__(n_arms, arms)
         self.len_window = len_window

@@ -6,12 +6,12 @@ from project.dia_pckg.Learner import Learner
 from project.dia_pckg.Config import *
 
 
-# we estimate the expected reward given by a bid value
-# at each round the learner fit a GP with the chosen bids as inputs
-# the targets of the GP are the observed number of clicks
+# We estimate the expected reward given by a bid value.
+# At each round the learner fit a GP with the chosen bids as inputs
+# The targets of the GP are the observed number of clicks
 
 
-class GPTS_Learner(Learner):
+class GP_Learner(Learner):
 
     def __init__(self, n_arms, arms):
         self.n_arms = n_arms

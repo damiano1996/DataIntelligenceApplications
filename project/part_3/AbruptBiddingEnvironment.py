@@ -4,6 +4,10 @@ from project.dia_pckg.SubCampaign import SubCampaign
 from project.part_2.BiddingEnvironment import BiddingEnvironment
 from project.dia_pckg.Config import *
 
+# AbruptBiddingEnvironment is an extension of the BiddingEnvironment class
+# It works in a scenario of multiple abrupt phases:
+# for each sub-campaign returns the reward of a given pulled arm, depending on the phase we are
+
 
 class AbruptBiddingEnvironment(BiddingEnvironment):
 

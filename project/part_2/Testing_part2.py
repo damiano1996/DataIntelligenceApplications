@@ -3,13 +3,14 @@ import pandas as pd
 
 from project.dia_pckg.plot_style.cb91visuals import *
 from project.part_2.BiddingEnvironment import BiddingEnvironment
-from project.part_2.GPTS_Learner import GPTS_Learner
+from project.part_2.GP_Learner import GP_Learner
 from project.part_2.Optimizer import *
 from project.dia_pckg.Config import *
 
 # %%
 
 np.random.seed(88)
+
 
 # CLAIRVOYANT REWARD
 def compute_Clairvoyant(bids, n_subcamp, env):
@@ -20,9 +21,9 @@ def compute_Clairvoyant(bids, n_subcamp, env):
     print(f"Best bidding clairvoyant (arms, reward): {fit_table(all_optimal_subs)}")
     return fit_table(all_optimal_subs)[1]
 
+
 # EXPLORATION PHASE
 def exploration(total_click, learners, env):
-
     pulled = [0, 0, 0]
     pulled[0] = 9
     pulled[1] = 9
@@ -63,6 +64,7 @@ def exploration(total_click, learners, env):
 
     return n_obs_exploration, total_click
 
+
 # EXPLOITATION PHASE
 def exploitation(total_click, learners, env, n_obs_exploitation):
     print(f"running exploitation for {n_obs_exploitation} days")
@@ -87,14 +89,13 @@ def exploitation(total_click, learners, env, n_obs_exploitation):
             "click3": clicks[2]
         }, ignore_index=True)
 
-
-
     for s in range(0, len(learners)):
         learners[s].plot(env.subs[s].bid)
 
     print(f"Best bidding computed (arms, reward): {fit_table(table_all_Subs)}")
 
     return total_click
+
 
 ## Regret Computation
 def plot_Regret(total_click, opt):
@@ -114,8 +115,7 @@ def plot_Regret(total_click, opt):
     plt.show()
 
     print(f"total reward:{np.sum(rewards_per_experiment)}")
-    print(f"avarage daily reward:{np.sum(rewards_per_experiment)/n_obs}")
-
+    print(f"average daily reward:{np.sum(rewards_per_experiment) / n_obs}")
 
 
 if __name__ == '__main__':
@@ -130,26 +130,13 @@ if __name__ == '__main__':
     learners = []
     # one learner for each sub campaign
     for i in range(0, n_subcamp):
-        learners.append(GPTS_Learner(n_arms, bids))
+        learners.append(GP_Learner(n_arms, bids))
 
-    opt = compute_Clairvoyant(bids,n_subcamp, env)
+    opt = compute_Clairvoyant(bids, n_subcamp, env)
 
-    n_obs_exploration,total_click_each_day = exploration(total_click_each_day, learners, env)
+    n_obs_exploration, total_click_each_day = exploration(total_click_each_day, learners, env)
 
     n_obs_exploitation = n_obs - n_obs_exploration
 
-    total_click_each_day = exploitation(total_click_each_day, learners, env,n_obs_exploitation)
+    total_click_each_day = exploitation(total_click_each_day, learners, env, n_obs_exploitation)
     plot_Regret(total_click_each_day, opt)
-
-
-
-
-
-
-
-
-
-
-
-
-
