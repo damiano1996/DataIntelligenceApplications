@@ -17,26 +17,21 @@ class GP_Learner(Learner):
         @param n_arms:
         @param arms:
         """
-        self.n_arms = n_arms
-
-        self.t = 0
-        self.rewards_per_arm = x = [[] for _ in range(n_arms)]
-        self.collected_rewards = np.array([])
+        super(GP_Learner, self).__init__(n_arms=n_arms)
 
         self.arms = arms
         self.means = np.zeros(n_arms)
         self.sigmas = np.ones(n_arms) * 10
         self.pulled_arms = []
 
-    def update_observations(self, arm_idx, reward):
+    def update_observations(self, pulled_arm, reward):
         """
         Update the values of the pulled arms and of the collected rewards
-        @param arm_idx: index of the arm
+        @param pulled_arm: index of the arm
         @param reward: associated reward
         """
-        self.rewards_per_arm[arm_idx].append(reward)
-        self.pulled_arms.append(self.arms[arm_idx])
-        self.collected_rewards = np.append(self.collected_rewards, reward)
+        super(GP_Learner, self).update_observations(pulled_arm=pulled_arm, reward=reward)
+        self.pulled_arms.append(self.arms[pulled_arm])
 
     def update_model(self):
         """
@@ -48,8 +43,6 @@ class GP_Learner(Learner):
                                       alpha=alpha ** 2,
                                       normalize_y=True,
                                       n_restarts_optimizer=9)
-        # self.gp = GaussianProcessRegressor(normalize_y=True,
-        #                                  n_restarts_optimizer=9)
 
         x = np.atleast_2d(self.pulled_arms).T
         y = self.collected_rewards

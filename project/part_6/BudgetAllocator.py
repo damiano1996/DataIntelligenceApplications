@@ -93,7 +93,7 @@ class BudgetAllocator:
         else:
 
             table_all_subs = np.ndarray(
-                shape=(0, len(multi_subcampaign_handler.subcampaigns_handlers[0].advertising.bids)), dtype=float)
+                shape=(0, len(multi_subcampaign_handler.subcampaigns_handlers[0].advertising.bids)), dtype=np.float32)
 
             for subcampaign_handler in multi_subcampaign_handler.subcampaigns_handlers:
                 if not opt:

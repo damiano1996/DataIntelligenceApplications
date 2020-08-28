@@ -39,7 +39,7 @@ if __name__ == '__main__':
     clicks_opt = np.array([])
 
     for p in range(0, n_phases):
-        all_optimal_subs = np.ndarray(shape=(0, len(bids)), dtype=float)
+        all_optimal_subs = np.ndarray(shape=(0, len(bids)), dtype=np.float32)
         for i in range(0, n_subcamp):
             all_optimal_subs = np.append(all_optimal_subs, np.atleast_2d(env.subs[i](bids, p)), 0)
         opt = fit_table(all_optimal_subs)[1]
@@ -55,14 +55,14 @@ if __name__ == '__main__':
                             basic_total_click_each_day["click3"]
 
     np.cumsum(clicks_opt - sw_clicks_obtained).plot(label="Sliding window")
-    np.cumsum(clicks_opt - basic_clicks_obtained).plot(color="green", label="Without sw")
+    np.cumsum(clicks_opt - basic_clicks_obtained).plot(label="Without sw")
     plt.legend(loc='lower right')
     plt.show()
 
     plt.show()
 
     print("SLIDING WINDOWS")
-    print(sum(sw_clicks_obtained))
+    print(np.sum(sw_clicks_obtained))
 
     print("\n\nWITHOUT SLIDING WINDOWS")
-    print(sum(basic_clicks_obtained))
+    print(np.sum(basic_clicks_obtained))

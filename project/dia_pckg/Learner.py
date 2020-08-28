@@ -1,7 +1,7 @@
 import numpy as np
 
 
-class Learner():
+class Learner:
     """
         This is the same Learner of the prof
     """

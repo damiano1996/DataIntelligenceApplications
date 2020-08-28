@@ -1,7 +1,9 @@
 import numpy as np
 import pandas as pd
 
+from project.dia_pckg.Config import max_bid
 from project.part_2.Optimizer import fit_table
+from project.part_2.Utils import get_idx_arm_from_allocation
 
 
 def execute_experiment(args):
@@ -36,7 +38,9 @@ def execute_experiment(args):
             table_all_Subs = np.ndarray(shape=(0, len(bids)), dtype=float)
             for l in learners:
                 table_all_Subs = np.append(table_all_Subs, np.atleast_2d(l.means.T), 0)
-            pulled = fit_table(table_all_Subs)[0]
+            allocations = fit_table(table_all_Subs)[0]
+            # conversion to arm index
+            pulled = [get_idx_arm_from_allocation(allocation, bids, max_bid) for allocation in allocations]
 
         clicks = env.round(pulled[0], pulled[1], pulled[2])
 
