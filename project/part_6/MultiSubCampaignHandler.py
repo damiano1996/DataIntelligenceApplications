@@ -20,10 +20,10 @@ class MultiSubCampaignHandler:
         self.n_arms_advertising = n_arms_advertising
 
         self.subcampaigns_handlers = []
-        for class_ in self.mch.classes:
+        for i, class_ in enumerate(self.mch.classes):
             subcampaign_handler = SubCampaignHandler(class_name=class_.name,
                                                      multi_class_handler=self.mch,
-                                                     subcampaign_name=classes_config[class_.name],
+                                                     subcampaign_idx=i,
                                                      n_arms_pricing=self.n_arms_pricing,
                                                      n_arms_advertising=self.n_arms_advertising)
             self.subcampaigns_handlers.append(subcampaign_handler)

@@ -1,7 +1,7 @@
 import numpy as np
 
 
-class MultiClassHandler():
+class MultiClassHandler:
 
     def __init__(self, *classes):
         """

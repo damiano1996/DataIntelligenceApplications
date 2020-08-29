@@ -12,13 +12,13 @@ class SubCampaignHandler:
     def __init__(self,
                  class_name,
                  multi_class_handler,
-                 subcampaign_name,
+                 subcampaign_idx,
                  n_arms_pricing,
                  n_arms_advertising):
         """
         :param class_name:
         :param multi_class_handler:
-        :param subcampaign_name:
+        :param subcampaign_idx:
         :param n_arms_pricing:
         :param n_arms_advertising:
         """
@@ -26,7 +26,7 @@ class SubCampaignHandler:
         self.class_name = class_name
 
         self.pricing = Pricing(class_name=class_name, multi_class_handler=multi_class_handler, n_arms=n_arms_pricing)
-        self.advertising = Advertising(n_arms=n_arms_advertising, subcampaign_name=subcampaign_name)
+        self.advertising = Advertising(n_arms=n_arms_advertising, subcampaign_idx=subcampaign_idx)
 
         self.total_revenue = 0
         self.total_clicks = 0
