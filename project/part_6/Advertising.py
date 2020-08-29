@@ -27,7 +27,8 @@ class Advertising:
         self.learner = GP_Learner(self.n_arms, self.bids)
 
         self.daily_clicks = 0
-        self.optimal_daily_clicks = 0
+        self.optimal_daily_clicks = compute_clairvoyant(self.bids, 3, self.env)
+
 
     def get_daily_clicks(self, pulled_arm):
         """
@@ -37,7 +38,6 @@ class Advertising:
         """
         # Get current number of clicks and optimal number of clicks
         self.daily_clicks = self.env.round_single_arm(pulled_arm, self.sub_idx)
-        self.optimal_daily_clicks = compute_clairvoyant(self.bids, 3, self.env)
 
         # Update GP learner
         self.learner.update(pulled_arm, self.daily_clicks)
