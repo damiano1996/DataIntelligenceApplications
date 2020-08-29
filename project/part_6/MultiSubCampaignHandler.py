@@ -1,6 +1,6 @@
 from project.part_2.Utils import get_idx_arm_from_allocation
 from project.part_6.SubCampaignHandler import SubCampaignHandler
-from project.part_6.TemporaryConfig import classes_config, max_bid
+from project.part_6.TemporaryConfig import max_bid
 
 
 class MultiSubCampaignHandler:

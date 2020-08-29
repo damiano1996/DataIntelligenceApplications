@@ -1,11 +1,9 @@
 import numpy as np
-from project.part_2.GP_Learner import GP_Learner
 
-from project.dia_pckg.Utils import find_nearest
 from project.part_2.BiddingEnvironment import BiddingEnvironment
-from project.part_2.Optimizer import fit_table
-from project.part_2.Utils import get_idx_arm_from_allocation, compute_clairvoyant
-from project.part_6.TemporaryConfig import max_bid, max_clicks
+from project.part_2.GPTS_Learner_v2 import GPTS_Learner_v2
+from project.part_2.Utils import compute_clairvoyant
+from project.part_6.TemporaryConfig import max_bid
 
 
 class Advertising:
@@ -24,11 +22,10 @@ class Advertising:
         self.bids = np.linspace(0, max_bid, self.n_arms)
         self.env = BiddingEnvironment(self.bids)
 
-        self.learner = GP_Learner(self.n_arms, self.bids)
+        self.learner = GPTS_Learner_v2(self.n_arms, self.bids)
 
         self.daily_clicks = 0
         self.optimal_daily_clicks = compute_clairvoyant(self.bids, 3, self.env)
-
 
     def get_daily_clicks(self, pulled_arm):
         """

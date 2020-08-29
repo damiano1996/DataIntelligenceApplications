@@ -4,7 +4,7 @@
 
 # campaign
 initial_date = '20200101'
-n_days = 150
+n_days = 20
 
 # Seller wallet and ambitions
 seller_max_budget = 20000  # $
