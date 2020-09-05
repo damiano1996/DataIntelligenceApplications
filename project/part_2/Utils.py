@@ -10,9 +10,11 @@ def compute_clairvoyant(bids, n_subcampaigns, env, verbose=False):
     for i in range(0, n_subcampaigns):
         all_optimal_subs = np.append(all_optimal_subs, np.atleast_2d(env.subs[i].bid(bids)), 0)
 
+    best_allocation, n_clicks = fit_table(all_optimal_subs)
+
     if verbose:
-        print(f"Best bidding clairvoyant (arms, reward): {fit_table(all_optimal_subs)}")
-    return fit_table(all_optimal_subs)[1]
+        print(f"Best bidding clairvoyant (best_allocation, n_clicks): {best_allocation}, {n_clicks}")
+    return n_clicks
 
 
 def get_idx_arm_from_allocation(allocation, bids, max_bid):

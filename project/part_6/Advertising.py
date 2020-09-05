@@ -25,7 +25,7 @@ class Advertising:
         self.learner = GPTS_Learner_v2(self.n_arms, self.bids)
 
         self.daily_clicks = 0
-        self.optimal_daily_clicks = compute_clairvoyant(self.bids, 3, self.env)
+        self.optimal_clicks = compute_clairvoyant(self.bids, 3, self.env, verbose=True)
 
     def get_daily_clicks(self, pulled_arm):
         """
@@ -39,4 +39,4 @@ class Advertising:
         # Update GP learner
         self.learner.update(pulled_arm, self.daily_clicks)
 
-        return self.daily_clicks, self.optimal_daily_clicks
+        return self.daily_clicks

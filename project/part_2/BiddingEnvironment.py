@@ -22,6 +22,7 @@ class BiddingEnvironment(Environment):
 
     def round_single_arm(self, pulled_arm, sub_idx):
         avg_clicks = self.subs[sub_idx].bid(self.bids[pulled_arm])
-        clicks = 0 if pulled_arm <= 0 else np.maximum(0, np.ceil(np.random.normal(
-            avg_clicks, np.abs(avg_clicks * noise_percentage))))
+        clicks = 0 if pulled_arm <= 0 else np.maximum(0,
+                                                      np.ceil(np.random.normal(avg_clicks,
+                                                                               np.abs(avg_clicks * noise_percentage))))
         return clicks

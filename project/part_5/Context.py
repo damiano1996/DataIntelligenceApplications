@@ -8,7 +8,7 @@ class Context():
         self.MAB = mab_algorithm  # Multi Armed Bandit algorithm to use
         self.MAB_args = mab_args
 
-        if (mab_algorithm is not None):
+        if mab_algorithm is not None:
             self.learner = self.MAB(*self.MAB_args)
 
         self.features = features

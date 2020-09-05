@@ -38,23 +38,23 @@ class SubCampaignHandler:
         :return:
         """
         # extracting the daily reward from the TS
-        daily_clicks, optimal_daily_clicks = self.advertising.get_daily_clicks(pulled_arm)
-        daily_collected_revenues, optimal_daily_revenue = self.pricing.get_daily_revenues(daily_clicks)
+        daily_clicks = self.advertising.get_daily_clicks(pulled_arm)
+        daily_collected_revenues = self.pricing.get_daily_revenues(daily_clicks)
 
         daily_revenue = np.sum(daily_collected_revenues)
 
-        daily_regret = self.get_daily_regret(daily_clicks, optimal_daily_clicks,
-                                             daily_revenue, optimal_daily_revenue)
+        daily_regret = self.get_daily_regret(daily_clicks, self.advertising.optimal_clicks,
+                                             daily_revenue, self.pricing.optimal_revenue)
 
         print('class: ', self.class_name,
-              'optimal clicks: ', int(optimal_daily_clicks),
-              'collected clicks: ', int(daily_clicks),
-              'optimal revenue: ', int(optimal_daily_revenue * optimal_daily_clicks),
+              'optimal clicks: ', self.advertising.optimal_clicks,
+              'collected clicks: ', round(daily_clicks),
+              'optimal revenue: ', round(self.pricing.optimal_revenue * self.advertising.optimal_clicks),
               'collected revenue: ', int(daily_revenue))
 
         # To update the total revenue in case of optimality, we have to multiply the optimal_daily_revenue
         # by the number of daily_clicks since the number of daily_clicks can be greater than optimal_daily_clicks.
-        self.total_revenue += daily_revenue if not opt else optimal_daily_revenue * daily_clicks
+        self.total_revenue += daily_revenue if not opt else self.pricing.optimal_revenue * daily_clicks
         # For the same reason above, we don't need the optimal_daily_clicks in case of optimality
         self.total_clicks += daily_clicks  # if not opt else optimal_daily_clicks
 
