@@ -54,6 +54,7 @@ class BudgetAllocator:
 
                 n_clicks = subcampaign_handler.total_clicks
                 v = subcampaign_handler.total_revenue / n_clicks if n_clicks != 0 else 0
+                print('V:', v)
                 revenue_clicks = learner_clicks * v if self.enable_pricing else learner_clicks
 
             else:
@@ -65,7 +66,7 @@ class BudgetAllocator:
 
             table_all_subs = np.append(table_all_subs, np.atleast_2d(revenue_clicks.T), 0)
 
-        self.allocation = fit_table(table_all_subs)[0]
+        self.best_allocation = fit_table(table_all_subs)[0]
 
-        if sum(self.allocation) > 1:
+        if sum(self.best_allocation) > 1:
             raise Exception("Allocation unfeasible")

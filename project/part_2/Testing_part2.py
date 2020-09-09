@@ -4,18 +4,15 @@ import pandas as pd
 from project.dia_pckg.Config import *
 from project.dia_pckg.plot_style.cb91visuals import *
 from project.part_2.BiddingEnvironment import BiddingEnvironment
-from project.part_2.GP_Learner import GP_Learner
+from project.part_2.GPTS_LearnerV2 import GPTS_LearnerV2
 from project.part_2.Optimizer import fit_table
 from project.part_2.Utils import get_idx_arm_from_allocation, compute_clairvoyant
 
 np.random.seed(88)
 
 
-# EXPLORATION PHASE
-def exploration(total_click, learners, env):
-    pulled = [9, 9, 9]
-    n_obs_exploration = 3
-
+def initialization(total_click, learners, env):
+    pulled = [n_arms - 1, n_arms - 1, n_arms - 1]
     clicks = env.round(pulled)
 
     for x in range(0, n_subcamp):
@@ -46,13 +43,10 @@ def exploration(total_click, learners, env):
         "click3": clicks[2]
     }, ignore_index=True)
 
-    print("Days used for exploration: ", n_obs_exploration)
-
-    return n_obs_exploration, total_click
+    return total_click
 
 
-# EXPLOITATION PHASE
-def exploitation(total_click, learners, env, n_obs_exploitation):
+def running(total_click, learners, env, n_obs_exploitation):
     print(f"running exploitation for {n_obs_exploitation} days")
     for i in range(0, n_obs_exploitation):
 
@@ -90,7 +84,7 @@ def plot_regret(total_click, opt):
     # list of the collected reward
     rewards_per_experiment = []
 
-    for i in range(0, n_obs_exploitation):
+    for i in range(0, n_obs):
         num_clicks_day_i = total_click.values[i][3] \
                            + total_click.values[i][4] \
                            + total_click.values[i][5]
@@ -118,13 +112,11 @@ if __name__ == '__main__':
     learners = []
     # one learner for each sub campaign
     for i in range(0, n_subcamp):
-        learners.append(GP_Learner(n_arms, bids))
+        learners.append(GPTS_LearnerV2(n_arms, bids))
 
     opt = compute_clairvoyant(bids, n_subcamp, env, verbose=True)
 
-    n_obs_exploration, total_click_each_day = exploration(total_click_each_day, learners, env)
+    total_click_each_day = initialization(total_click_each_day, learners, env)
 
-    n_obs_exploitation = n_obs - n_obs_exploration
-
-    total_click_each_day = exploitation(total_click_each_day, learners, env, n_obs_exploitation)
+    total_click_each_day = running(total_click_each_day, learners, env, n_obs)
     plot_regret(total_click_each_day, opt)
