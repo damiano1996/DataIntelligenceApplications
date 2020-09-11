@@ -9,6 +9,7 @@ from project.part_2.Optimizer import fit_table
 from project.part_3.AbruptBiddingEnvironment import AbruptBiddingEnvironment
 from project.part_3.DynamicLearner import DynamicLearner
 from project.part_3.Learning_experiment import execute_experiment
+from project.part_3.DLChangeDetect import DLChangeDetect
 
 np.random.seed(8972)
 
@@ -33,8 +34,18 @@ if __name__ == '__main__':
     args2['n_obs'] = n_obs
     args2['print_span'] = print_span
 
+    args3 = {}
+    args3['learner'] = DLChangeDetect
+    args3['environment'] = env
+    args3['bids'] = bids
+    args3['n_subcamp'] = n_subcamp
+    args3['n_arms'] = n_arms
+    args3['n_obs'] = n_obs
+    args3['print_span'] = print_span
+
     with Pool(2) as p:
-        basic_total_click_each_day, sw_total_click_each_day = p.map(execute_experiment, [args1, args2])
+        basic_total_click_each_day, sw_total_click_each_day, dc_total_click_each_day = p.map(execute_experiment,
+                                                                                             [args1, args2, args3])
 
     clicks_opt = np.array([])
 
@@ -54,8 +65,14 @@ if __name__ == '__main__':
                             basic_total_click_each_day["click2"] + \
                             basic_total_click_each_day["click3"]
 
-    np.cumsum(clicks_opt - sw_clicks_obtained).plot(label="Sliding window")
-    np.cumsum(clicks_opt - basic_clicks_obtained).plot(label="Without sw")
+    dc_clicks_obtained = dc_total_click_each_day["click1"] + \
+                         dc_total_click_each_day["click2"] + \
+                         dc_total_click_each_day["click3"]
+
+    np.cumsum(clicks_opt - sw_clicks_obtained).plot(label="Sliding Window")
+    np.cumsum(clicks_opt - basic_clicks_obtained).plot(label="Without SW")
+    np.cumsum(clicks_opt - dc_clicks_obtained).plot(label="Change Detect")
+
     plt.legend(loc='lower right')
     plt.show()
 
@@ -66,3 +83,6 @@ if __name__ == '__main__':
 
     print("\n\nWITHOUT SLIDING WINDOWS")
     print(np.sum(basic_clicks_obtained))
+
+    print("\n\nCHANGE DETECT")
+    print(np.sum(dc_clicks_obtained))

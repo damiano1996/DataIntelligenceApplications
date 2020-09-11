@@ -19,7 +19,7 @@ class GPTS_LearnerV2(GPTS_Learner):
         plt.scatter(self.pulled_arms, self.collected_rewards, marker='o', label=r'Observed Clicks')
         plt.plot(x_pred, y_pred, 'b-', label=r'Predicted Clicks')
         plt.fill(np.concatenate([x_pred, x_pred[::-1]]),
-                 np.concatenate([y_pred - 1.96 * sigma, (y_pred + 1.96 * sigma)[::-1]]),
+                 np.concatenate([y_pred - 196 * sigma, (y_pred + 196 * sigma)[::-1]]),
                  alpha=.2, fc='C2', ec='None', label='95% conf interval')
         plt.xlabel('$x$')
         plt.ylabel('$n(x)$')
