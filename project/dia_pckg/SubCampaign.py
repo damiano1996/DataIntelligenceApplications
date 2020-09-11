@@ -15,8 +15,8 @@ class SubCampaign:
         self.product = product
         self.campaign = campaign
 
-        self.param_for_phase = np.random.random_integers(10, 200, 3) / 10
-        self.max_click_phase = np.minimum(np.random.random_integers(30, 200, 3) / 100, [1, 1, 1])
+        self.param_for_phase = np.random.random_integers(1, 200, 3) / 10
+        self.max_click_phase = np.minimum(np.random.random_integers(3, 2000, 3) / 100, [1, 1, 1])
 
     def bid(self, x, phase=-1):
         phase = 0 if phase == -1 else int(phase)
