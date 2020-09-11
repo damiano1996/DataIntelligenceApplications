@@ -1,7 +1,7 @@
 from multiprocessing import Pool
 
 import numpy as np
-from project.part_2.GP_Learner import GP_Learner as Learner
+from project.part_2.GPTS_LearnerV2 import GPTS_LearnerV2 as Learner
 
 from project.dia_pckg.Config import *
 from project.dia_pckg.plot_style.cb91visuals import *
