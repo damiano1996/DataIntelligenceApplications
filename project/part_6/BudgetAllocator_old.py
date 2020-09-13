@@ -2,9 +2,9 @@ import copy
 
 import numpy as np
 
+from project.dia_pckg.Config import max_bid
 from project.part_2.Optimizer import fit_table
 from project.part_6.MultiSubCampaignHandler import MultiSubCampaignHandler
-from project.part_6.TemporaryConfig import max_bid
 
 
 class BudgetAllocator:

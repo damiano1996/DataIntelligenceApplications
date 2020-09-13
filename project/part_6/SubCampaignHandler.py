@@ -1,5 +1,3 @@
-import numpy as np
-
 from project.part_6.Advertising import Advertising
 from project.part_6.Pricing import Pricing
 
@@ -14,7 +12,8 @@ class SubCampaignHandler:
                  multi_class_handler,
                  subcampaign_idx,
                  n_arms_pricing,
-                 n_arms_advertising):
+                 n_arms_advertising,
+                 bidding_environment):
         """
         :param class_name:
         :param multi_class_handler:
@@ -26,7 +25,9 @@ class SubCampaignHandler:
         self.class_name = class_name
 
         self.pricing = Pricing(class_name=class_name, multi_class_handler=multi_class_handler, n_arms=n_arms_pricing)
-        self.advertising = Advertising(n_arms=n_arms_advertising, subcampaign_idx=subcampaign_idx)
+        self.advertising = Advertising(bidding_environment=bidding_environment,
+                                       n_arms=n_arms_advertising,
+                                       subcampaign_idx=subcampaign_idx)
 
         self.total_revenue = 0
         self.total_clicks = 0
@@ -39,9 +40,7 @@ class SubCampaignHandler:
         """
         # extracting the daily reward from the TS
         daily_clicks = self.advertising.get_daily_clicks(pulled_arm)
-        daily_collected_revenues = self.pricing.get_daily_revenues(daily_clicks)
-
-        daily_revenue = np.sum(daily_collected_revenues)
+        daily_revenue = self.pricing.get_daily_revenue(daily_clicks)
 
         daily_regret = self.get_daily_regret(daily_clicks, self.advertising.optimal_clicks,
                                              daily_revenue, self.pricing.optimal_revenue)

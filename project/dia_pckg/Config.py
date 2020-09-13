@@ -4,12 +4,12 @@
 
 # campaign
 initial_date = '20200101'
-n_days = 20
+n_days = 50
 
 # Seller wallet and ambitions
 seller_max_budget = 20000  # $
-max_n_clicks = 10000
-avg_users_per_day = 1000  # this param must be changed after budget allocation available!
+max_n_clicks = 1000
+avg_users_per_day = 100  # this param must be changed after budget allocation available!
 
 # one product to sell
 product_config = {
@@ -45,6 +45,6 @@ print_span = 60  # How often we want to print the graphs
 n_subcamp = 3
 
 max_bid = 1
-n_arms = 11
+n_arms = 10
 
-noise_percentage = 0.05
+noise_std = 0.05

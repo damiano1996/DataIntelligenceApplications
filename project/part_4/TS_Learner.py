@@ -18,9 +18,9 @@ class TS_Learner(Learner):
         :param beta_parameters: beta parameters with whom will be initialized
         :param rewards_per_arm: beta rewards_per_arm with whom will be initialized
         """
-        if (beta_parameters is not None):
+        if beta_parameters is not None:
             self.beta_parameters = beta_parameters
-        if (rewards_per_arm is not None):
+        if rewards_per_arm is not None:
             self.rewards_per_arm = rewards_per_arm
 
     def pull_arm_demand(self):

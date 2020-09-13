@@ -25,7 +25,7 @@ def execute_experiment(args):
 
     budget_allocator = BudgetAllocator(multi_class_handler=mch,
                                        n_arms_pricing=10,
-                                       n_arms_advertising=10,
+                                       n_arms_advertising=15,
                                        enable_pricing=enable_pricing)
 
     current_day, done = env.reset()
@@ -106,7 +106,7 @@ if __name__ == '__main__':
         regret_per_experiment.append(result['regret'])
 
     # PLOTS
-    fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(12, 10))
+    fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(12, 8))
 
     title = ' & Pricing' if enable_pricing else ''
     title = f'Testing_Env_6 - Advertising{title}'

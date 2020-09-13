@@ -1,25 +1,43 @@
 import numpy as np
 
-from project.dia_pckg.Config import *
-
 
 class SubCampaign:
 
-    def __init__(self, class_obj=None, product=None, campaign=None):
+    def __init__(self,
+                 bids, sigma, max_n_clicks,
+                 class_obj=None, product=None, campaign=None):
         """
         :param class_obj: Class object
         :param product: Product object
         :param campaign: Campaign object
         """
+        self.bids = bids
+        self.sigma = sigma
+        self.max_n_clicks = max_n_clicks
+
         self.my_class = class_obj
         self.product = product
         self.campaign = campaign
 
-        self.param_for_phase = np.random.random_integers(1, 200, 3) / 10
-        self.max_click_phase = np.minimum(np.random.random_integers(3, 2000, 3) / 100, [1, 1, 1])
+        self.param_for_phase = np.random.choice(np.arange(3, 6, 0.01), 3)
+        self.max_value_phase = np.random.choice(np.arange(0.8, 1, 0.01), 3)
 
-    def bid(self, x, phase=-1):
-        phase = 0 if phase == -1 else int(phase)
-        percentage_value = (self.max_click_phase[phase] - np.exp(-self.param_for_phase[phase] * x))
+        self.means = {f'phase_{i}': self.phase_curve(bids, phase=i) for i in range(3)}
+        self.sigmas = {f'phase_{i}': np.full(self.means[f'phase_{i}'].shape, sigma * self.max_n_clicks) for i in
+                       range(3)}
 
-        return np.ceil(max_n_clicks * percentage_value)
+    def phase_curve(self, x, phase=0):
+        curve = self.max_n_clicks * (self.max_value_phase[phase] - np.exp(-self.param_for_phase[phase] * x))
+        curve[np.where(curve < 0)] = 0
+        return curve
+
+
+if __name__ == '__main__':
+    x = np.arange(0, 1, 0.01)
+    sc = SubCampaign(x, 5, 1000)
+
+    import matplotlib.pyplot as plt
+
+    for phase in range(3):
+        plt.plot(x, sc.means[f'phase_{phase}'])
+        plt.show()

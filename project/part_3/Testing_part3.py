@@ -1,17 +1,18 @@
+import multiprocessing
 from multiprocessing import Pool
 
 import numpy as np
-from project.part_2.GPTS_LearnerV2 import GPTS_LearnerV2 as Learner
 
 from project.dia_pckg.Config import *
 from project.dia_pckg.plot_style.cb91visuals import *
+from project.part_2.GPTS_Learner import GPTS_Learner as Learner
 from project.part_2.Optimizer import fit_table
 from project.part_3.AbruptBiddingEnvironment import AbruptBiddingEnvironment
+from project.part_3.DLChangeDetect import DLChangeDetect
 from project.part_3.DynamicLearner import DynamicLearner
 from project.part_3.Learning_experiment import execute_experiment
-from project.part_3.DLChangeDetect import DLChangeDetect
 
-np.random.seed(8972)
+np.random.seed(0)
 
 if __name__ == '__main__':
     bids = np.linspace(0, max_bid, n_arms)
@@ -43,16 +44,16 @@ if __name__ == '__main__':
     args3['n_obs'] = n_obs
     args3['print_span'] = print_span
 
-    with Pool(2) as p:
-        basic_total_click_each_day, sw_total_click_each_day, dc_total_click_each_day = p.map(execute_experiment,
-                                                                                             [args1, args2, args3])
+    with Pool(processes=multiprocessing.cpu_count()) as phase:
+        basic_total_click_each_day, sw_total_click_each_day, dc_total_click_each_day = phase.map(execute_experiment,
+                                                                                                 [args1, args2, args3])
 
     clicks_opt = np.array([])
 
-    for p in range(0, n_phases):
+    for phase in range(0, n_phases):
         all_optimal_subs = np.ndarray(shape=(0, len(bids)), dtype=np.float32)
         for i in range(0, n_subcamp):
-            all_optimal_subs = np.append(all_optimal_subs, np.atleast_2d(env.subs[i](bids, p)), 0)
+            all_optimal_subs = np.append(all_optimal_subs, np.atleast_2d(env.subs[i].means[f'phase_{phase}']), 0)
         opt = fit_table(all_optimal_subs)[1]
         for days in range(0, phaselen):
             clicks_opt = np.append(clicks_opt, opt)
@@ -69,8 +70,8 @@ if __name__ == '__main__':
                          dc_total_click_each_day["click2"] + \
                          dc_total_click_each_day["click3"]
 
-    np.cumsum(clicks_opt - sw_clicks_obtained).plot(label="Sliding Window")
     np.cumsum(clicks_opt - basic_clicks_obtained).plot(label="Without SW")
+    np.cumsum(clicks_opt - sw_clicks_obtained).plot(label="Sliding Window")
     np.cumsum(clicks_opt - dc_clicks_obtained).plot(label="Change Detect")
 
     plt.legend(loc='lower right')

@@ -1,5 +1,3 @@
-import numpy as np
-
 from project.dia_pckg.User import User
 from project.part_4.Env_4 import Env_4
 from project.part_4.TS_Learner import TS_Learner
@@ -29,15 +27,15 @@ class Pricing:
 
         self.optimal_revenue = self.get_optimal_revenue()
 
-    def get_daily_revenues(self, daily_clicks):  # to change n_arms
+    def get_daily_revenue(self, daily_clicks):  # to change n_arms
         """
             Get the daily reward and the optimal one
         """
 
-        daily_collected_revenues = np.asarray([])
+        daily_revenue = 0
 
         if daily_clicks == 0:
-            return daily_collected_revenues
+            return daily_revenue
 
         # Generate an environment for a day simulation
         env = Env_4(initial_date='20200101',
@@ -47,7 +45,6 @@ class Pricing:
                     n_arms=self.n_arms)
 
         _, done = env.reset()
-
         while not done:
             user = User(class_name=self.class_name)
 
@@ -58,10 +55,9 @@ class Pricing:
             self.learner.update(pulled_arm, reward)
 
             # optimal_revenues = np.append(optimal_revenues, opt_revenue)
-            daily_collected_revenues = np.append(daily_collected_revenues,
-                                                 self.learner.get_real_reward(pulled_arm, reward))
+            daily_revenue += self.learner.get_real_reward(pulled_arm, reward)
 
-        return daily_collected_revenues
+        return daily_revenue
 
     def get_candidate_prices(self):
         """

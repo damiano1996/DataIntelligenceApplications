@@ -1,9 +1,5 @@
-import numpy as np
-
-from project.part_2.BiddingEnvironment import BiddingEnvironment
-from project.part_2.GPTS_LearnerV2 import GPTS_LearnerV2
+from project.part_2.GPTS_Learner import GPTS_Learner
 from project.part_2.Utils import compute_clairvoyant
-from project.part_6.TemporaryConfig import max_bid
 
 
 class Advertising:
@@ -11,21 +7,22 @@ class Advertising:
         This class is an extension of parts 2 and 3
     """
 
-    def __init__(self, n_arms, subcampaign_idx):
+    def __init__(self, bidding_environment, n_arms, subcampaign_idx):
         """
         :param n_arms:
         :param subcampaign_idx:
         """
         self.n_arms = n_arms
-
         self.sub_idx = subcampaign_idx
-        self.bids = np.linspace(0, max_bid, self.n_arms)
-        self.env = BiddingEnvironment(self.bids)
 
-        self.learner = GPTS_LearnerV2(self.n_arms, self.bids)
+        self.env = bidding_environment
+
+        self.learner = GPTS_Learner(self.n_arms, self.env.bids)
 
         self.daily_clicks = 0
-        self.optimal_clicks = compute_clairvoyant(self.bids, 3, self.env, verbose=True)
+        self.optimal_clicks = compute_clairvoyant(self.env, verbose=True) / 3
+        # division by three because the function returns the total optimal number of clicks,
+        # but we need only the optimal for a single sub-campaign if we want to to compute the regret!
 
     def get_daily_clicks(self, pulled_arm):
         """
@@ -34,9 +31,7 @@ class Advertising:
         :param pulled_arm
         """
         # Get current number of clicks and optimal number of clicks
-        # print(pulled_arm)
         self.daily_clicks = self.env.round_single_arm(pulled_arm, self.sub_idx)
-        # print(self.learner.pulled_arms)
 
         # Update GP learner
         self.learner.update(pulled_arm, self.daily_clicks)

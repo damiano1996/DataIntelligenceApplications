@@ -1,7 +1,4 @@
-import numpy as np
-
 from project.dia_pckg.Config import *
-from project.dia_pckg.SubCampaign import SubCampaign
 from project.part_2.BiddingEnvironment import BiddingEnvironment
 
 
@@ -13,9 +10,7 @@ from project.part_2.BiddingEnvironment import BiddingEnvironment
 class AbruptBiddingEnvironment(BiddingEnvironment):
 
     def __init__(self, bids):
-        self.bids = bids
-        self.subs_objects = [SubCampaign(), SubCampaign(), SubCampaign()]
-        self.subs = [self.subs_objects[0].bid, self.subs_objects[1].bid, self.subs_objects[2].bid]
+        super(AbruptBiddingEnvironment, self).__init__(bids=bids)
         self.day = 0
 
     def reset(self):
@@ -24,13 +19,5 @@ class AbruptBiddingEnvironment(BiddingEnvironment):
     def phase(self):
         return (self.day / phaselen) % n_phases
 
-    def round(self, pulled_arm1, pulled_arm2, pulled_arm3):
-        pulled_arms = [pulled_arm1, pulled_arm2, pulled_arm3]
-        rewards = np.array([])
-        for i in range(0, len(pulled_arms)):
-            avg_clicks = self.subs[i](self.bids[pulled_arms[i]], self.phase())
-            reward = 0 if pulled_arms[i] == 0 else np.maximum(0, np.ceil(np.random.normal(
-                np.abs(avg_clicks), np.abs(avg_clicks * noise_percentage))))
-            rewards = np.append(rewards, reward)
-        self.day = self.day + 1
-        return rewards
+    def round(self, pulled_arms):
+        return super(AbruptBiddingEnvironment, self).round(pulled_arms, int(self.phase()))

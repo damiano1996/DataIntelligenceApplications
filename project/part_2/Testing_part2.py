@@ -4,11 +4,11 @@ import pandas as pd
 from project.dia_pckg.Config import *
 from project.dia_pckg.plot_style.cb91visuals import *
 from project.part_2.BiddingEnvironment import BiddingEnvironment
-from project.part_2.GPTS_LearnerV2 import GPTS_LearnerV2
+from project.part_2.GPTS_Learner import GPTS_Learner
 from project.part_2.Optimizer import fit_table
 from project.part_2.Utils import get_idx_arm_from_allocation, compute_clairvoyant
 
-np.random.seed(88)
+np.random.seed(0)
 
 
 def initialization(total_click, learners, env):
@@ -71,8 +71,8 @@ def running(total_click, learners, env, n_obs_exploitation):
             "click3": clicks[2]
         }, ignore_index=True)
 
-    for s in range(0, len(learners)):
-        learners[s].plot(env.subs[s].bid)
+    for i in range(0, len(learners)):
+        learners[i].plot(env.subs[i].phase_curve(bids))
 
     print(f"Best bidding computed (arms, reward): {fit_table(table_all_subs)}")
 
@@ -96,8 +96,8 @@ def plot_regret(total_click, opt):
     plt.plot(np.cumsum(opt - rewards_per_experiment, axis=0))
     plt.show()
 
-    print(f"total reward:{np.sum(rewards_per_experiment)}")
-    print(f"average daily reward:{np.sum(rewards_per_experiment) / n_obs}")
+    print(f"total reward: {np.sum(rewards_per_experiment)}")
+    print(f"average daily reward: {np.sum(rewards_per_experiment) / n_obs}")
 
 
 if __name__ == '__main__':
@@ -112,9 +112,9 @@ if __name__ == '__main__':
     learners = []
     # one learner for each sub campaign
     for i in range(0, n_subcamp):
-        learners.append(GPTS_LearnerV2(n_arms, bids))
+        learners.append(GPTS_Learner(n_arms, bids))
 
-    opt = compute_clairvoyant(bids, n_subcamp, env, verbose=True)
+    opt = compute_clairvoyant(env, verbose=True)
 
     total_click_each_day = initialization(total_click_each_day, learners, env)
 
