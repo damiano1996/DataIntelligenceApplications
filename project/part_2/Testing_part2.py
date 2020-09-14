@@ -8,7 +8,7 @@ from project.part_2.GPTS_Learner import GPTS_Learner
 from project.part_2.Optimizer import fit_table
 from project.part_2.Utils import get_idx_arm_from_allocation, compute_clairvoyant
 
-np.random.seed(88)
+np.random.seed(0)
 
 
 def initialization(total_click, learners, env):
