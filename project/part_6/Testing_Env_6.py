@@ -24,8 +24,8 @@ def execute_experiment(args):
     mch = args['multiclasshandler']
 
     budget_allocator = BudgetAllocator(multi_class_handler=mch,
-                                       n_arms_pricing=10,
-                                       n_arms_advertising=11,
+                                       n_arms_pricing=16,
+                                       n_arms_advertising=15,
                                        enable_pricing=enable_pricing)
 
     current_day, done = env.reset()
@@ -105,31 +105,20 @@ if __name__ == '__main__':
         agnostic_regret_per_experiment.append(result['agnostic_regret'])
         regret_per_experiment.append(result['regret'])
 
-    # PLOTS
-    fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(12, 8))
-
     title = ' & Pricing' if enable_pricing else ''
     title = f'Testing_Env_6 - Advertising{title}'
-    fig.suptitle(title, fontsize=20)
+    plt.title(title, fontsize=20)
 
-    ax1.set_title('Regret on Revenue (Advertising <=!=> Pricing)')
     for agnostic_regret in agnostic_regret_per_experiment:
-        ax1.plot(np.cumsum(agnostic_regret), alpha=0.05, c='C2')
-    ax1.plot(np.cumsum(np.mean(agnostic_regret_per_experiment, axis=0)), label='Mean Regret')
-    ax1.set_xlabel('Time')
-    ax1.set_ylabel('Regret')
-    ax1.legend()
+        plt.plot(np.cumsum(agnostic_regret), alpha=0.05, c='C2')
+    plt.plot(np.cumsum(np.mean(agnostic_regret_per_experiment, axis=0)), c='C2', label='Regret (Advertising <=!=> Pricing)')
 
-    ax2.set_title('Regret on Revenue (Advertising <==> Pricing)')
     for regret in regret_per_experiment:
-        ax2.plot(np.cumsum(regret), alpha=0.05, c='C2')
-    ax2.plot(np.cumsum(np.mean(regret_per_experiment, axis=0)), label='Mean Regret')
-    ax2.set_xlabel('Time')
-    ax2.set_ylabel('Regret')
-    ax2.legend()
+        plt.plot(np.cumsum(regret), alpha=0.05, c='C3')
+    plt.plot(np.cumsum(np.mean(regret_per_experiment, axis=0)), c='C3', label='Regret (Advertising <==> Pricing)')
+    plt.xlabel('Time')
+    plt.ylabel('Regret')
+    plt.legend()
 
-    fig.tight_layout()
-    fig.subplots_adjust(top=0.9)
-
-    fig.savefig('other_files/' + title + '.png')
-    fig.show()
+    plt.savefig('other_files/' + title + '.png')
+    plt.show()

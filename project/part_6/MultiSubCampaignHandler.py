@@ -38,7 +38,7 @@ class MultiSubCampaignHandler:
         self.daily_revenue = 0
         self.total_revenue = 0
 
-    def update_all_subcampaign_handlers(self, allocations, opt=False):
+    def update_all_subcampaign_handlers(self, allocations):
         """
             Execute one day round:
             Update advertising and pricing model
@@ -55,7 +55,7 @@ class MultiSubCampaignHandler:
             pulled_arm = get_idx_arm_from_allocation(allocation=allocation,
                                                      bids=subcampaign_handler.advertising.env.bids)
 
-            subcampaign_daily_regret, subcampaign_daily_revenue = subcampaign_handler.daily_update(pulled_arm, opt=opt)
+            subcampaign_daily_regret, subcampaign_daily_revenue = subcampaign_handler.daily_update(pulled_arm)
             learner = subcampaign_handler.get_updated_parameters()
             learners.append(learner)
             total_daily_regret += subcampaign_daily_regret

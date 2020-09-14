@@ -32,7 +32,7 @@ class SubCampaignHandler:
         self.total_revenue = 0
         self.total_clicks = 0
 
-    def daily_update(self, pulled_arm, opt=False):
+    def daily_update(self, pulled_arm):
         """
             Daily update
         :param pulled_arm: Learned best budget allocation
@@ -51,11 +51,8 @@ class SubCampaignHandler:
               'optimal revenue: ', round(self.pricing.optimal_revenue * self.advertising.optimal_clicks),
               'collected revenue: ', int(daily_revenue))
 
-        # To update the total revenue in case of optimality, we have to multiply the optimal_daily_revenue
-        # by the number of daily_clicks since the number of daily_clicks can be greater than optimal_daily_clicks.
-        self.total_revenue += daily_revenue if not opt else self.pricing.optimal_revenue * daily_clicks
-        # For the same reason above, we don't need the optimal_daily_clicks in case of optimality
-        self.total_clicks += daily_clicks  # if not opt else optimal_daily_clicks
+        self.total_revenue += daily_revenue
+        self.total_clicks += daily_clicks
 
         return daily_regret, daily_revenue
 
