@@ -18,9 +18,9 @@ def compute_clairvoyant(env, phase=0, verbose=False):
     return n_clicks
 
 
-def get_idx_arm_from_allocation(allocation, bids, max_bid):
+def get_idx_arm_from_allocation(allocation, bids):
     # conversion from percentage to arm index
-    allocation_bid = allocation * max_bid
+    allocation_bid = allocation * bids[-1]
     nearest_allocation = find_nearest(bids, allocation_bid)
     pulled_arm = np.where(bids == nearest_allocation)[0][0]
     return int(pulled_arm)

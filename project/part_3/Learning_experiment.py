@@ -35,7 +35,7 @@ def execute_experiment(args):
                 table_all_Subs = np.append(table_all_Subs, np.atleast_2d(l.means.T), 0)
             allocations = fit_table(table_all_Subs)[0]
             # conversion to arm index
-            pulled = [get_idx_arm_from_allocation(allocation, bids, max_bid) for allocation in allocations]
+            pulled = [get_idx_arm_from_allocation(allocation, bids) for allocation in allocations]
 
         clicks = env.round(pulled)
 

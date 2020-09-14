@@ -35,8 +35,8 @@ class MultiSubCampaignHandler:
             self.subcampaigns_handlers.append(subcampaign_handler)
 
         self.regret = []
+        self.daily_revenue = 0
         self.total_revenue = 0
-        self.total_regret = 0
 
     def update_all_subcampaign_handlers(self, allocations, opt=False):
         """
@@ -49,20 +49,20 @@ class MultiSubCampaignHandler:
         # Learn about data of the current day, given the budget allocations
         learners = []
         total_daily_regret = 0
+        self.daily_revenue = 0
         for subcampaign_handler, allocation in zip(self.subcampaigns_handlers, allocations):
             # conversion from percentage to arm index
             pulled_arm = get_idx_arm_from_allocation(allocation=allocation,
-                                                     bids=subcampaign_handler.advertising.env.bids,
-                                                     max_bid=max_bid)
+                                                     bids=subcampaign_handler.advertising.env.bids)
 
-            daily_regret, daily_revenue = subcampaign_handler.daily_update(pulled_arm, opt=opt)
+            subcampaign_daily_regret, subcampaign_daily_revenue = subcampaign_handler.daily_update(pulled_arm, opt=opt)
             learner = subcampaign_handler.get_updated_parameters()
             learners.append(learner)
-            total_daily_regret += daily_regret
-            self.total_revenue += daily_revenue
+            total_daily_regret += subcampaign_daily_regret
+            self.daily_revenue += subcampaign_daily_revenue
 
-        self.total_regret += total_daily_regret
-        # Save daily regret
+        # saving revenue and regret
+        self.total_revenue += self.daily_revenue
         self.regret.append(total_daily_regret)
 
         return learners

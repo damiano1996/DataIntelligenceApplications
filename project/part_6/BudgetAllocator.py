@@ -1,7 +1,7 @@
 import numpy as np
 
-from project.dia_pckg.Config import max_bid
 from project.part_2.Optimizer import fit_table
+from project.part_2.Utils import get_idx_arm_from_allocation
 from project.part_6.MultiSubCampaignHandler import MultiSubCampaignHandler
 
 
@@ -31,6 +31,7 @@ class BudgetAllocator:
         self.best_allocation = self.day_zero_initialization()
 
         self.regret = []
+        self.optimal_total_revenue = self.get_optimal_total_revenue()
 
     def day_zero_initialization(self):
         """
@@ -39,28 +40,21 @@ class BudgetAllocator:
         avg = 1 / self.n_subcampaigns
         return [avg, avg, avg]
 
-    def update(self, opt=False):
+    def update(self):
 
         self.msh.update_all_subcampaign_handlers(self.best_allocation)
+
+        self.regret.append(self.optimal_total_revenue - self.msh.daily_revenue)
 
         table_all_subs = np.ndarray(shape=(0, len(self.msh.subcampaigns_handlers[0].advertising.env.bids)),
                                     dtype=np.float32)
 
         for subcampaign_handler in self.msh.subcampaigns_handlers:
+            learner_clicks = subcampaign_handler.get_updated_parameters().means
 
-            if not opt:
-                # in this case we get the learned curves from the learners
-                learner_clicks = subcampaign_handler.get_updated_parameters().means
-
-                n_clicks = subcampaign_handler.total_clicks
-                v = subcampaign_handler.total_revenue / n_clicks if n_clicks != 0 else 0
-                revenue_clicks = learner_clicks * v if self.enable_pricing else learner_clicks
-
-            else:
-                # in the optimal case we already know the complete curve
-                bids = np.linspace(0, max_bid, subcampaign_handler.advertising.n_arms)
-                learner_clicks = subcampaign_handler.advertising.env.subs[subcampaign_handler.advertising.sub](bids)
-                revenue_clicks = learner_clicks * subcampaign_handler.pricing.get_optimal_revenue()
+            n_clicks = subcampaign_handler.total_clicks
+            v = subcampaign_handler.total_revenue / n_clicks if n_clicks != 0 else 0
+            revenue_clicks = learner_clicks * v if self.enable_pricing else learner_clicks
 
             table_all_subs = np.append(table_all_subs, np.atleast_2d(revenue_clicks.T), 0)
 
@@ -69,3 +63,35 @@ class BudgetAllocator:
 
         if round(sum(self.best_allocation), 3) != 1:
             raise Exception("Allocation unfeasible")
+
+    def get_optimal_total_revenue(self):
+        """
+            This function is to compute the total optimal revenue, for the computation of the non-agnostic regret.
+            Note: the so called "agnostic" regret is the regret in which the optimal revenue
+                is computed using the "optimal number of clicks",
+                but the "optimal number of clicks" is NOT computed knowing the pricing.
+                Below, we compute the "optimal number of clicks" using the pricing!
+        """
+        table_all_subs = np.ndarray(shape=(0, len(self.msh.subcampaigns_handlers[0].advertising.env.bids)),
+                                    dtype=np.float32)
+
+        # for loop to initialize the table with the product between the unknown curves and the optimal revenues
+        for sub_idx, subcampaign_handler in enumerate(self.msh.subcampaigns_handlers):
+            unknown_clicks_curve = subcampaign_handler.advertising.env.subs[sub_idx].means['phase_0']
+            revenue_clicks = unknown_clicks_curve * subcampaign_handler.pricing.optimal_revenue
+            table_all_subs = np.append(table_all_subs, np.atleast_2d(revenue_clicks.T), 0)
+
+        # computation of the optimal allocation
+        optimal_allocation = fit_table(table_all_subs)[0]
+
+        # Once we have computed the optimal allocation, we can compute the total revenue
+        # using the pricing
+        optimal_total_revenue = 0
+        for sub_idx, (allocation, subcampaign_handler) in enumerate(zip(optimal_allocation, self.msh.subcampaigns_handlers)):
+            hypothetical_pulled_arm = get_idx_arm_from_allocation(
+                allocation=allocation,
+                bids=self.msh.subcampaigns_handlers[0].advertising.env.bids)
+            optimal_clicks = self.msh.bidding_environment.subs[sub_idx].means['phase_0'][hypothetical_pulled_arm]
+            optimal_total_revenue += optimal_clicks * subcampaign_handler.pricing.optimal_revenue
+
+        return optimal_total_revenue

@@ -44,8 +44,8 @@ def execute_experiment(args):
         current_day, done = env.step()
 
     print('Total revenue:', int(budget_allocator.msh.total_revenue),
-          'Cumulative regret:', int(budget_allocator.msh.total_regret),
-          'Final loss:', budget_allocator.msh.total_regret / budget_allocator.msh.total_revenue)
+          'Cumulative regret:', int(sum(budget_allocator.msh.regret)),
+          'Final loss:', sum(budget_allocator.msh.regret) / budget_allocator.msh.total_revenue)
 
     print(str(index) + ' has ended')
 
