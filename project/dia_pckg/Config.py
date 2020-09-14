@@ -8,7 +8,7 @@ n_days = 50
 
 # Seller wallet and ambitions
 seller_max_budget = 20000  # $
-max_n_clicks = 1000
+max_n_clicks = 5000
 avg_users_per_day = 100  # this param must be changed after budget allocation available!
 
 # one product to sell
@@ -47,4 +47,4 @@ n_subcamp = 3
 max_bid = 1
 n_arms = 10
 
-noise_std = 0.05
+noise_std = 0.0

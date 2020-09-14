@@ -54,7 +54,7 @@ class BudgetAllocator:
 
             n_clicks = subcampaign_handler.total_clicks
             v = subcampaign_handler.total_revenue / n_clicks if n_clicks != 0 else 0
-            revenue_clicks = learner_clicks * v if self.enable_pricing else learner_clicks
+            revenue_clicks = np.multiply(learner_clicks, v) if self.enable_pricing else learner_clicks
 
             table_all_subs = np.append(table_all_subs, np.atleast_2d(revenue_clicks.T), 0)
 
@@ -78,7 +78,7 @@ class BudgetAllocator:
         # for loop to initialize the table with the product between the unknown curves and the optimal revenues
         for sub_idx, subcampaign_handler in enumerate(self.msh.subcampaigns_handlers):
             unknown_clicks_curve = subcampaign_handler.advertising.env.subs[sub_idx].means['phase_0']
-            revenue_clicks = unknown_clicks_curve * subcampaign_handler.pricing.optimal_revenue
+            revenue_clicks = np.multiply(unknown_clicks_curve, subcampaign_handler.pricing.optimal_revenue)
             table_all_subs = np.append(table_all_subs, np.atleast_2d(revenue_clicks.T), 0)
 
         # computation of the optimal allocation
@@ -87,7 +87,8 @@ class BudgetAllocator:
         # Once we have computed the optimal allocation, we can compute the total revenue
         # using the pricing
         optimal_total_revenue = 0
-        for sub_idx, (allocation, subcampaign_handler) in enumerate(zip(optimal_allocation, self.msh.subcampaigns_handlers)):
+        for sub_idx, (allocation, subcampaign_handler) in enumerate(zip(optimal_allocation,
+                                                                        self.msh.subcampaigns_handlers)):
             hypothetical_pulled_arm = get_idx_arm_from_allocation(
                 allocation=allocation,
                 bids=self.msh.subcampaigns_handlers[0].advertising.env.bids)

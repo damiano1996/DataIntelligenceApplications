@@ -8,7 +8,7 @@ from project.part_2.GPTS_Learner import GPTS_Learner
 from project.part_2.Optimizer import fit_table
 from project.part_2.Utils import get_idx_arm_from_allocation, compute_clairvoyant
 
-np.random.seed(0)
+np.random.seed(88)
 
 
 def initialization(total_click, learners, env):
@@ -114,7 +114,7 @@ if __name__ == '__main__':
     for i in range(0, n_subcamp):
         learners.append(GPTS_Learner(n_arms, bids))
 
-    opt = compute_clairvoyant(env, verbose=True)
+    opt = compute_clairvoyant(env, verbose=True)[1]
 
     total_click_each_day = initialization(total_click_each_day, learners, env)
 

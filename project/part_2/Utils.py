@@ -15,7 +15,7 @@ def compute_clairvoyant(env, phase=0, verbose=False):
 
     if verbose:
         print(f"Best bidding clairvoyant (best_allocation, n_clicks): {best_allocation}, {n_clicks}")
-    return n_clicks
+    return best_allocation, n_clicks
 
 
 def get_idx_arm_from_allocation(allocation, bids):

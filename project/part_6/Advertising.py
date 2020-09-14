@@ -1,5 +1,5 @@
 from project.part_2.GPTS_Learner import GPTS_Learner
-from project.part_2.Utils import compute_clairvoyant
+from project.part_2.Utils import compute_clairvoyant, get_idx_arm_from_allocation
 
 
 class Advertising:
@@ -20,7 +20,7 @@ class Advertising:
         self.learner = GPTS_Learner(self.n_arms, self.env.bids)
 
         self.daily_clicks = 0
-        self.optimal_clicks = compute_clairvoyant(self.env, verbose=True) / 3
+        self.optimal_clicks = self.get_optimal()
         # division by three because the function returns the total optimal number of clicks,
         # but we need only the optimal for a single sub-campaign if we want to to compute the regret!
 
@@ -37,3 +37,11 @@ class Advertising:
         self.learner.update(pulled_arm, self.daily_clicks)
 
         return self.daily_clicks
+
+    def get_optimal(self):
+        optimal_allocation = compute_clairvoyant(self.env, verbose=True)[0][self.sub_idx]
+        hypothetical_pulled_arm = get_idx_arm_from_allocation(
+            allocation=optimal_allocation,
+            bids=self.env.bids)
+        optimal_clicks = self.env.subs[self.sub_idx].means['phase_0'][hypothetical_pulled_arm]
+        return optimal_clicks

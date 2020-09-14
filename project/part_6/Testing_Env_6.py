@@ -15,7 +15,7 @@ from project.part_6.BudgetAllocator import BudgetAllocator
 
 np.random.seed(0)
 
-enable_pricing = True
+enable_pricing = False
 
 
 def execute_experiment(args):
@@ -25,7 +25,7 @@ def execute_experiment(args):
 
     budget_allocator = BudgetAllocator(multi_class_handler=mch,
                                        n_arms_pricing=10,
-                                       n_arms_advertising=15,
+                                       n_arms_advertising=11,
                                        enable_pricing=enable_pricing)
 
     current_day, done = env.reset()
@@ -92,7 +92,7 @@ if __name__ == '__main__':
     plt.legend()
     plt.show()
 
-    n_experiments = 1  # the number is small to do a raw test, otherwise set it to 1000
+    n_experiments = 10  # the number is small to do a raw test, otherwise set it to 1000
     agnostic_regret_per_experiment = []  # collect all the regrets achieved
     regret_per_experiment = []
     args = [{'environment': copy.deepcopy(base_env), 'index': idx, 'multiclasshandler': mch}
