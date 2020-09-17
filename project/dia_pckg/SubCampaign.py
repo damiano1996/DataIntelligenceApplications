@@ -19,8 +19,8 @@ class SubCampaign:
         self.product = product
         self.campaign = campaign
 
-        self.param_for_phase = np.random.choice(np.arange(2, 7, 0.01), 3)
-        self.max_value_phase = np.random.choice(np.arange(0.3, 1, 0.01), 3)
+        self.param_for_phase = np.random.choice(np.arange(3, 7, 1), 3)
+        self.max_value_phase = np.random.choice(np.arange(0.5, 1, 0.1), 3)
 
         self.means = {f'phase_{i}': self.phase_curve(bids, phase=i) for i in range(3)}
         self.sigmas = {f'phase_{i}': np.multiply(self.means[f'phase_{i}'], sigma) for i in range(3)}

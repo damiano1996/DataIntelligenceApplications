@@ -15,7 +15,7 @@ from project.part_6.BudgetAllocator import BudgetAllocator
 
 np.random.seed(0)
 
-enable_pricing = False
+enable_pricing = True
 
 
 def execute_experiment(args):
@@ -24,8 +24,8 @@ def execute_experiment(args):
     mch = args['multiclasshandler']
 
     budget_allocator = BudgetAllocator(multi_class_handler=mch,
-                                       n_arms_pricing=16,
-                                       n_arms_advertising=15,
+                                       n_arms_pricing=20,
+                                       n_arms_advertising=20,
                                        enable_pricing=enable_pricing)
 
     current_day, done = env.reset()
@@ -92,7 +92,7 @@ if __name__ == '__main__':
     plt.legend()
     plt.show()
 
-    n_experiments = 10  # the number is small to do a raw test, otherwise set it to 1000
+    n_experiments = 1  # the number is small to do a raw test, otherwise set it to 1000
     agnostic_regret_per_experiment = []  # collect all the regrets achieved
     regret_per_experiment = []
     args = [{'environment': copy.deepcopy(base_env), 'index': idx, 'multiclasshandler': mch}
@@ -111,7 +111,8 @@ if __name__ == '__main__':
 
     for agnostic_regret in agnostic_regret_per_experiment:
         plt.plot(np.cumsum(agnostic_regret), alpha=0.05, c='C2')
-    plt.plot(np.cumsum(np.mean(agnostic_regret_per_experiment, axis=0)), c='C2', label='Regret (Advertising <=!=> Pricing)')
+    plt.plot(np.cumsum(np.mean(agnostic_regret_per_experiment, axis=0)), c='C2',
+             label='Regret (Advertising <=!=> Pricing)')
 
     for regret in regret_per_experiment:
         plt.plot(np.cumsum(regret), alpha=0.05, c='C3')

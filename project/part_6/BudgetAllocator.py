@@ -38,13 +38,11 @@ class BudgetAllocator:
             Initialize allocations for day zero
         """
         avg = 1 / self.n_subcampaigns
-        return [avg, avg, avg]
+        allocation = [avg, avg, avg]
+        self.msh.update_all_subcampaign_handlers(allocation)
+        return allocation
 
     def update(self):
-
-        self.msh.update_all_subcampaign_handlers(self.best_allocation)
-
-        self.regret.append(self.optimal_total_revenue - self.msh.daily_revenue)
 
         table_all_subs = np.ndarray(shape=(0, len(self.msh.subcampaigns_handlers[0].advertising.env.bids)),
                                     dtype=np.float32)
@@ -53,8 +51,13 @@ class BudgetAllocator:
             learner_clicks = subcampaign_handler.get_updated_parameters().means
 
             n_clicks = subcampaign_handler.total_clicks
-            v = subcampaign_handler.total_revenue / n_clicks if n_clicks != 0 else 0
+            v = subcampaign_handler.total_revenue if n_clicks != 0 else 0
             revenue_clicks = np.multiply(learner_clicks, v) if self.enable_pricing else learner_clicks
+
+            if subcampaign_handler.advertising.sub_idx == 5:
+                subcampaign_handler.advertising.learner.plot(
+                    subcampaign_handler.advertising.env.subs[subcampaign_handler.advertising.sub_idx].means['phase_0'],
+                    sigma_scale_factor=5)
 
             table_all_subs = np.append(table_all_subs, np.atleast_2d(revenue_clicks.T), 0)
 
@@ -63,6 +66,10 @@ class BudgetAllocator:
 
         if round(sum(self.best_allocation), 3) != 1:
             raise Exception("Allocation unfeasible")
+
+        # updates
+        self.msh.update_all_subcampaign_handlers(self.best_allocation)
+        self.regret.append(self.optimal_total_revenue - self.msh.daily_revenue)
 
     def get_optimal_total_revenue(self):
         """
