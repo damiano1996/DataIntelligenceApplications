@@ -51,13 +51,8 @@ class BudgetAllocator:
             learner_clicks = subcampaign_handler.get_updated_parameters().means
 
             n_clicks = subcampaign_handler.total_clicks
-            v = subcampaign_handler.total_revenue if n_clicks != 0 else 0
+            v = subcampaign_handler.total_revenue / n_clicks if n_clicks != 0 else 0
             revenue_clicks = np.multiply(learner_clicks, v) if self.enable_pricing else learner_clicks
-
-            if subcampaign_handler.advertising.sub_idx == 5:
-                subcampaign_handler.advertising.learner.plot(
-                    subcampaign_handler.advertising.env.subs[subcampaign_handler.advertising.sub_idx].means['phase_0'],
-                    sigma_scale_factor=5)
 
             table_all_subs = np.append(table_all_subs, np.atleast_2d(revenue_clicks.T), 0)
 

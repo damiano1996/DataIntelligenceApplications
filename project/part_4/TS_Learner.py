@@ -59,7 +59,7 @@ class TS_Learner(Learner):
         """
         :param pulled_arm:
         :param bernoulli_reward:
-        :return: the real reward price*bernoulli_reard
+        :return: the real reward price * bernoulli_real
         """
         real_reward = bernoulli_reward * self.arm_prices[pulled_arm]  # calculate the real reward (isBought*price)
         return real_reward

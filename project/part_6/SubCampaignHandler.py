@@ -34,6 +34,9 @@ class SubCampaignHandler:
         self.total_revenue = 0
         self.total_clicks = 0
 
+        self.daily_revenue = 0
+        self.daily_clicks = 0
+
     def daily_update(self, pulled_arm):
         """
             Daily update
@@ -41,22 +44,22 @@ class SubCampaignHandler:
         :return:
         """
         # extracting the daily reward from the TS
-        daily_clicks = self.advertising.get_daily_clicks(pulled_arm)
-        daily_revenue = self.pricing.get_daily_revenue(daily_clicks)
+        self.daily_clicks = self.advertising.get_daily_clicks(pulled_arm)
+        self.daily_revenue = self.pricing.get_daily_revenue(self.daily_clicks)
 
-        daily_regret = self.get_daily_regret(daily_clicks, self.advertising.optimal_clicks,
-                                             daily_revenue, self.pricing.optimal_revenue)
+        daily_regret = self.get_daily_regret(self.daily_clicks, self.advertising.optimal_clicks,
+                                             self.daily_revenue, self.pricing.optimal_revenue)
 
         print('class: ', self.class_name,
               'optimal clicks: ', self.advertising.optimal_clicks,
-              'collected clicks: ', round(daily_clicks),
+              'collected clicks: ', round(self.daily_clicks),
               'optimal revenue: ', round(self.pricing.optimal_revenue * self.advertising.optimal_clicks),
-              'collected revenue: ', int(daily_revenue))
+              'collected revenue: ', int(self.daily_revenue))
 
-        self.total_revenue += daily_revenue
-        self.total_clicks += daily_clicks
+        self.total_revenue += self.daily_revenue
+        self.total_clicks += self.daily_clicks
 
-        return daily_regret, daily_revenue
+        return daily_regret, self.daily_revenue
 
     def get_daily_regret(self, daily_clicks, optimal_daily_clicks, daily_revenue, optimal_daily_revenue):
         """

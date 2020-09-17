@@ -16,6 +16,7 @@ from project.part_6.BudgetAllocator import BudgetAllocator
 np.random.seed(0)
 
 enable_pricing = True
+plot_advertising = False
 
 
 def execute_experiment(args):
@@ -24,8 +25,8 @@ def execute_experiment(args):
     mch = args['multiclasshandler']
 
     budget_allocator = BudgetAllocator(multi_class_handler=mch,
-                                       n_arms_pricing=20,
-                                       n_arms_advertising=20,
+                                       n_arms_pricing=10,
+                                       n_arms_advertising=10,
                                        enable_pricing=enable_pricing)
 
     current_day, done = env.reset()
@@ -36,22 +37,20 @@ def execute_experiment(args):
         # Handler solve the problem for current day
         budget_allocator.update()
 
-        # For viewing purpose
-        # import time
-        # time.sleep(5)
-
         # Day step
         current_day, done = env.step()
+
+    if plot_advertising:
+        for subcampaign_handler in budget_allocator.msh.subcampaigns_handlers:
+            unknown_clicks_curve = subcampaign_handler.advertising.env.subs[
+                subcampaign_handler.advertising.sub_idx].means['phase_0']
+            subcampaign_handler.advertising.learner.plot(unknown_clicks_curve, sigma_scale_factor=10)
 
     print('Total revenue:', int(budget_allocator.msh.total_revenue),
           'Cumulative regret:', int(sum(budget_allocator.msh.regret)),
           'Final loss:', sum(budget_allocator.msh.regret) / budget_allocator.msh.total_revenue)
 
     print(str(index) + ' has ended')
-
-    # for i, subcampaignhandler in enumerate(budget_allocator.msh.subcampaigns_handlers):
-    # learner = subcampaignhandler.get_updated_parameters()
-    # learner.plot(subcampaignhandler.advertising.env.subs[i])
 
     return {'agnostic_regret': budget_allocator.msh.regret, 'regret': budget_allocator.regret}
 
@@ -92,7 +91,7 @@ if __name__ == '__main__':
     plt.legend()
     plt.show()
 
-    n_experiments = 1  # the number is small to do a raw test, otherwise set it to 1000
+    n_experiments = 5  # the number is small to do a raw test, otherwise set it to 1000
     agnostic_regret_per_experiment = []  # collect all the regrets achieved
     regret_per_experiment = []
     args = [{'environment': copy.deepcopy(base_env), 'index': idx, 'multiclasshandler': mch}
@@ -110,12 +109,13 @@ if __name__ == '__main__':
     plt.title(title, fontsize=20)
 
     for agnostic_regret in agnostic_regret_per_experiment:
-        plt.plot(np.cumsum(agnostic_regret), alpha=0.05, c='C2')
-    plt.plot(np.cumsum(np.mean(agnostic_regret_per_experiment, axis=0)), c='C2',
+        plt.plot(np.cumsum(agnostic_regret), alpha=0.4, c='C2')
+    plt.plot(np.cumsum(np.mean(agnostic_regret_per_experiment, axis=0)),
+             c='C2',
              label='Regret (Advertising <=!=> Pricing)')
 
     for regret in regret_per_experiment:
-        plt.plot(np.cumsum(regret), alpha=0.05, c='C3')
+        plt.plot(np.cumsum(regret), alpha=0.4, c='C3')
     plt.plot(np.cumsum(np.mean(regret_per_experiment, axis=0)), c='C3', label='Regret (Advertising <==> Pricing)')
     plt.xlabel('Time')
     plt.ylabel('Regret')
