@@ -23,9 +23,14 @@ class DLChangeDetect(GPTS_Learner):
 
             meandiff = reward - np.array(self.rewards_per_arm[pulled_arm]).mean()
             std = np.array(self.rewards_per_arm[pulled_arm]).std()
-            test = np.abs(meandiff / std)
+            import warnings
+            warnings.filterwarnings("ignore")
+            try:
+                test = np.abs(meandiff / std)
+            except:
+                test = 0
 
-            if test > 3.5:
+            if test > 3:
                 print("CAMBIO len=" + str(len(self.rewards_per_arm[pulled_arm])) + " std=" + str(std) + " test=" + str(
                     test))
                 self.rewards_per_arm[pulled_arm].clear()

@@ -23,7 +23,7 @@ def execute_experiment(args):
     for i in range(0, n_subcamp):
         learners.append(learner(n_arms, bids))
 
-    # TODO: ?
+
     for d in range(0, n_obs):
         if first_day:
             pulled = [n_arms - 1, n_arms - 1, n_arms - 1]

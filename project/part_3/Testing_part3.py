@@ -12,11 +12,12 @@ from project.part_3.DLChangeDetect import DLChangeDetect
 from project.part_3.DynamicLearner import DynamicLearner
 from project.part_3.Learning_experiment import execute_experiment
 
-np.random.seed(0)
+np.random.seed(13337)
 
 if __name__ == '__main__':
     bids = np.linspace(0, max_bid, n_arms)
     env = AbruptBiddingEnvironment(bids)
+
     args1 = {}
     args1['learner'] = Learner
     args1['environment'] = env

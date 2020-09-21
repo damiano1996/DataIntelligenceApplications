@@ -12,19 +12,27 @@ class BiddingEnvironment(Environment):
         self.subs = [SubCampaign(bids=bids, sigma=noise_std, max_n_clicks=max_n_clicks),
                      SubCampaign(bids=bids, sigma=noise_std, max_n_clicks=max_n_clicks),
                      SubCampaign(bids=bids, sigma=noise_std, max_n_clicks=max_n_clicks)]
+        self.day = 0
 
-    def round(self, pulled_arms, phase=0):
+    def round(self, pulled_arms):
         """
         For each sub-campaign, given the index of the pulled arm, i.e. the index of the bid chosen by the Learner,
         returns the reward
         @return: array of the rewards, one for each sub-campaign
         """
-        clicks = [self.round_single_arm(pulled_arm, sub_idx, phase=phase) for sub_idx, pulled_arm in
+        clicks = [self.round_single_arm(pulled_arm, sub_idx) for sub_idx, pulled_arm in
                   enumerate(pulled_arms)]
+        self.day = self.day + 1
         return np.asarray(clicks)
 
-    def round_single_arm(self, pulled_arm, sub_idx, phase=0):
-        received_clicks = np.random.normal(self.subs[sub_idx].means[f'phase_{phase}'][pulled_arm],
-                                           self.subs[sub_idx].sigmas[f'phase_{phase}'][pulled_arm])
+    def round_single_arm(self, pulled_arm, sub_idx):
+        received_clicks = np.random.normal(self.subs[sub_idx].means[f'phase_0'][pulled_arm],
+                                           self.subs[sub_idx].sigmas[f'phase_0'][pulled_arm])
         received_clicks = 0 if received_clicks < 0 else received_clicks
         return int(received_clicks)
+
+    def reset(self):
+        self.day = 0
+
+    def phase(self):
+        return 0
