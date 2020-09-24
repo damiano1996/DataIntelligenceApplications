@@ -52,11 +52,11 @@ if __name__ == '__main__':
     # initialization of the three classes
     class_names = list(classes_config.keys())
     class_1 = Class(class_name=class_names[0], class_config=classes_config[class_names[0]], product=product,
-                    n_abrupt_phases=n_abrupts)
+                    n_abrupt_phases=n_abrupts_phases)
     class_2 = Class(class_name=class_names[1], class_config=classes_config[class_names[1]], product=product,
-                    n_abrupt_phases=n_abrupts)
+                    n_abrupt_phases=n_abrupts_phases)
     class_3 = Class(class_name=class_names[2], class_config=classes_config[class_names[2]], product=product,
-                    n_abrupt_phases=n_abrupts)
+                    n_abrupt_phases=n_abrupts_phases)
 
     mch = MultiClassHandler(class_1, class_2, class_3)
 

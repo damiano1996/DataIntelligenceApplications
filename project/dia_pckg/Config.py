@@ -4,11 +4,11 @@
 
 # campaign
 initial_date = '20200101'
-n_days = 180
+n_days = 150
 
 # Seller wallet and ambitions
 seller_max_budget = 20000  # $
-max_n_clicks = 10000
+max_n_clicks = 1000
 avg_users_per_day = 100  # this param must be changed after budget allocation available!
 
 # one product to sell
@@ -32,14 +32,13 @@ classes_config = {
     'sports': [0, 1]  # <30, worker
 }
 # number of abrupt phases
-n_abrupts = 3
+n_abrupts_phases = 3
 # directory to store the curves
 demand_path = 'demand_curves'
 
-n_phases = 3
-len_window = 40
-phaselen = 60
-n_obs = 180  # 3 abrupt phase
+len_window = 30
+phase_len = n_days // n_abrupts_phases
+
 print_span = 60  # How often we want to print the graphs
 
 n_subcamp = 3

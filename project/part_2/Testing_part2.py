@@ -84,7 +84,7 @@ def plot_regret(total_click, opt):
     # list of the collected reward
     rewards_per_experiment = []
 
-    for i in range(0, n_obs):
+    for i in range(0, n_days):
         num_clicks_day_i = total_click.values[i][3] \
                            + total_click.values[i][4] \
                            + total_click.values[i][5]
@@ -97,7 +97,7 @@ def plot_regret(total_click, opt):
     plt.show()
 
     print(f"total reward: {np.sum(rewards_per_experiment)}")
-    print(f"average daily reward: {np.sum(rewards_per_experiment) / n_obs}")
+    print(f"average daily reward: {np.sum(rewards_per_experiment) / n_days}")
 
 
 if __name__ == '__main__':
@@ -118,5 +118,5 @@ if __name__ == '__main__':
 
     total_click_each_day = initialization(total_click_each_day, learners, env)
 
-    total_click_each_day = running(total_click_each_day, learners, env, n_obs)
+    total_click_each_day = running(total_click_each_day, learners, env, n_days)
     plot_regret(total_click_each_day, opt)

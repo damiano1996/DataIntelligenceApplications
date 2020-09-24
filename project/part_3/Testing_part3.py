@@ -10,7 +10,7 @@ from project.part_2.Optimizer import fit_table
 from project.part_3.AbruptBiddingEnvironment import AbruptBiddingEnvironment
 from project.part_3.DLChangeDetect import DLChangeDetect
 from project.part_3.DynamicLearner import DynamicLearner
-from project.part_3.Learning_experiment import execute_experiment
+from project.part_2.Learning_experiment import execute_experiment
 
 np.random.seed(13337)
 
@@ -24,7 +24,7 @@ if __name__ == '__main__':
     args1['bids'] = bids
     args1['n_subcamp'] = n_subcamp
     args1['n_arms'] = n_arms
-    args1['n_obs'] = n_obs
+    args1['n_obs'] = n_days
     args1['print_span'] = print_span
 
     args2 = {}
@@ -33,7 +33,7 @@ if __name__ == '__main__':
     args2['bids'] = bids
     args2['n_subcamp'] = n_subcamp
     args2['n_arms'] = n_arms
-    args2['n_obs'] = n_obs
+    args2['n_obs'] = n_days
     args2['print_span'] = print_span
 
     args3 = {}
@@ -42,7 +42,7 @@ if __name__ == '__main__':
     args3['bids'] = bids
     args3['n_subcamp'] = n_subcamp
     args3['n_arms'] = n_arms
-    args3['n_obs'] = n_obs
+    args3['n_obs'] = n_days
     args3['print_span'] = print_span
 
     with Pool(processes=multiprocessing.cpu_count()) as phase:
@@ -51,12 +51,12 @@ if __name__ == '__main__':
 
     clicks_opt = np.array([])
 
-    for phase in range(0, n_phases):
+    for phase in range(0, n_abrupts_phases):
         all_optimal_subs = np.ndarray(shape=(0, len(bids)), dtype=np.float32)
         for i in range(0, n_subcamp):
             all_optimal_subs = np.append(all_optimal_subs, np.atleast_2d(env.subs[i].means[f'phase_{phase}']), 0)
         opt = fit_table(all_optimal_subs)[1]
-        for days in range(0, phaselen):
+        for days in range(0, phase_len):
             clicks_opt = np.append(clicks_opt, opt)
 
     sw_clicks_obtained = sw_total_click_each_day["click1"] + \

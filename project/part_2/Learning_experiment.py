@@ -1,7 +1,6 @@
 import numpy as np
 import pandas as pd
 
-from project.dia_pckg.Config import max_bid
 from project.part_2.Optimizer import fit_table
 from project.part_2.Utils import get_idx_arm_from_allocation
 
@@ -23,17 +22,19 @@ def execute_experiment(args):
     for i in range(0, n_subcamp):
         learners.append(learner(n_arms, bids))
 
-
     for d in range(0, n_obs):
         if first_day:
-            pulled = [n_arms - 1, n_arms - 1, n_arms - 1]
+            avg = 1 / len(env.subs)
+            allocations = [avg, avg, avg]
+            pulled = [get_idx_arm_from_allocation(allocation, bids) for allocation in allocations]
+
             first_day = False
         else:
             # uso l'algoritmo della tabella per selezionare gli arm che mi danno un reward massimo
-            table_all_Subs = np.ndarray(shape=(0, len(bids)), dtype=float)
+            table_all_subs = np.ndarray(shape=(0, len(bids)), dtype=float)
             for l in learners:
-                table_all_Subs = np.append(table_all_Subs, np.atleast_2d(l.means.T), 0)
-            allocations = fit_table(table_all_Subs)[0]
+                table_all_subs = np.append(table_all_subs, np.atleast_2d(l.means.T), 0)
+            allocations = fit_table(table_all_subs)[0]
             # conversion to arm index
             pulled = [get_idx_arm_from_allocation(allocation, bids) for allocation in allocations]
 
@@ -60,4 +61,4 @@ def execute_experiment(args):
             #    print(f"not able to plot {learners[0].name}")
             print(f"DAY: {d}\nPULLED:{pulled}\nCLICKS: {clicks}\nTOT: {clicks.sum()}\n")
 
-    return click_each_day
+    return click_each_day, args

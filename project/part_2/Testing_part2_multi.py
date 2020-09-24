@@ -1,60 +1,52 @@
-import numpy as np
-import pandas as pd
 import multiprocessing
 from multiprocessing import Pool
+
+import numpy as np
+
 from project.dia_pckg.Config import *
 from project.dia_pckg.plot_style.cb91visuals import *
 from project.part_2.BiddingEnvironment import BiddingEnvironment
 from project.part_2.GPTS_Learner import GPTS_Learner
-from project.part_2.Optimizer import fit_table
-from project.part_2.Utils import get_idx_arm_from_allocation, compute_clairvoyant
-from project.part_3.Learning_experiment import execute_experiment
+from project.part_2.Learning_experiment import execute_experiment
+from project.part_2.Utils import compute_clairvoyant
 
-
-np.random.seed(13337)
+np.random.seed(0)
 
 if __name__ == '__main__':
     bids = np.linspace(0, max_bid, n_arms)
-    env = []
-    thread_x_l = 5
+    thread_x_l = 10
     args = []
 
     for i in range(thread_x_l):
-        envi = BiddingEnvironment(bids)
-        argsi = {}
-        argsi['learner'] = GPTS_Learner
-        argsi['environment'] = envi
-        argsi['bids'] = bids
-        argsi['n_subcamp'] = n_subcamp
-        argsi['n_arms'] = n_arms
-        argsi['n_obs'] = n_obs
-        argsi['print_span'] = print_span
-        args.append(argsi)
-        env.append(envi)
+        env_i = BiddingEnvironment(bids)
+        args_i = {
+            'learner': GPTS_Learner,
+            'environment': env_i,
+            'bids': bids,
+            'n_subcamp': n_subcamp,
+            'n_arms': n_arms,
+            'n_obs': n_days,
+            'print_span': print_span}
+        args.append(args_i)
 
-    with Pool(processes=multiprocessing.cpu_count()) as phase:
-        results = phase.map(execute_experiment, args)
+    with Pool(processes=multiprocessing.cpu_count()) as pool:
+        results = pool.map(execute_experiment, args, chunksize=1)
 
-    learner_clicks_obtained = np.array([0 for i in range(n_days)])
-    for t in range(1, thread_x_l):
-        learner_clicks_obtained = learner_clicks_obtained + results[t]["click1"] + results[t][
-                "click2"] + results[t]["click3"]
+    clicks_per_experiment = []
+    opt_clicks_per_experiment = []
+    for i, (click_each_day, args) in enumerate(results):
+        clicks = np.sum(np.asarray(([click_each_day[f'click{j + 1}'] for j in range(3)])), axis=0)
+        clicks_per_experiment.append(clicks)
 
-    clicks_opt = np.array([0 for d in range(n_days)])
-    for t in range(thread_x_l):
+        opt_clicks = compute_clairvoyant(args['environment'])[1]
+        opt_clicks_per_experiment.append(np.asarray(opt_clicks))
 
-        clicks_opt = clicks_opt + compute_clairvoyant(env[t], verbose=True)[1]
+    for clicks, opts in zip(clicks_per_experiment, opt_clicks_per_experiment):
+        plt.plot(np.cumsum(opts - clicks), alpha=0.2, c='C2')
 
-
-
-
-
-    np.cumsum(clicks_opt - learner_clicks_obtained).plot(label="CUMSUM REGRET")
-
-    plt.legend(loc='lower right')
+    plt.plot(np.cumsum(np.mean(opt_clicks_per_experiment) - np.mean(clicks_per_experiment, axis=0)),
+             c='C2', label='Mean Regret')
+    plt.ylabel('Regret')
+    plt.xlabel('Time')
+    plt.legend()
     plt.show()
-
-    plt.show()
-
-    print("TOTAL CLICKS")
-    print(np.sum(learner_clicks_obtained[0]))
