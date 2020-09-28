@@ -13,7 +13,7 @@ from project.dia_pckg.plot_style.cb91visuals import *
 from project.part_4.MultiClassHandler import MultiClassHandler
 from project.part_6.BudgetAllocator import BudgetAllocator
 
-np.random.seed(0)
+np.random.seed(1764)
 
 enable_pricing = True
 plot_advertising = False
