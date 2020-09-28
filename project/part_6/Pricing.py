@@ -27,7 +27,7 @@ class Pricing:
 
         self.optimal_revenue = self.get_optimal_revenue()
 
-    def get_daily_revenue(self, daily_clicks):  # to change n_arms
+    def get_daily_revenue(self, daily_clicks, fix_arm=None):  # to change n_arms
         """
             Get the daily reward and the optimal one
         """
@@ -48,14 +48,20 @@ class Pricing:
         while not done:
             user = User(class_name=self.class_name)
 
-            pulled_arm = self.learner.pull_arm_revenue()  # optimize by revenue
+            if fix_arm is None:
+                pulled_arm = self.learner.pull_arm_revenue()  # optimize by revenue
 
-            reward, _, done, _ = env.round(pulled_arm, user)
+                reward, _, done, _ = env.round(pulled_arm, user)
 
-            self.learner.update(pulled_arm, reward)
+                self.learner.update(pulled_arm, reward)
 
-            # optimal_revenues = np.append(optimal_revenues, opt_revenue)
-            daily_revenue += self.learner.get_real_reward(pulled_arm, reward)
+                # optimal_revenues = np.append(optimal_revenues, opt_revenue)
+                daily_revenue += self.learner.get_real_reward(pulled_arm, reward)
+
+            else:
+
+                reward, _, done, _ = env.round(fix_arm, user)
+                daily_revenue += self.learner.get_real_reward(fix_arm, reward)
 
         return daily_revenue
 

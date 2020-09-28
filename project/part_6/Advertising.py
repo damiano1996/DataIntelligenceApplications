@@ -1,5 +1,7 @@
 from project.part_2.GPTS_Learner import GPTS_Learner
 from project.part_2.Utils import compute_clairvoyant, get_idx_arm_from_allocation
+from project.part_3.DLChangeDetect import DLChangeDetect
+from project.part_3.DynamicLearner import DynamicLearner
 
 
 class Advertising:

@@ -17,16 +17,20 @@ from project.part_6.BudgetAllocator import BudgetAllocator
 enable_pricing = True
 plot_advertising = False
 
+pricing_arms = 10
+
 
 def execute_experiment(args):
     index = args['index']
     env = args['environment']
     mch = args['multiclasshandler']
+    fix_arm = args['fix_arm']
 
     budget_allocator = BudgetAllocator(multi_class_handler=mch,
-                                       n_arms_pricing=10,
+                                       n_arms_pricing=pricing_arms,
                                        n_arms_advertising=10,
-                                       enable_pricing=enable_pricing)
+                                       enable_pricing=enable_pricing,
+                                       fix_arm=fix_arm)
 
     current_day, done = env.reset()
 
@@ -90,35 +94,36 @@ if __name__ == '__main__':
     # plt.legend()
     # plt.show()
 
-    n_experiments = 10  # the number is small to do a raw test, otherwise set it to 1000
-    agnostic_regret_per_experiment = []  # collect all the regrets achieved
-    regret_per_experiment = []
-    args = [{'environment': copy.deepcopy(base_env), 'index': idx, 'multiclasshandler': mch}
-            for idx in range(n_experiments)]  # create arguments for the experiment
+    for arm_i in range(pricing_arms):
+        n_experiments = 10  # the number is small to do a raw test, otherwise set it to 1000
+        agnostic_regret_per_experiment = []  # collect all the regrets achieved
+        regret_per_experiment = []
+        args = [{'environment': copy.deepcopy(base_env), 'index': idx, 'multiclasshandler': mch, 'fix_arm': arm_i}
+                for idx in range(n_experiments)]  # create arguments for the experiment
 
-    with Pool(processes=1) as pool:  # multiprocessing.cpu_count()
-        results = pool.map(execute_experiment, args, chunksize=1)
+        with Pool(processes=1) as pool:  # multiprocessing.cpu_count()
+            results = pool.map(execute_experiment, args, chunksize=1)
 
-    for result in results:
-        agnostic_regret_per_experiment.append(result['agnostic_regret'])
-        regret_per_experiment.append(result['regret'])
+        for result in results:
+            agnostic_regret_per_experiment.append(result['agnostic_regret'])
+            regret_per_experiment.append(result['regret'])
 
-    title = ' & Pricing' if enable_pricing else ''
-    title = f'Testing_Env_6 - Advertising{title}'
-    plt.title(title, fontsize=20)
+        title = ' & Pricing' if enable_pricing else ''
+        title = f'Testing_Env_7 - ARM CANDIDATE: {arm_i} - Advertising{title}'
+        plt.title(title, fontsize=20)
 
-    for agnostic_regret in agnostic_regret_per_experiment:
-        plt.plot(np.cumsum(agnostic_regret), alpha=0.4, c='C2')
-    plt.plot(np.cumsum(np.mean(agnostic_regret_per_experiment, axis=0)),
-             c='C2',
-             label='Regret (Advertising <=!=> Pricing)')
+        for agnostic_regret in agnostic_regret_per_experiment:
+            plt.plot(np.cumsum(agnostic_regret), alpha=0.4, c='C2')
+        plt.plot(np.cumsum(np.mean(agnostic_regret_per_experiment, axis=0)),
+                 c='C2',
+                 label='Regret (Advertising <=!=> Pricing)')
 
-    for regret in regret_per_experiment:
-        plt.plot(np.cumsum(regret), alpha=0.4, c='C3')
-    plt.plot(np.cumsum(np.mean(regret_per_experiment, axis=0)), c='C3', label='Regret (Advertising <==> Pricing)')
-    plt.xlabel('Time')
-    plt.ylabel('Regret')
-    plt.legend()
+        for regret in regret_per_experiment:
+            plt.plot(np.cumsum(regret), alpha=0.4, c='C3')
+        plt.plot(np.cumsum(np.mean(regret_per_experiment, axis=0)), c='C3', label='Regret (Advertising <==> Pricing)')
+        plt.xlabel('Time')
+        plt.ylabel('Regret')
+        plt.legend()
 
-    plt.savefig('other_files/' + title + '.png')
-    plt.show()
+        plt.savefig('other_files/' + title + '.png')
+        plt.show()

@@ -39,7 +39,7 @@ class SubCampaignHandler:
 
         self.price = 0
 
-    def daily_update(self, pulled_arm):
+    def daily_update(self, pulled_arm, fix_arm=None):
         """
             Daily update
         :param pulled_arm: Learned best budget allocation
@@ -47,7 +47,7 @@ class SubCampaignHandler:
         """
         # extracting the daily reward from the TS
         self.daily_clicks = self.advertising.get_daily_clicks(pulled_arm)
-        self.daily_revenue = self.pricing.get_daily_revenue(self.daily_clicks)
+        self.daily_revenue = self.pricing.get_daily_revenue(self.daily_clicks, fix_arm=fix_arm)
         self.price = self.daily_revenue / self.daily_clicks if self.daily_clicks != 0 else self.price
 
         daily_regret = self.get_daily_regret(self.daily_clicks, self.advertising.optimal_clicks,

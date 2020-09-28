@@ -4,7 +4,7 @@
 
 # campaign
 initial_date = '20200101'
-n_days = 150
+n_days = 50
 
 # Seller wallet and ambitions
 seller_max_budget = 20000  # $
@@ -36,7 +36,7 @@ n_abrupts_phases = 3
 # directory to store the curves
 demand_path = 'demand_curves'
 
-len_window = 30
+len_window = 10
 phase_len = n_days // n_abrupts_phases
 
 print_span = 60  # How often we want to print the graphs

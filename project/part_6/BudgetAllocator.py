@@ -11,7 +11,8 @@ class BudgetAllocator:
                  multi_class_handler,
                  n_arms_pricing,
                  n_arms_advertising,
-                 enable_pricing=True):
+                 enable_pricing=True,
+                 fix_arm=None):
         """
         :param multi_class_handler:
         :param n_arms_pricing:
@@ -23,6 +24,7 @@ class BudgetAllocator:
                                            n_arms_advertising=n_arms_advertising)
 
         self.enable_pricing = enable_pricing
+        self.fix_arm = fix_arm
 
         self.n_arms_pricing = self.msh.subcampaigns_handlers[0].pricing.n_arms
         self.n_arms_advertising = self.msh.subcampaigns_handlers[0].advertising.n_arms
@@ -39,7 +41,7 @@ class BudgetAllocator:
         """
         avg = 1 / self.n_subcampaigns
         allocation = [avg, avg, avg]
-        self.msh.update_all_subcampaign_handlers(allocation)
+        self.msh.update_all_subcampaign_handlers(allocation, fix_arm=self.fix_arm)
         return allocation
 
     def update(self):
@@ -50,21 +52,23 @@ class BudgetAllocator:
         for subcampaign_handler in self.msh.subcampaigns_handlers:
             learner_clicks = subcampaign_handler.get_updated_parameters().means
 
-            #n_clicks = subcampaign_handler.total_clicks
-            #v = subcampaign_handler.total_revenue / n_clicks if n_clicks != 0 else 0
+            # TODO: Decidere come trattare le V: solo ultimo giorno? O tutto lo storico?
+            # n_clicks = subcampaign_handler.total_clicks
+            # v = subcampaign_handler.total_revenue / n_clicks if n_clicks != 0 else 0
             v = subcampaign_handler.price
             revenue_clicks = np.multiply(learner_clicks, v) if self.enable_pricing else learner_clicks
 
             table_all_subs = np.append(table_all_subs, np.atleast_2d(revenue_clicks.T), 0)
 
-        self.best_allocation = fit_table(table_all_subs)[0]
+        # self.best_allocation = fit_table(table_all_subs)[0]
+        self.best_allocation = np.asarray(fit_table(table_all_subs)[0])
         print('BEST ALLOCATION:', self.best_allocation)
 
         if round(sum(self.best_allocation), 3) != 1:
             raise Exception("Allocation unfeasible")
 
         # updates
-        self.msh.update_all_subcampaign_handlers(self.best_allocation)
+        self.msh.update_all_subcampaign_handlers(self.best_allocation, fix_arm=self.fix_arm)
         self.regret.append(self.optimal_total_revenue - self.msh.daily_revenue)
 
     def get_optimal_total_revenue(self):

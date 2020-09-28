@@ -1,0 +1,17 @@
+GPTS_Learner:
+    No V:
+        Total revenue: 14452180 Cumulative regret: 548643 Final loss: 0.0379627058626961
+
+    V:
+        Total revenue: 13295700 Cumulative regret: 422199 Final loss: 0.03175459042091764
+
+        last_day:
+        Total revenue: 6779700 Cumulative regret: 689070 Final loss: 0.10163734967726169
+
+
+DynamicLearner:
+    V:
+        Total revenue: 11963240 Cumulative regret: 1353113 Final loss: 0.11310596430004759
+
+DLChangeDetect:
+    V: Total revenue: 15162360 Cumulative regret: 826044 Final loss: 0.05447996603367907
