@@ -11,6 +11,8 @@ class SubCampaign:
         :param product: Product object
         :param campaign: Campaign object
         """
+        # np.random.seed(0)
+
         self.bids = bids
         self.sigma = sigma
         self.max_n_clicks = max_n_clicks
