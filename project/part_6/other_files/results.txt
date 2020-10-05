@@ -1,17 +1,32 @@
 GPTS_Learner:
-    No V:
-        Total revenue: 14452180 Cumulative regret: 548643 Final loss: 0.0379627058626961
+Con V:
+Total revenue: 5604700 Cumulative regret: 396497 Final loss: 0.07074370861756264
+    Best bidding clairvoyant (best_allocation, n_clicks): [0.5555555555555556, 0.4444444444444444, 0.0]
+        -> BEST ALLOCATION: [0.55555556 0.44444444 0.        ]
 
-    V:
-        Total revenue: 13295700 Cumulative regret: 422199 Final loss: 0.03175459042091764
+No V:
+Total revenue: 5347780 Cumulative regret: 653417 Final loss: 0.12218476894877
+    Best bidding clairvoyant (best_allocation, n_clicks): [0.5555555555555556, 0.4444444444444444, 0.0]
+        -> BEST ALLOCATION: [0.55555556 0.         0.44444444]
 
-        last_day:
-        Total revenue: 6779700 Cumulative regret: 689070 Final loss: 0.10163734967726169
+DAILY_PRICE:
+Con V:
+Total revenue: 5541240 Cumulative regret: 459957 Final loss: 0.08300619783457373
+    Best bidding clairvoyant (best_allocation, n_clicks): [0.5555555555555556, 0.4444444444444444, 0.0]
+        -> BEST ALLOCATION: [0.55555556 0.44444444 0.        ]
 
+No V:
+Total revenue: 5347780 Cumulative regret: 653417 Final loss: 0.12218476894877
+    Best bidding clairvoyant (best_allocation, n_clicks): [0.5555555555555556, 0.4444444444444444, 0.0]
+        -> BEST ALLOCATION: [0.55555556 0.         0.44444444]
 
-DynamicLearner:
-    V:
-        Total revenue: 11963240 Cumulative regret: 1353113 Final loss: 0.11310596430004759
+DAILY_PRICE CON PERCENTUALE:
+Con V:
+Total revenue: 5541240 Cumulative regret: 459957 Final loss: 0.08300619783457373
+    Best bidding clairvoyant (best_allocation, n_clicks): [0.5555555555555556, 0.4444444444444444, 0.0]
+        -> BEST ALLOCATION: [0.55555556 0.44444444 0.        ]
 
-DLChangeDetect:
-    V: Total revenue: 15162360 Cumulative regret: 826044 Final loss: 0.05447996603367907
+No V:
+Total revenue: 5347780 Cumulative regret: 653417 Final loss: 0.12218476894877
+    Best bidding clairvoyant (best_allocation, n_clicks): [0.5555555555555556, 0.4444444444444444, 0.0]
+        -> BEST ALLOCATION: [0.55555556 0.         0.44444444]

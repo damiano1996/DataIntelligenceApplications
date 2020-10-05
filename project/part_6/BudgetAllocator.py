@@ -32,7 +32,7 @@ class BudgetAllocator:
 
         self.best_allocation = self.day_zero_initialization()
 
-        self.regret = []
+        self.regret = [0]
         self.optimal_total_revenue = self.get_optimal_total_revenue()
 
     def day_zero_initialization(self):
@@ -53,9 +53,9 @@ class BudgetAllocator:
             learner_clicks = subcampaign_handler.get_updated_parameters().means
 
             # TODO: Decidere come trattare le V: solo ultimo giorno? O tutto lo storico?
-            # n_clicks = subcampaign_handler.total_clicks
-            # v = subcampaign_handler.total_revenue / n_clicks if n_clicks != 0 else 0
-            v = subcampaign_handler.price
+            n_clicks = subcampaign_handler.total_clicks
+            v = subcampaign_handler.total_revenue / n_clicks if n_clicks != 0 else 0
+            # v = subcampaign_handler.price
             revenue_clicks = np.multiply(learner_clicks, v) if self.enable_pricing else learner_clicks
 
             table_all_subs = np.append(table_all_subs, np.atleast_2d(revenue_clicks.T), 0)
