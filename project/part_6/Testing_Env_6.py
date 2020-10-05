@@ -12,9 +12,9 @@ from project.dia_pckg.plot_style.cb91visuals import *
 from project.part_4.MultiClassHandler import MultiClassHandler
 from project.part_6.BudgetAllocator import BudgetAllocator
 
-# np.random.seed(0)
+#np.random.seed(141)
 
-enable_pricing = False
+enable_pricing = True
 plot_advertising = False
 
 
@@ -47,11 +47,12 @@ def execute_experiment(args):
 
     print('Total revenue:', int(budget_allocator.msh.total_revenue),
           'Cumulative regret:', int(sum(budget_allocator.regret)),
-          'Final loss:', sum(budget_allocator.regret) / budget_allocator.msh.total_revenue)
+          'Loss:', sum(budget_allocator.regret) / budget_allocator.msh.total_revenue)
 
     print(str(index) + ' has ended')
 
-    return {'agnostic_regret': budget_allocator.msh.regret, 'regret': budget_allocator.regret}
+    return {'agnostic_regret': budget_allocator.msh.regret, 'regret': budget_allocator.regret, 
+                        'loss': sum(budget_allocator.regret) / budget_allocator.msh.total_revenue}
 
 
 if __name__ == '__main__':
@@ -90,30 +91,33 @@ if __name__ == '__main__':
     # plt.legend()
     # plt.show()
 
-    n_experiments = 20  # the number is small to do a raw test, otherwise set it to 1000
+    n_experiments = 100  # the number is small to do a raw test, otherwise set it to 1000
+    final_loss_per_experiment = []  # collect all the regrets achieved
     agnostic_regret_per_experiment = []  # collect all the regrets achieved
     regret_per_experiment = []
     args = [{'environment': copy.deepcopy(base_env), 'index': idx, 'multiclasshandler': mch}
             for idx in range(n_experiments)]  # create arguments for the experiment
 
-    with Pool(processes=1) as pool:  # multiprocessing.cpu_count()
+    with Pool(processes=10) as pool:  # multiprocessing.cpu_count()
         results = pool.map(execute_experiment, args, chunksize=1)
 
     for result in results:
         agnostic_regret_per_experiment.append(result['agnostic_regret'])
         regret_per_experiment.append(result['regret'])
+        final_loss_per_experiment.append(result['loss'])
 
+    
     title = ' & Pricing (mul by v)' if enable_pricing else ''
     title = f'Testing_Env_6 - Advertising{title}'
     plt.title(title, fontsize=20)
 
-    for agnostic_regret in agnostic_regret_per_experiment:
-        plt.plot(np.cumsum(agnostic_regret), alpha=0.1, c='C2')
+    #for agnostic_regret in agnostic_regret_per_experiment:
+        #plt.plot(np.cumsum(agnostic_regret), alpha=0.1, c='C2')
     plt.plot(np.cumsum(np.mean(agnostic_regret_per_experiment, axis=0)),
              c='C2', label='Regret (Advertising <=!=> Pricing)')
 
-    for regret in regret_per_experiment:
-        plt.plot(np.cumsum(regret), alpha=0.1, c='C3')
+    #for regret in regret_per_experiment:
+        #plt.plot(np.cumsum(regret), alpha=0.1, c='C3')
     plt.plot(np.cumsum(np.mean(regret_per_experiment, axis=0)),
              c='C3', label='Regret (Advertising <==> Pricing)')
 
@@ -122,5 +126,6 @@ if __name__ == '__main__':
     plt.ylim([0, 1e6])
     plt.legend()
 
-    plt.savefig('other_files/' + title + '.png')
+    print('\n\nFINAL LOSS:', np.mean(final_loss_per_experiment))
+    #plt.savefig('other_files/' + title + '.png')
     plt.show()

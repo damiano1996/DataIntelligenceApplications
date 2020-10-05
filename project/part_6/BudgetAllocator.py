@@ -50,11 +50,12 @@ class BudgetAllocator:
                                     dtype=np.float32)
 
         for subcampaign_handler in self.msh.subcampaigns_handlers:
-            learner_clicks = subcampaign_handler.get_updated_parameters().means
+            learner_clicks = subcampaign_handler.get_updated_parameters()#.means
 
             # TODO: Decidere come trattare le V: solo ultimo giorno? O tutto lo storico?
             n_clicks = subcampaign_handler.total_clicks
             v = subcampaign_handler.total_revenue / n_clicks if n_clicks != 0 else 0
+
             # v = subcampaign_handler.price
             revenue_clicks = np.multiply(learner_clicks, v) if self.enable_pricing else learner_clicks
 
@@ -62,7 +63,7 @@ class BudgetAllocator:
 
         # self.best_allocation = fit_table(table_all_subs)[0]
         self.best_allocation = np.asarray(fit_table(table_all_subs)[0])
-        print('BEST ALLOCATION:', self.best_allocation)
+        print('BEST ALLOCATION FOUND:', self.best_allocation)
 
         if round(sum(self.best_allocation), 3) != 1:
             raise Exception("Allocation unfeasible")

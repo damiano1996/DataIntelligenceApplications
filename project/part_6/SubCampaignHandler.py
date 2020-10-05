@@ -77,4 +77,5 @@ class SubCampaignHandler:
         return best - learned
 
     def get_updated_parameters(self):
-        return self.advertising.learner
+        #return self.advertising.learner
+        return self.advertising.learner.pull_arm_sequence()
