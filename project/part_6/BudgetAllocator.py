@@ -50,7 +50,7 @@ class BudgetAllocator:
                                     dtype=np.float32)
 
         for subcampaign_handler in self.msh.subcampaigns_handlers:
-            learner_clicks = subcampaign_handler.get_updated_parameters()#.means
+            learner_clicks = subcampaign_handler.get_updated_parameters()
 
             # TODO: Decidere come trattare le V: solo ultimo giorno? O tutto lo storico?
             n_clicks = subcampaign_handler.total_clicks

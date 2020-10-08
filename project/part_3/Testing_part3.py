@@ -1,3 +1,4 @@
+import copy
 import multiprocessing
 from multiprocessing import Pool
 
@@ -6,85 +7,72 @@ import numpy as np
 from project.dia_pckg.Config import *
 from project.dia_pckg.plot_style.cb91visuals import *
 from project.part_2.GPTS_Learner import GPTS_Learner as Learner
-from project.part_2.Optimizer import fit_table
+from project.part_2.Learning_experiment import execute_experiment
+from project.part_2.Utils import compute_clairvoyant
 from project.part_3.AbruptBiddingEnvironment import AbruptBiddingEnvironment
 from project.part_3.DLChangeDetect import DLChangeDetect
 from project.part_3.DynamicLearner import DynamicLearner
-from project.part_2.Learning_experiment import execute_experiment
 
-np.random.seed(13337)
+np.random.seed(0)
 
 if __name__ == '__main__':
     bids = np.linspace(0, max_bid, n_arms)
-    env = AbruptBiddingEnvironment(bids)
+    thread_x_l = 10
+    args = []
+    learners_types = [Learner, DynamicLearner, DLChangeDetect]
+    for i in range(thread_x_l):
+        env_i = AbruptBiddingEnvironment(bids)
+        for learner in learners_types:
+            args_i = {
+                'learner': learner,
+                'environment': copy.deepcopy(env_i),
+                'bids': bids,
+                'n_subcamp': n_subcamp,
+                'n_arms': n_arms,
+                'n_obs': n_days,
+                'print_span': print_span}
+            args.append(args_i)
 
-    args1 = {}
-    args1['learner'] = Learner
-    args1['environment'] = env
-    args1['bids'] = bids
-    args1['n_subcamp'] = n_subcamp
-    args1['n_arms'] = n_arms
-    args1['n_obs'] = n_days
-    args1['print_span'] = print_span
+    with Pool(processes=multiprocessing.cpu_count()) as pool:
+        results = pool.map(execute_experiment, args, chunksize=1)
 
-    args2 = {}
-    args2['learner'] = DynamicLearner
-    args2['environment'] = env
-    args2['bids'] = bids
-    args2['n_subcamp'] = n_subcamp
-    args2['n_arms'] = n_arms
-    args2['n_obs'] = n_days
-    args2['print_span'] = print_span
+    clicks_per_experiments = {}
+    opt_clicks_per_experiments = {}
+    for i, (click_each_day, args) in enumerate(results):
+        # for each result we get the name of the used learner
+        learner_name = args['learner'].__name__
 
-    args3 = {}
-    args3['learner'] = DLChangeDetect
-    args3['environment'] = env
-    args3['bids'] = bids
-    args3['n_subcamp'] = n_subcamp
-    args3['n_arms'] = n_arms
-    args3['n_obs'] = n_days
-    args3['print_span'] = print_span
+        clicks = np.sum(np.asarray(([click_each_day[f'click{j + 1}'] for j in range(3)])), axis=0)
+        # adding to the dictionary
+        # if the dictionary already contains the given key, we can append it
+        # otherwise we have to initialize the array
+        if learner_name in list(clicks_per_experiments.keys()):
+            clicks_per_experiments[learner_name].append(clicks)
+        else:
+            clicks_per_experiments[learner_name] = [clicks]
 
-    with Pool(processes=multiprocessing.cpu_count()) as phase:
-        basic_total_click_each_day, sw_total_click_each_day, dc_total_click_each_day = phase.map(execute_experiment,
-                                                                                                 [args1, args2, args3])
+        # the optimal number of clicks depends by the phase, thus we have to compute the optimal for each phase
+        opt_clicks = np.arange(0, n_days, 1)
+        for phase in range(n_abrupts_phases):
+            opt_phase_clicks = compute_clairvoyant(args['environment'], phase=phase)[1]
+            opt_clicks[int(phase * phase_len):int((phase + 1) * phase_len)] = opt_phase_clicks
+        # adding to dictionary
+        if learner_name in list(opt_clicks_per_experiments.keys()):
+            opt_clicks_per_experiments[learner_name].append(opt_clicks)
+        else:
+            opt_clicks_per_experiments[learner_name] = [opt_clicks]
 
-    clicks_opt = np.array([])
+    # plot
+    for i, ((learner_name, clicks_per_experiment), (opt_clicks_per_experiment)) in enumerate(
+            zip(clicks_per_experiments.items(), opt_clicks_per_experiments.values())):
 
-    for phase in range(0, n_abrupts_phases):
-        all_optimal_subs = np.ndarray(shape=(0, len(bids)), dtype=np.float32)
-        for i in range(0, n_subcamp):
-            all_optimal_subs = np.append(all_optimal_subs, np.atleast_2d(env.subs[i].means[f'phase_{phase}']), 0)
-        opt = fit_table(all_optimal_subs)[1]
-        for days in range(0, phase_len):
-            clicks_opt = np.append(clicks_opt, opt)
+        for clicks, opts in zip(clicks_per_experiment, opt_clicks_per_experiment):
+            plt.plot(np.cumsum(opts - clicks), alpha=0.2, c=f'C{i + 1}')
 
-    sw_clicks_obtained = sw_total_click_each_day["click1"] + \
-                         sw_total_click_each_day["click2"] + \
-                         sw_total_click_each_day["click3"]
+        plt.plot(np.cumsum(np.mean(opt_clicks_per_experiment) - np.mean(clicks_per_experiment, axis=0)),
+                 c=f'C{i + 1}', label=f'{learner_name} - Mean Regret')
 
-    basic_clicks_obtained = basic_total_click_each_day["click1"] + \
-                            basic_total_click_each_day["click2"] + \
-                            basic_total_click_each_day["click3"]
-
-    dc_clicks_obtained = dc_total_click_each_day["click1"] + \
-                         dc_total_click_each_day["click2"] + \
-                         dc_total_click_each_day["click3"]
-
-    np.cumsum(clicks_opt - basic_clicks_obtained).plot(label="Without SW")
-    np.cumsum(clicks_opt - sw_clicks_obtained).plot(label="Sliding Window")
-    np.cumsum(clicks_opt - dc_clicks_obtained).plot(label="Change Detect")
-
-    plt.legend(loc='lower right')
+    plt.ylabel('Regret')
+    plt.xlabel('Time')
+    plt.legend()
     plt.show()
-
-    plt.show()
-
-    print("SLIDING WINDOWS")
-    print(np.sum(sw_clicks_obtained))
-
-    print("\n\nWITHOUT SLIDING WINDOWS")
-    print(np.sum(basic_clicks_obtained))
-
-    print("\n\nCHANGE DETECT")
-    print(np.sum(dc_clicks_obtained))

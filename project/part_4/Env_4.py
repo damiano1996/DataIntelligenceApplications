@@ -58,6 +58,8 @@ class Env_4(Environment):
         opt = self.mch.get_optimal(class_name=user.class_name)
         optimal_revenue = opt['price'] * opt['probability']
 
+        if (probability < 0):
+            probability = 1e-3
         reward = np.random.binomial(1, probability)
         return reward, optimal_revenue
 

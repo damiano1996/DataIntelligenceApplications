@@ -91,7 +91,7 @@ if __name__ == '__main__':
     # plt.legend()
     # plt.show()
 
-    n_experiments = 100  # the number is small to do a raw test, otherwise set it to 1000
+    n_experiments = 50  # the number is small to do a raw test, otherwise set it to 1000
     final_loss_per_experiment = []  # collect all the regrets achieved
     agnostic_regret_per_experiment = []  # collect all the regrets achieved
     regret_per_experiment = []
@@ -123,7 +123,7 @@ if __name__ == '__main__':
 
     plt.xlabel('Time')
     plt.ylabel('Regret')
-    plt.ylim([0, 1e6])
+    #plt.ylim([0, 1e6])
     plt.legend()
 
     print('\n\nFINAL LOSS:', np.mean(final_loss_per_experiment))
