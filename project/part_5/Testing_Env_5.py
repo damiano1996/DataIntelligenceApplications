@@ -35,18 +35,38 @@ def execute_experiment(args):
         if new_week:  # in this case we can generate new contexts and new learners
             campaign_scheduler.context_update()
 
-        user = User(random=True)
-
         if keep_daily_price:
+            user_elegant = User(class_name='elegant')
+            user_casual = User(class_name='casual')
+            user_sport = User(class_name='sports')
+
             if new_day:
-                pulled_arm = campaign_scheduler.pull_arm_from_user(user)
+                pulled_arm_elegant = campaign_scheduler.pull_arm_from_user(user_elegant)
+                pulled_arm_casual = campaign_scheduler.pull_arm_from_user(user_casual)
+                pulled_arm_sport = campaign_scheduler.pull_arm_from_user(user_sport)
+
+            new_week, reward, current_date, new_day, done, opt_revenue = env.round(pulled_arm_elegant, user_elegant)
+            campaign_scheduler.update(user_elegant, pulled_arm_elegant, reward)
+            optimal_revenues = np.append(optimal_revenues, opt_revenue)
+
+            new_week, reward, current_date, new_day, done, opt_revenue = env.round(pulled_arm_casual, user_casual)
+            campaign_scheduler.update(user_casual, pulled_arm_casual, reward)
+            optimal_revenues = np.append(optimal_revenues, opt_revenue)
+
+            new_week, reward, current_date, new_day, done, opt_revenue = env.round(pulled_arm_sport, user_sport)
+            campaign_scheduler.update(user_sport, pulled_arm_sport, reward)
+            optimal_revenues = np.append(optimal_revenues, opt_revenue)
+
         else:
+            user = User(random=True)
+
             pulled_arm = campaign_scheduler.pull_arm_from_user(user)
 
-        new_week, reward, current_date, new_day, done, opt_revenue = env.round(pulled_arm, user)
+            new_week, reward, current_date, new_day, done, opt_revenue = env.round(pulled_arm, user)
+            campaign_scheduler.update(user, pulled_arm, reward)
+            optimal_revenues = np.append(optimal_revenues, opt_revenue)
 
-        campaign_scheduler.update(user, pulled_arm, reward)
-        optimal_revenues = np.append(optimal_revenues, opt_revenue)
+        
 
     print(str(index) + ' has ended')
 
@@ -131,5 +151,5 @@ if __name__ == '__main__':
     plt.xlabel('Time')
     plt.ylabel('Regret')
     plt.legend()
-    plt.savefig(f'other_files/testing_part5_narms{n_arms}_keepdailyprice{keep_daily_price}.png')
+    plt.savefig(f'project/part_5/other_files/testing_part5_narms{n_arms}_keepdailyprice{keep_daily_price}.png')
     plt.show()
