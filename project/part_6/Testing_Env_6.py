@@ -14,7 +14,7 @@ from project.part_6.BudgetAllocator import BudgetAllocator
 
 # np.random.seed(141)
 
-enable_pricing = True
+enable_pricing = False
 plot_advertising = False
 
 

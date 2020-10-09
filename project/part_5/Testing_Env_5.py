@@ -124,4 +124,5 @@ if __name__ == '__main__':
     plt.xlabel('Time')
     plt.ylabel('Regret')
     plt.legend()
+    plt.savefig('other_files/testing_part5.png')
     plt.show()

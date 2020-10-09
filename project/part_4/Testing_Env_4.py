@@ -81,6 +81,7 @@ if __name__ == '__main__':
     plt.xlabel('Price')
     plt.ylabel('Conversion Rate')
     plt.legend()
+    plt.savefig('other_files/testing_part4_demandcurves.png')
     plt.show()
 
     n_experiments = 10  # the number is small to do a raw test, otherwise set it to 1000
@@ -113,4 +114,5 @@ if __name__ == '__main__':
     plt.xlabel('Time')
     plt.ylabel('Regret')
     plt.legend()
+    plt.savefig('other_files/testing_part4.png')
     plt.show()

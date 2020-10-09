@@ -49,4 +49,5 @@ if __name__ == '__main__':
     plt.ylabel('Regret')
     plt.xlabel('Time')
     plt.legend()
+    plt.savefig('other_files/testing_part2.png')
     plt.show()
