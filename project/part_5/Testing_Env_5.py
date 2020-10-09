@@ -16,7 +16,9 @@ from project.part_5.CampaignScheduler_5 import CampaignScheduler_5
 from project.part_5.Env_5 import Env_5
 
 np.random.seed(0)
+
 n_arms = 20
+keep_daily_price = False
 
 
 def execute_experiment(args):
@@ -28,15 +30,20 @@ def execute_experiment(args):
     campaign_scheduler.reset()
     optimal_revenues = np.array([])
 
+    new_day = True
     while not done:
         if new_week:  # in this case we can generate new contexts and new learners
             campaign_scheduler.context_update()
 
         user = User(random=True)
 
-        pulled_arm = campaign_scheduler.pull_arm_from_user(user)
+        if keep_daily_price:
+            if new_day:
+                pulled_arm = campaign_scheduler.pull_arm_from_user(user)
+        else:
+            pulled_arm = campaign_scheduler.pull_arm_from_user(user)
 
-        new_week, reward, current_date, done, opt_revenue = env.round(pulled_arm, user)
+        new_week, reward, current_date, new_day, done, opt_revenue = env.round(pulled_arm, user)
 
         campaign_scheduler.update(user, pulled_arm, reward)
         optimal_revenues = np.append(optimal_revenues, opt_revenue)
@@ -124,5 +131,5 @@ if __name__ == '__main__':
     plt.xlabel('Time')
     plt.ylabel('Regret')
     plt.legend()
-    plt.savefig('other_files/testing_part5.png')
+    plt.savefig(f'other_files/testing_part5_narms{n_arms}_keepdailyprice{keep_daily_price}.png')
     plt.show()

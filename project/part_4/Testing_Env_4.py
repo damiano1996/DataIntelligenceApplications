@@ -16,6 +16,7 @@ from project.part_4.TS_Learner import TS_Learner
 
 np.random.seed(0)
 n_arms = 20
+keep_daily_price = False
 
 
 def execute_experiment(args):
@@ -27,13 +28,18 @@ def execute_experiment(args):
     # ts_learner = SWTS_Learner(n_arms=n_arms, arm_prices=env.arm_prices['prices'], window_size=2000)
     optimal_revenues = np.array([])
 
+    new_day = True
     while not done:
         user = User(random=True)
 
-        # pulled_arm = ts_learner.pull_arm() #optimize by demand
-        pulled_arm = ts_learner.pull_arm_revenue()  # optimize by revenue
+        if keep_daily_price:
+            if new_day:
+                # pulled_arm = ts_learner.pull_arm() #optimize by demand
+                pulled_arm = ts_learner.pull_arm_revenue()  # optimize by revenue
+        else:
+            pulled_arm = ts_learner.pull_arm_revenue()  # optimize by revenue
 
-        reward, _, done, opt_revenue = env.round(pulled_arm, user)
+        reward, current_date, new_day, done, opt_revenue = env.round(pulled_arm, user)
 
         ts_learner.update(pulled_arm, reward)
         optimal_revenues = np.append(optimal_revenues, opt_revenue)
@@ -114,5 +120,5 @@ if __name__ == '__main__':
     plt.xlabel('Time')
     plt.ylabel('Regret')
     plt.legend()
-    plt.savefig('other_files/testing_part4.png')
+    plt.savefig(f'other_files/testing_part4_narms{n_arms}_keepdailyprice{keep_daily_price}.png')
     plt.show()

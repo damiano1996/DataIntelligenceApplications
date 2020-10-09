@@ -20,17 +20,18 @@ class Env_5(Env_4):
         :param pulled_arm: arm to pull
         :return: (reward, current date, done) done is a boolean -> True if the "game" is finished
         """
+        new_day = False
         new_week = False
         done = False
 
         reward, opt_revenue = self.one_user_round(pulled_arm, user)
         current_date = self.get_current_date()
 
-        self.count_rounds_today += 1
         if self.count_rounds_today == self.round_per_day:
+            new_day = True
             self.count_rounds_today = 0
             current_date, done = self.step()
             if self.get_current_date().weekday() == 6:
                 new_week = True
 
-        return new_week, reward, current_date, done, opt_revenue
+        return new_week, reward, current_date, new_day, done, opt_revenue

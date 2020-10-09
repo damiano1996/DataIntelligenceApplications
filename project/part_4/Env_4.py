@@ -23,6 +23,8 @@ class Env_4(Environment):
         self.n_arms = n_arms
         self.arm_prices = self.get_candidate_prices()
 
+        self.daily_pulled_arm = None
+
     def round(self, pulled_arm, user):
         """
             This method performs a round considering the number of steps per day
@@ -34,14 +36,15 @@ class Env_4(Environment):
 
         current_date = self.get_current_date()
         done = False
+        new_day = False
 
-        self.count_rounds_today += 1
         if self.count_rounds_today == self.round_per_day:
             self.count_rounds_today = 0
             current_date, done = self.step()
             # print(current_date.weekday())
+            new_day = True
 
-        return reward, current_date, done, opt_revenue
+        return reward, current_date, new_day, done, opt_revenue
 
     def one_user_round(self, pulled_arm, user):
         """
@@ -50,6 +53,7 @@ class Env_4(Environment):
         :param user: User object
         :return: reward
         """
+        self.count_rounds_today += 1
         # class of the user
         conv_rate = self.mch.get_class(class_name=user.class_name).conv_rates['phase_0']
 
