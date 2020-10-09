@@ -4,7 +4,7 @@ from project.dia_pckg.Config import features_space, classes_config
 
 
 # for each user we can observe the value of two binary features
-class User():
+class User:
 
     def __init__(self, features=None, class_name=None, random=False):
         """
@@ -13,7 +13,7 @@ class User():
         :param random: to create a user with random params
         """
         self.class_name = class_name
-        if (features is None and class_name is not None):
+        if features is None and class_name is not None:
             self.features = classes_config[self.class_name]
 
         if random:

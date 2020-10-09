@@ -1,6 +1,8 @@
+import numpy as np
+
 from project.part_6.Advertising import Advertising
 from project.part_6.Pricing import Pricing
-import numpy as np
+
 
 class SubCampaignHandler:
     """
@@ -34,7 +36,7 @@ class SubCampaignHandler:
         self.window_size = 5
         self.window_revenue = np.array([])
         self.window_clicks = np.array([])
-        
+
         self.total_revenue = 0
         self.total_clicks = 0
 
@@ -63,8 +65,8 @@ class SubCampaignHandler:
               'optimal revenue: ', round(self.pricing.optimal_revenue * self.advertising.optimal_clicks),
               'collected revenue: ', int(self.daily_revenue))
 
-        #self.total_revenue += self.daily_revenue
-        #self.total_clicks += self.daily_clicks
+        # self.total_revenue += self.daily_revenue
+        # self.total_clicks += self.daily_clicks
         self.update_windows(self.daily_revenue, self.daily_clicks)
 
         return daily_regret, self.daily_revenue
@@ -84,8 +86,7 @@ class SubCampaignHandler:
     def get_updated_parameters(self):
         return self.advertising.learner.pull_arm_sequence()
 
-
-    def update_windows (self, daily_revenue, daily_clicks):
+    def update_windows(self, daily_revenue, daily_clicks):
         self.window_revenue = np.append(self.window_revenue, daily_revenue)
         if (self.window_revenue.shape[0] > self.window_size):
             self.window_revenue = np.delete(self.window_revenue, 0)
@@ -96,4 +97,3 @@ class SubCampaignHandler:
 
         self.total_revenue = np.sum(self.window_revenue)
         self.total_clicks = np.sum(self.window_clicks)
-        

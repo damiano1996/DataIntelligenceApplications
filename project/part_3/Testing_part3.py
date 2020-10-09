@@ -69,7 +69,7 @@ if __name__ == '__main__':
         for clicks, opts in zip(clicks_per_experiment, opt_clicks_per_experiment):
             plt.plot(np.cumsum(opts - clicks), alpha=0.2, c=f'C{i + 1}')
 
-        plt.plot(np.cumsum(np.mean(opt_clicks_per_experiment) - np.mean(clicks_per_experiment, axis=0)),
+        plt.plot(np.cumsum(np.mean(opt_clicks_per_experiment, axis=0) - np.mean(clicks_per_experiment, axis=0)),
                  c=f'C{i + 1}', label=f'{learner_name} - Mean Regret')
 
     plt.ylabel('Regret')

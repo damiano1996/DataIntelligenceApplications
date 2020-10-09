@@ -4,7 +4,7 @@
 
 # campaign
 initial_date = '20200101'
-n_days = 200
+n_days = 30
 
 # Seller wallet and ambitions
 seller_max_budget = 20000  # $
@@ -36,8 +36,10 @@ n_abrupts_phases = 3
 # directory to store the curves
 demand_path = 'demand_curves'
 
-len_window = 10
+len_window = 5
 phase_len = n_days // n_abrupts_phases
+# Since n_abrupts_phases is odd and n_days could be even we add 1 to obtain equal phases
+phase_len = phase_len + 1 if n_days % 2 == 0 else phase_len
 
 print_span = 60  # How often we want to print the graphs
 
