@@ -84,4 +84,16 @@ loss=0.0317
 Curva_real=sopra, si alza tanto (1.62e^6)
 Curva_agnostic=sotto, si alza poco(0.81e^6)
 
+-------------------------------------------
+10 experiments for 200 days
+
+-keep_price
+loss=0.0477
+Curva_real=sopra, si alza tanto (2.24e^6)
+Curva_agnostic=sotto, si alza poco(1.41e^6)
+
+-no_keep_price
+loss=0.0320
+Curva_real=sopra, si alza tanto (1.49e^6)
+Curva_agnostic=sotto, si alza poco(0.09e^6)
 

@@ -11,7 +11,8 @@ class MultiSubCampaignHandler:
     def __init__(self,
                  multi_class_handler,
                  n_arms_pricing,
-                 n_arms_advertising):
+                 n_arms_advertising,
+                 keep_daily_price):
         """
         :param multi_class_handler:
         :param n_arms_pricing:
@@ -31,14 +32,15 @@ class MultiSubCampaignHandler:
                                                      subcampaign_idx=i,
                                                      n_arms_pricing=self.n_arms_pricing,
                                                      n_arms_advertising=self.n_arms_advertising,
-                                                     bidding_environment=self.bidding_environment)
+                                                     bidding_environment=self.bidding_environment,
+                                                     keep_daily_price=keep_daily_price)
             self.subcampaigns_handlers.append(subcampaign_handler)
 
         self.regret = []
         self.daily_revenue = 0
         self.total_revenue = 0
 
-    def update_all_subcampaign_handlers(self, allocations, fix_arm=None):
+    def update_all_subcampaign_handlers(self, allocations):
         """
             Execute one day round:
             Update advertising and pricing model
@@ -55,8 +57,7 @@ class MultiSubCampaignHandler:
             pulled_arm = get_idx_arm_from_allocation(allocation=allocation,
                                                      bids=subcampaign_handler.advertising.env.bids)
 
-            subcampaign_daily_regret, subcampaign_daily_revenue = subcampaign_handler.daily_update(pulled_arm,
-                                                                                                   fix_arm=fix_arm)
+            subcampaign_daily_regret, subcampaign_daily_revenue = subcampaign_handler.daily_update(pulled_arm)
             learner = subcampaign_handler.get_updated_parameters()
             learners.append(learner)
             total_daily_regret += subcampaign_daily_regret

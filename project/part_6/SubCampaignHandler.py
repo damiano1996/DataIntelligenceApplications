@@ -15,7 +15,8 @@ class SubCampaignHandler:
                  subcampaign_idx,
                  n_arms_pricing,
                  n_arms_advertising,
-                 bidding_environment):
+                 bidding_environment,
+                 keep_daily_price):
         """
         :param class_name:
         :param multi_class_handler:
@@ -28,7 +29,7 @@ class SubCampaignHandler:
 
         self.n_arms_advertising = n_arms_advertising
 
-        self.pricing = Pricing(class_name=class_name, multi_class_handler=multi_class_handler, n_arms=n_arms_pricing)
+        self.pricing = Pricing(class_name=class_name, multi_class_handler=multi_class_handler, n_arms=n_arms_pricing, keep_daily_price=keep_daily_price)
         self.advertising = Advertising(bidding_environment=bidding_environment,
                                        n_arms=self.n_arms_advertising,
                                        subcampaign_idx=subcampaign_idx)
@@ -45,7 +46,7 @@ class SubCampaignHandler:
 
         self.price = 0
 
-    def daily_update(self, pulled_arm, fix_arm=None):
+    def daily_update(self, pulled_arm):
         """
             Daily update
         :param pulled_arm: Learned best budget allocation
@@ -53,7 +54,7 @@ class SubCampaignHandler:
         """
         # extracting the daily reward from the TS
         self.daily_clicks = self.advertising.get_daily_clicks(pulled_arm)
-        self.daily_revenue = self.pricing.get_daily_revenue(self.daily_clicks, fix_arm=fix_arm)
+        self.daily_revenue = self.pricing.get_daily_revenue(self.daily_clicks)
         self.price = self.daily_revenue / self.daily_clicks if self.daily_clicks != 0 else self.price
 
         daily_regret = self.get_daily_regret(self.daily_clicks, self.advertising.optimal_clicks,

@@ -14,8 +14,9 @@ from project.part_6.BudgetAllocator import BudgetAllocator
 
 # np.random.seed(141)
 
-enable_pricing = False
+enable_pricing = True
 plot_advertising = False
+keep_daily_price = False
 
 
 def execute_experiment(args):
@@ -26,7 +27,8 @@ def execute_experiment(args):
     budget_allocator = BudgetAllocator(multi_class_handler=mch,
                                        n_arms_pricing=10,
                                        n_arms_advertising=10,
-                                       enable_pricing=enable_pricing)
+                                       enable_pricing=enable_pricing,
+                                       keep_daily_price=keep_daily_price)
 
     current_day, done = env.reset()
 
@@ -98,7 +100,7 @@ if __name__ == '__main__':
     args = [{'environment': copy.deepcopy(base_env), 'index': idx, 'multiclasshandler': mch}
             for idx in range(n_experiments)]  # create arguments for the experiment
 
-    with Pool(processes=1) as pool:  # multiprocessing.cpu_count()
+    with Pool(processes=10) as pool:  # multiprocessing.cpu_count()
         results = pool.map(execute_experiment, args, chunksize=1)
 
     for result in results:
@@ -122,9 +124,9 @@ if __name__ == '__main__':
 
     plt.xlabel('Time')
     plt.ylabel('Regret')
-    plt.ylim([0, 800e3])
+    #plt.ylim([0, 800e3])
     plt.legend()
 
     print('\n\nFINAL LOSS:', np.mean(final_loss_per_experiment))
-    plt.savefig('other_files/' + title + '.png')
+    plt.savefig(f'project/part_6/other_files/testing_part6_enablePricing{enable_pricing} _keepdailyprice{keep_daily_price}.png')
     plt.show()

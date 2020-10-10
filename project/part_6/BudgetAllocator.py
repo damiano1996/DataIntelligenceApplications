@@ -12,7 +12,7 @@ class BudgetAllocator:
                  n_arms_pricing,
                  n_arms_advertising,
                  enable_pricing=True,
-                 fix_arm=None):
+                 keep_daily_price=False):
         """
         :param multi_class_handler:
         :param n_arms_pricing:
@@ -21,10 +21,10 @@ class BudgetAllocator:
 
         self.msh = MultiSubCampaignHandler(multi_class_handler=multi_class_handler,
                                            n_arms_pricing=n_arms_pricing,
-                                           n_arms_advertising=n_arms_advertising)
+                                           n_arms_advertising=n_arms_advertising,
+                                           keep_daily_price=keep_daily_price)
 
         self.enable_pricing = enable_pricing
-        self.fix_arm = fix_arm
 
         self.n_arms_pricing = self.msh.subcampaigns_handlers[0].pricing.n_arms
         self.n_arms_advertising = self.msh.subcampaigns_handlers[0].advertising.n_arms
@@ -41,7 +41,7 @@ class BudgetAllocator:
         """
         avg = 1 / self.n_subcampaigns
         allocation = [avg, avg, avg]
-        self.msh.update_all_subcampaign_handlers(allocation, fix_arm=self.fix_arm)
+        self.msh.update_all_subcampaign_handlers(allocation)
         return allocation
 
     def update(self):
@@ -68,7 +68,7 @@ class BudgetAllocator:
             raise Exception("Allocation unfeasible")
 
         # updates
-        self.msh.update_all_subcampaign_handlers(self.best_allocation, fix_arm=self.fix_arm)
+        self.msh.update_all_subcampaign_handlers(self.best_allocation)
         self.regret.append(self.optimal_total_revenue - self.msh.daily_revenue)
 
     def get_optimal_total_revenue(self):

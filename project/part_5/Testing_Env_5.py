@@ -18,7 +18,7 @@ from project.part_5.Env_5 import Env_5
 np.random.seed(0)
 
 n_arms = 20
-keep_daily_price = False
+keep_daily_price = True
 
 
 def execute_experiment(args):

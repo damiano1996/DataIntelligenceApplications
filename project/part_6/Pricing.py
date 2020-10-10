@@ -11,7 +11,8 @@ class Pricing:
     def __init__(self,
                  class_name,
                  multi_class_handler,
-                 n_arms):
+                 n_arms,
+                 keep_daily_price):
         """
         :param class_name:
         :param multi_class_handler:
@@ -21,13 +22,14 @@ class Pricing:
         self.mch = multi_class_handler
         self.n_arms = n_arms
         self.class_name = class_name
+        self.keep_daily_price = keep_daily_price
 
         # self.pricing_learner = SWTS_Learner(n_arms=n_arms, arm_prices=self.get_candidate_prices()['prices'], window_size=5000)
         self.learner = TS_Learner(n_arms=self.n_arms, arm_prices=self.get_candidate_prices()['prices'])
 
         self.optimal_revenue = self.get_optimal_revenue()
 
-    def get_daily_revenue(self, daily_clicks, fix_arm=None):  # to change n_arms
+    def get_daily_revenue(self, daily_clicks):  # to change n_arms
         """
             Get the daily reward and the optimal one
         """
@@ -43,25 +45,24 @@ class Pricing:
                     users_per_day=daily_clicks,
                     multi_class_handler=self.mch,
                     n_arms=self.n_arms)
-
         _, done = env.reset()
+        new_day=True
+
         while not done:
             user = User(class_name=self.class_name)
 
-            if fix_arm is None:
-                pulled_arm = self.learner.pull_arm_revenue()  # optimize by revenue
-
-                reward, _, done, _ = env.round(pulled_arm, user)
-
-                self.learner.update(pulled_arm, reward)
-
-                # optimal_revenues = np.append(optimal_revenues, opt_revenue)
-                daily_revenue += self.learner.get_real_reward(pulled_arm, reward)
-
+            if self.keep_daily_price:
+                if new_day:
+                    pulled_arm = self.learner.pull_arm_revenue()  # optimize by revenue
             else:
+                pulled_arm = self.learner.pull_arm_revenue()
 
-                reward, _, done, _ = env.round(fix_arm, user)
-                daily_revenue += self.learner.get_real_reward(fix_arm, reward)
+            reward, _, new_day, done, _ = env.round(pulled_arm, user)
+
+            self.learner.update(pulled_arm, reward)
+
+            # optimal_revenues = np.append(optimal_revenues, opt_revenue)
+            daily_revenue += self.learner.get_real_reward(pulled_arm, reward)
 
         return daily_revenue
 
