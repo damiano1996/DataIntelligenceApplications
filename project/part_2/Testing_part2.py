@@ -10,21 +10,23 @@ from project.part_2.GPTS_Learner import GPTS_Learner
 from project.part_2.Learning_experiment import execute_experiment
 from project.part_2.Utils import compute_clairvoyant
 
-np.random.seed(0)
 
-if __name__ == '__main__':
-    bids = np.linspace(0, max_bid, n_arms)
-    thread_x_l = 10
+def test_part2(n_experiments=10,
+               chart_path='other_files/testing_part2.png',
+               title='Part 2 - Regret GPTS'):
+    np.random.seed(0)
+
+    bids = np.linspace(0, max_bid, n_arms_advertising)
     args = []
 
-    for i in range(thread_x_l):
+    for i in range(n_experiments):
         env_i = BiddingEnvironment(bids)
         args_i = {
             'learner': GPTS_Learner,
             'environment': env_i,
             'bids': bids,
             'n_subcamp': n_subcamp,
-            'n_arms': n_arms,
+            'n_arms': n_arms_advertising,
             'n_obs': n_days,
             'print_span': print_span}
         args.append(args_i)
@@ -41,6 +43,7 @@ if __name__ == '__main__':
         opt_clicks = compute_clairvoyant(args['environment'])[1]
         opt_clicks_per_experiment.append(np.asarray(opt_clicks))
 
+    plt.title(title)
     for clicks, opts in zip(clicks_per_experiment, opt_clicks_per_experiment):
         plt.plot(np.cumsum(opts - clicks), alpha=0.2, c='C2')
 
@@ -49,5 +52,9 @@ if __name__ == '__main__':
     plt.ylabel('Regret')
     plt.xlabel('Time')
     plt.legend()
-    plt.savefig('other_files/testing_part2.png')
+    plt.savefig(chart_path)
     plt.show()
+
+
+if __name__ == '__main__':
+    test_part2()

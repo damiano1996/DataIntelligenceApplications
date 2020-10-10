@@ -47,12 +47,12 @@ class GPTS_Learner(Learner):
         sampled_values = np.random.normal(self.means, self.sigmas)
         return sampled_values
 
-    def plot(self, unknown_function, sigma_scale_factor=20):
+    def plot(self, unknown_function, sigma_scale_factor=20, chart_path=None):
         x_pred = np.atleast_2d(self.arms).T
         y_pred, sigma = self.gp.predict(x_pred, return_std=True)
 
         plt.figure(0)
-        plt.title(f'Regret')
+        plt.title(f'Clicks Over Budget')  # TODO: Va bene questo titolo?
         plt.plot(x_pred, unknown_function, ':', label=r'Unknown function')
         plt.scatter(self.pulled_arms, self.collected_rewards, marker='o', label=r'Observed Clicks')
         plt.plot(x_pred, y_pred, '-', label=r'Predicted Clicks')
@@ -60,7 +60,9 @@ class GPTS_Learner(Learner):
                  np.concatenate([y_pred - 1.96 * sigma * sigma_scale_factor,
                                  (y_pred + 1.96 * sigma * sigma_scale_factor)[::-1]]),
                  alpha=.2, fc='C2', ec='None', label='95% conf interval')
-        plt.xlabel('$x$')
-        plt.ylabel('$n(x)$')
+        plt.xlabel('Budget')  # TODO: Va bene?
+        plt.ylabel('Clicks')
         plt.legend(loc='lower right')
+        if chart_path is not None:
+            plt.savefig(chart_path)
         plt.show()

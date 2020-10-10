@@ -4,7 +4,6 @@ from multiprocessing import Pool
 
 import numpy as np
 
-from project.dia_pckg.Campaign import Campaign
 from project.dia_pckg.Class import Class
 from project.dia_pckg.Config import *
 from project.dia_pckg.Product import Product
@@ -14,17 +13,95 @@ from project.part_4.Env_4 import Env_4
 from project.part_4.MultiClassHandler import MultiClassHandler
 from project.part_4.TS_Learner import TS_Learner
 
-np.random.seed(0)
-n_arms = 20
-keep_daily_price = True
+
+def test_part4(n_experiments=10,
+               keep_daily_price=True,
+               demand_chart_path='other_files/testing_part4_demandcurves.png',
+               demand_chart_title='Part 4 - Demand Curves',
+               results_chart_path='other_files/testing_part4_regrets.png',
+               results_chart_title='Part 4 - Regret'):
+    np.random.seed(0)
+
+    # one product to sell
+    product = Product(product_config=product_config)
+
+    # initialization of the three classes
+    class_names = list(classes_config.keys())
+    class_1 = Class(class_name=class_names[0], class_config=classes_config[class_names[0]], product=product,
+                    n_abrupt_phases=n_abrupts_phases)
+    class_2 = Class(class_name=class_names[1], class_config=classes_config[class_names[1]], product=product,
+                    n_abrupt_phases=n_abrupts_phases)
+    class_3 = Class(class_name=class_names[2], class_config=classes_config[class_names[2]], product=product,
+                    n_abrupt_phases=n_abrupts_phases)
+
+    mch = MultiClassHandler(class_1, class_2, class_3)
+
+    env = Env_4(initial_date=initial_date,
+                n_days=n_days,
+                users_per_day=avg_users_per_day,
+                multi_class_handler=mch,
+                n_arms=n_arms_pricing)
+
+    plt.title(demand_chart_title)
+    for class_ in mch.classes:
+        plt.plot(class_.conv_rates['phase_0']['prices'],
+                 class_.conv_rates['phase_0']['probabilities'], label=class_.name.upper(), linestyle='--')
+    plt.plot(mch.aggregate_demand_curve['prices'],
+             mch.aggregate_demand_curve['probabilities'], label='aggregate')
+
+    for opt_class_name, opt in mch.classes_opt.items():
+        plt.scatter(opt['price'],
+                    opt['probability'], marker='o', label=f'opt {opt_class_name.upper()}')
+    plt.scatter(mch.aggregate_opt['price'],
+                mch.aggregate_opt['probability'], marker='o', label='opt aggregate')
+
+    plt.xlabel('Price')
+    plt.ylabel('Conversion Rate')
+    plt.legend()
+    plt.savefig(demand_chart_path)
+    plt.show()
+
+    rewards_per_experiment = []  # collect all the rewards achieved from the TS
+    optimals_per_experiment = []  # collect all the optimals of the users generated
+    args = [{'environment': copy.deepcopy(env), 'index': idx, 'keep_daily_price': keep_daily_price} for idx in
+            range(n_experiments)]  # create arguments for the experiment
+
+    with Pool(processes=multiprocessing.cpu_count()) as pool:
+        results = pool.map(execute_experiment, args, chunksize=1)
+
+    for result in results:
+        rewards_per_experiment.append(result['collected_rewards'])
+        optimals_per_experiment.append(result['optimal_revenues'])
+
+    plt.title(results_chart_title)
+    # for opt_class_name, opt in mch.classes_opt.items():
+    #     area = opt['price'] * opt['probability']
+    #     plt.plot(np.cumsum(np.mean(area - rewards_per_experiment, axis=0)),
+    #              label='Regret of the ' + opt_class_name.upper() + ' model')
+
+    # Regret computed UN-knowing the class of the users
+    area_aggregate = mch.aggregate_opt['price'] * mch.aggregate_opt['probability']
+    plt.plot(np.cumsum(np.mean(area_aggregate - rewards_per_experiment, axis=0)),
+             label='Regret of the aggregate model')
+
+    # Below the regret computed knowing the optimal for each user
+    plt.plot(np.cumsum(np.mean(optimals_per_experiment, axis=0) - np.mean(rewards_per_experiment, axis=0)),
+             label='Regret of the true evaluation')
+
+    plt.xlabel('Time')
+    plt.ylabel('Regret')
+    plt.legend()
+    plt.savefig(results_chart_path)
+    plt.show()
 
 
 def execute_experiment(args):
     index = args['index']
     env = args['environment']
+    keep_daily_price = args['keep_daily_price']
 
     _, done = env.reset()
-    ts_learner = TS_Learner(n_arms=n_arms, arm_prices=env.arm_prices['prices'])
+    ts_learner = TS_Learner(n_arms=n_arms_pricing, arm_prices=env.arm_prices['prices'])
     # ts_learner = SWTS_Learner(n_arms=n_arms, arm_prices=env.arm_prices['prices'], window_size=2000)
     optimal_revenues = np.array([])
 
@@ -48,75 +125,4 @@ def execute_experiment(args):
 
 
 if __name__ == '__main__':
-    campaign = Campaign(max_budget=seller_max_budget, max_n_clicks=max_n_clicks)
-
-    # one product to sell
-    product = Product(product_config=product_config)
-
-    # initialization of the three classes
-    class_names = list(classes_config.keys())
-    class_1 = Class(class_name=class_names[0], class_config=classes_config[class_names[0]], product=product,
-                    n_abrupt_phases=n_abrupts_phases)
-    class_2 = Class(class_name=class_names[1], class_config=classes_config[class_names[1]], product=product,
-                    n_abrupt_phases=n_abrupts_phases)
-    class_3 = Class(class_name=class_names[2], class_config=classes_config[class_names[2]], product=product,
-                    n_abrupt_phases=n_abrupts_phases)
-
-    mch = MultiClassHandler(class_1, class_2, class_3)
-
-    env = Env_4(initial_date=initial_date,
-                n_days=n_days,
-                users_per_day=avg_users_per_day,
-                multi_class_handler=mch,
-                n_arms=n_arms)
-
-    for class_ in mch.classes:
-        plt.plot(class_.conv_rates['phase_0']['prices'],
-                 class_.conv_rates['phase_0']['probabilities'], label=class_.name.upper(), linestyle='--')
-    plt.plot(mch.aggregate_demand_curve['prices'],
-             mch.aggregate_demand_curve['probabilities'], label='aggregate')
-
-    for opt_class_name, opt in mch.classes_opt.items():
-        plt.scatter(opt['price'],
-                    opt['probability'], marker='o', label=f'opt {opt_class_name.upper()}')
-    plt.scatter(mch.aggregate_opt['price'],
-                mch.aggregate_opt['probability'], marker='o', label='opt aggregate')
-
-    plt.xlabel('Price')
-    plt.ylabel('Conversion Rate')
-    plt.legend()
-    plt.savefig('other_files/testing_part4_demandcurves.png')
-    plt.show()
-
-    n_experiments = 10  # the number is small to do a raw test, otherwise set it to 1000
-    rewards_per_experiment = []  # collect all the rewards achieved from the TS
-    optimals_per_experiment = []  # collect all the optimals of the users generated
-    args = [{'environment': copy.deepcopy(env), 'index': idx} for idx in
-            range(n_experiments)]  # create arguments for the experiment
-
-    with Pool(processes=multiprocessing.cpu_count()) as pool:
-        results = pool.map(execute_experiment, args, chunksize=1)
-
-    for result in results:
-        rewards_per_experiment.append(result['collected_rewards'])
-        optimals_per_experiment.append(result['optimal_revenues'])
-
-    # for opt_class_name, opt in mch.classes_opt.items():
-    #     area = opt['price'] * opt['probability']
-    #     plt.plot(np.cumsum(np.mean(area - rewards_per_experiment, axis=0)),
-    #              label='Regret of the ' + opt_class_name.upper() + ' model')
-
-    # Regret computed UN-knowing the class of the users
-    area_aggregate = mch.aggregate_opt['price'] * mch.aggregate_opt['probability']
-    plt.plot(np.cumsum(np.mean(area_aggregate - rewards_per_experiment, axis=0)),
-             label='Regret of the aggregate model')
-
-    # Below the regret computed knowing the optimal for each user
-    plt.plot(np.cumsum(np.mean(optimals_per_experiment, axis=0) - np.mean(rewards_per_experiment, axis=0)),
-             label='Regret of the true evaluation')
-
-    plt.xlabel('Time')
-    plt.ylabel('Regret')
-    plt.legend()
-    plt.savefig(f'other_files/testing_part4_narms{n_arms}_keepdailyprice{keep_daily_price}.png')
-    plt.show()
+    test_part4()
