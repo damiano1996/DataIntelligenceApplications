@@ -46,8 +46,7 @@ class Pricing:
                     multi_class_handler=self.mch,
                     n_arms=self.n_arms)
         _, done = env.reset()
-        new_day=True
-
+        new_day = True
         while not done:
             user = User(class_name=self.class_name)
 

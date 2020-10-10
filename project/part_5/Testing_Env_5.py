@@ -12,7 +12,7 @@ from project.dia_pckg.User import User
 from project.dia_pckg.plot_style.cb91visuals import *
 from project.part_4.MultiClassHandler import MultiClassHandler
 from project.part_4.SWTS_Learner import SWTS_Learner
-from project.part_5.CampaignScheduler_5 import CampaignScheduler_5
+from project.part_5.CampaignScheduler import CampaignScheduler
 from project.part_5.Env_5 import Env_5
 
 np.random.seed(0)
@@ -35,38 +35,13 @@ def execute_experiment(args):
         if new_week:  # in this case we can generate new contexts and new learners
             campaign_scheduler.context_update()
 
-        if keep_daily_price:
-            user_elegant = User(class_name='elegant')
-            user_casual = User(class_name='casual')
-            user_sport = User(class_name='sports')
+        user = User(random=True)
 
-            if new_day:
-                pulled_arm_elegant = campaign_scheduler.pull_arm_from_user(user_elegant)
-                pulled_arm_casual = campaign_scheduler.pull_arm_from_user(user_casual)
-                pulled_arm_sport = campaign_scheduler.pull_arm_from_user(user_sport)
+        pulled_arm = campaign_scheduler.pull_arm_from_user(user, keep_daily_price, new_day)
 
-            new_week, reward, current_date, new_day, done, opt_revenue = env.round(pulled_arm_elegant, user_elegant)
-            campaign_scheduler.update(user_elegant, pulled_arm_elegant, reward)
-            optimal_revenues = np.append(optimal_revenues, opt_revenue)
-
-            new_week, reward, current_date, new_day, done, opt_revenue = env.round(pulled_arm_casual, user_casual)
-            campaign_scheduler.update(user_casual, pulled_arm_casual, reward)
-            optimal_revenues = np.append(optimal_revenues, opt_revenue)
-
-            new_week, reward, current_date, new_day, done, opt_revenue = env.round(pulled_arm_sport, user_sport)
-            campaign_scheduler.update(user_sport, pulled_arm_sport, reward)
-            optimal_revenues = np.append(optimal_revenues, opt_revenue)
-
-        else:
-            user = User(random=True)
-
-            pulled_arm = campaign_scheduler.pull_arm_from_user(user)
-
-            new_week, reward, current_date, new_day, done, opt_revenue = env.round(pulled_arm, user)
-            campaign_scheduler.update(user, pulled_arm, reward)
-            optimal_revenues = np.append(optimal_revenues, opt_revenue)
-
-        
+        new_week, reward, current_date, new_day, done, opt_revenue = env.round(pulled_arm, user)
+        campaign_scheduler.update(user, pulled_arm, reward)
+        optimal_revenues = np.append(optimal_revenues, opt_revenue)
 
     print(str(index) + ' has ended')
 
@@ -96,7 +71,7 @@ if __name__ == '__main__':
                 multi_class_handler=mch,
                 n_arms=n_arms)
 
-    campaign_scheduler = CampaignScheduler_5(mch, SWTS_Learner, n_arms, env.arm_prices['prices'], 5000)
+    campaign_scheduler = CampaignScheduler(mch, SWTS_Learner, n_arms, env.arm_prices['prices'], 5000)
 
     for class_ in mch.classes:
         plt.plot(class_.conv_rates['phase_0']['prices'],
@@ -151,5 +126,5 @@ if __name__ == '__main__':
     plt.xlabel('Time')
     plt.ylabel('Regret')
     plt.legend()
-    plt.savefig(f'project/part_5/other_files/testing_part5_narms{n_arms}_keepdailyprice{keep_daily_price}.png')
+    plt.savefig(f'other_files/testing_part5_narms{n_arms}_keepdailyprice{keep_daily_price}.png')
     plt.show()

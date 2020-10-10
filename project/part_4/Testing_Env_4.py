@@ -35,12 +35,10 @@ def execute_experiment(args):
         if keep_daily_price:
             if new_day:
                 pulled_arm = ts_learner.pull_arm_revenue()  # optimize by revenue
-                
         else:
             pulled_arm = ts_learner.pull_arm_revenue()  # optimize by revenue
 
         reward, current_date, new_day, done, opt_revenue = env.round(pulled_arm, user)
-        
         ts_learner.update(pulled_arm, reward)
         optimal_revenues = np.append(optimal_revenues, opt_revenue)
 
@@ -87,7 +85,7 @@ if __name__ == '__main__':
     plt.xlabel('Price')
     plt.ylabel('Conversion Rate')
     plt.legend()
-    plt.savefig('project/part_4/other_files/testing_part4_demandcurves.png')
+    plt.savefig('other_files/testing_part4_demandcurves.png')
     plt.show()
 
     n_experiments = 10  # the number is small to do a raw test, otherwise set it to 1000
@@ -120,5 +118,5 @@ if __name__ == '__main__':
     plt.xlabel('Time')
     plt.ylabel('Regret')
     plt.legend()
-    plt.savefig(f'project/part_4/other_files/testing_part4_narms{n_arms}_keepdailyprice{keep_daily_price}.png')
+    plt.savefig(f'other_files/testing_part4_narms{n_arms}_keepdailyprice{keep_daily_price}.png')
     plt.show()

@@ -4,7 +4,7 @@ from project.dia_pckg.Config import classes_config
 from project.part_5.ContextGenerator import ContextGenerator
 
 
-class CampaignScheduler_5(ContextGenerator):
+class CampaignScheduler(ContextGenerator):
 
     def __init__(self, multi_class_handler, mab_algorithm, *mab_args):
         super().__init__(multi_class_handler, mab_algorithm, mab_args)
@@ -34,10 +34,10 @@ class CampaignScheduler_5(ContextGenerator):
             Updating the context
         :return: None
         """
-        self.week_contexts = self.get_weekly_contexts_v2(last_contexts=self.week_contexts,
-                                                         rewards_counters=self.counters)
+        self.week_contexts = self.get_weekly_contexts(last_contexts=self.week_contexts,
+                                                      rewards_counters=self.counters)
 
-    def pull_arm_from_user(self, user):
+    def pull_arm_from_user(self, user, keep_daily_price, new_day):
         """
             Return the pulled arm from the context in which the user belongs
         :param user: User object
@@ -45,7 +45,7 @@ class CampaignScheduler_5(ContextGenerator):
         """
         for context_name, context_obj in self.week_contexts.items():
             if context_obj.is_user_belonging(user):
-                return context_obj.learner.pull_arm_revenue()
+                return context_obj.pull_arm(keep_daily_price, new_day)
 
     def update_rewards_counters(self, reward, user):
         """

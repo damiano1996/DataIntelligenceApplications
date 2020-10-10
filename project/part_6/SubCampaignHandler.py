@@ -29,7 +29,8 @@ class SubCampaignHandler:
 
         self.n_arms_advertising = n_arms_advertising
 
-        self.pricing = Pricing(class_name=class_name, multi_class_handler=multi_class_handler, n_arms=n_arms_pricing, keep_daily_price=keep_daily_price)
+        self.pricing = Pricing(class_name=class_name, multi_class_handler=multi_class_handler, n_arms=n_arms_pricing,
+                               keep_daily_price=keep_daily_price)
         self.advertising = Advertising(bidding_environment=bidding_environment,
                                        n_arms=self.n_arms_advertising,
                                        subcampaign_idx=subcampaign_idx)

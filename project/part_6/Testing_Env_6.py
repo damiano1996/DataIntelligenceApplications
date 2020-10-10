@@ -124,9 +124,10 @@ if __name__ == '__main__':
 
     plt.xlabel('Time')
     plt.ylabel('Regret')
-    #plt.ylim([0, 800e3])
+    # plt.ylim([0, 800e3])
     plt.legend()
 
     print('\n\nFINAL LOSS:', np.mean(final_loss_per_experiment))
-    plt.savefig(f'project/part_6/other_files/testing_part6_enablePricing{enable_pricing} _keepdailyprice{keep_daily_price}.png')
+    plt.savefig(
+        f'project/part_6/other_files/testing_part6_enablePricing{enable_pricing} _keepdailyprice{keep_daily_price}.png')
     plt.show()

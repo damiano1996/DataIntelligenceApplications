@@ -17,7 +17,7 @@ class ContextGenerator:
 
         self.report = ''
 
-    def get_weekly_contexts_v2(self, last_contexts, rewards_counters, delta=0.9):
+    def get_weekly_contexts(self, last_contexts, rewards_counters, delta=0.9):
         self.report = 'Generation context '
 
         if len(last_contexts) == 0:
