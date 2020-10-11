@@ -33,7 +33,7 @@ def read_configs():
 
 if __name__ == '__main__':
     dt_now = datetime.now()
-    charts_path = os.path.join('results_charts', 'test_' + str(dt_now).replace(' ', '_'))
+    charts_path = os.path.join('results_charts', 'test_' + str(dt_now.strftime('%Y-%m-%d_%H-%M')))
     os.mkdir(charts_path)
 
     logs_path = os.path.join(charts_path, 'logs.txt')
@@ -76,7 +76,7 @@ if __name__ == '__main__':
                keep_daily_price=keep_daily_price,
                demand_chart_path=demand_curves_chart_path,
                demand_chart_title=demand_curves_title,
-               results_chart_path=f'{charts_path}/part4_keep-daily-price:{keep_daily_price}.png',
+               results_chart_path=f'{charts_path}/part4_keep-daily-price{keep_daily_price}.png',
                results_chart_title=f'Part 4 - Regret [keep_daily_price:{keep_daily_price}]')
     print_(f'First sub-test completed.\n'
            f'Time: {datetime.now()}\n')
@@ -86,7 +86,7 @@ if __name__ == '__main__':
                keep_daily_price=keep_daily_price,
                demand_chart_path=demand_curves_chart_path,
                demand_chart_title=demand_curves_title,
-               results_chart_path=f'{charts_path}/part4_keep-daily-price:{keep_daily_price}.png',
+               results_chart_path=f'{charts_path}/part4_keep-daily-price{keep_daily_price}.png',
                results_chart_title=f'Part 4 - Regret [keep_daily_price:{keep_daily_price}]')
     print_(f'Second sub-test completed.\n'
            f'Time: {datetime.now()}\n')
@@ -102,7 +102,7 @@ if __name__ == '__main__':
                keep_daily_price=keep_daily_price,
                demand_chart_path=demand_curves_chart_path,
                demand_chart_title=demand_curves_title,
-               results_chart_path=f'{charts_path}/part5_keep-daily-price:{keep_daily_price}.png',
+               results_chart_path=f'{charts_path}/part5_keep-daily-price{keep_daily_price}.png',
                results_chart_title=f'Part 5 - Regret [keep_daily_price:{keep_daily_price}]')
     print_(f'First sub-test completed.\n'
            f'Time: {datetime.now()}\n')
@@ -112,7 +112,7 @@ if __name__ == '__main__':
                keep_daily_price=keep_daily_price,
                demand_chart_path=demand_curves_chart_path,
                demand_chart_title=demand_curves_title,
-               results_chart_path=f'{charts_path}/part5_keep-daily-price:{keep_daily_price}.png',
+               results_chart_path=f'{charts_path}/part5_keep-daily-price{keep_daily_price}.png',
                results_chart_title=f'Part 5 - Regret [keep_daily_price:{keep_daily_price}]')
     print_(f'Second sub-test completed.\n'
            f'Time: {datetime.now()}\n')
@@ -133,8 +133,8 @@ if __name__ == '__main__':
                demand_chart_path=demand_curves_chart_path,
                demand_chart_title=demand_curves_title,
                results_chart_path=f'{charts_path}/part6_'
-                                  f'enable-pricing:{enable_pricing}_'
-                                  f'keep-daily-price:{keep_daily_price}.png',
+                                  f'enable-pricing{enable_pricing}_'
+                                  f'keep-daily-price{keep_daily_price}.png',
                results_chart_title=f'Part 6 - Regret ['
                                    f'enable_pricing:{enable_pricing} '
                                    f'keep_daily_price:{keep_daily_price}]',
@@ -152,8 +152,8 @@ if __name__ == '__main__':
                demand_chart_path=demand_curves_chart_path,
                demand_chart_title=demand_curves_title,
                results_chart_path=f'{charts_path}/part6_'
-                                  f'enable-pricing:{enable_pricing}_'
-                                  f'keep-daily-price:{keep_daily_price}.png',
+                                  f'enable-pricing{enable_pricing}_'
+                                  f'keep-daily-price{keep_daily_price}.png',
                results_chart_title=f'Part 6 - Regret ['
                                    f'enable_pricing:{enable_pricing} '
                                    f'keep_daily_price:{keep_daily_price}]')
@@ -169,8 +169,8 @@ if __name__ == '__main__':
                demand_chart_path=demand_curves_chart_path,
                demand_chart_title=demand_curves_title,
                results_chart_path=f'{charts_path}/part6_'
-                                  f'enable-pricing:{enable_pricing}_'
-                                  f'keep-daily-price:{keep_daily_price}.png',
+                                  f'enable-pricing{enable_pricing}_'
+                                  f'keep-daily-price{keep_daily_price}.png',
                results_chart_title=f'Part 6 - Regret ['
                                    f'enable_pricing:{enable_pricing} '
                                    f'keep_daily_price:{keep_daily_price}]')
@@ -186,8 +186,8 @@ if __name__ == '__main__':
                demand_chart_path=demand_curves_chart_path,
                demand_chart_title=demand_curves_title,
                results_chart_path=f'{charts_path}/part6_'
-                                  f'enable-pricing:{enable_pricing}_'
-                                  f'keep-daily-price:{keep_daily_price}.png',
+                                  f'enable-pricing{enable_pricing}_'
+                                  f'keep-daily-price{keep_daily_price}.png',
                results_chart_title=f'Part 6 - Regret ['
                                    f'enable_pricing:{enable_pricing} '
                                    f'keep_daily_price:{keep_daily_price}]')

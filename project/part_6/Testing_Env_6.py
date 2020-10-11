@@ -1,5 +1,4 @@
 import copy
-import multiprocessing
 from multiprocessing import Pool
 
 import numpy as np
@@ -65,7 +64,7 @@ def test_part6(n_experiments=10,
              'plot_advertising': plot_advertising, 'advertising_chart_root_path': advertising_chart_root_path}
             for idx in range(n_experiments)]  # create arguments for the experiment
 
-    with Pool(processes=multiprocessing.cpu_count()) as pool:
+    with Pool(processes=1) as pool:  # multiprocessing.cpu_count()
         results = pool.map(execute_experiment, args, chunksize=1)
 
     for result in results:
@@ -87,7 +86,7 @@ def test_part6(n_experiments=10,
 
     plt.xlabel('Time')
     plt.ylabel('Regret')
-    # plt.ylim([0, 800e3])
+    plt.ylim([0, 2e6])
     plt.legend()
     plt.savefig(results_chart_path)
     plt.show()
