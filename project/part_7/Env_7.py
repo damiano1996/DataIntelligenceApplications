@@ -18,7 +18,6 @@ class Env_7(Environment):
         self.n_arms = n_arms
         self.arm_prices = self.get_candidate_prices()
 
-
     def round(self, pulled_arm_price, clicks_per_class):
         """
         Returns reward x each class
@@ -32,17 +31,17 @@ class Env_7(Environment):
         rewards = {}
         optimals = {}
 
-        for cl,ck in clicks_per_class:
+        for cl, ck in clicks_per_class:
             conv_rate = self.mch.get_class(class_name=cl).conv_rates['phase_0']
             probability = conv_rate['probabilities'][self.arm_prices['indices'][pulled_arm_price]]
 
-            if (probability < 0):
+            if probability < 0:
                 probability = 1e-3
 
             rewards[cl] = np.random.normal(probability, noise_std) * self.arm_prices['prices'][pulled_arm_price]
 
         super.step()
-        return rewards,optimals
+        return rewards, optimals
 
     def reset(self):
         """
