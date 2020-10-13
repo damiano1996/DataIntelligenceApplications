@@ -161,9 +161,11 @@ To detect change, we need to compare two sources of data and decide whether the 
 they come from the same distribution, is true.
 Pr(|μ ̂_0- μ ̂_1 |/√(σ_0^2⁡〖+σ_1^2 〗 )>h)
 <br>
-
-$$x_{1,2} = {-b\pm\sqrt{b^2 - 4ac} \over 2a}.$$
-
+<font size="3">
+$
+r_{xy} = \frac{\sum_{i=1}^n (x_i-\overline{x})(y_i-\overline{y})}{\sigma_x \sigma_y}
+$
+</font>
 Plot the cumulative regret and compare it with the cumulative regret that a non-sliding-window algorithm would obtain.
 
 ##### 2.3 Learning the price
