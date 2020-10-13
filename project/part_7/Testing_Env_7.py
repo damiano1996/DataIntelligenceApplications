@@ -10,7 +10,8 @@ from project.dia_pckg.Environment import Environment
 from project.dia_pckg.Product import Product
 from project.dia_pckg.plot_style.cb91visuals import *
 from project.part_4.MultiClassHandler import MultiClassHandler
-from project.part_6.BudgetAllocator import BudgetAllocator
+from project.part_6.MultiSubCampaignHandler import MultiSubCampaignHandler
+from project.part_7.BudgetAllocator import BudgetAllocator
 
 # np.random.seed(0)
 
@@ -24,24 +25,17 @@ def execute_experiment(args):
     index = args['index']
     env = args['environment']
     mch = args['multiclasshandler']
-    for arm in range(n_arms_pricing):
-        budget_allocator = BudgetAllocator(multi_class_handler=mch,
-                                           n_arms_pricing=pricing_arms,
-                                           n_arms_advertising=10,
-                                           enable_pricing=enable_pricing,
-                                           keep_daily_price=True,
-                                           arm=arm)
+    budget_allocators = []
 
-        current_day, done = env.reset()
 
-        while not done:
-            print('day:', current_day)
+    for pricing_arm in range(0,pricing_arms):
+        None
 
-            # Handler solve the problem for current day
-            budget_allocator.update()
+    for d in range(0,n_days):
+        None
 
-            # Day step
-            current_day, done = env.step()
+
+
 
     if plot_advertising:
         for subcampaign_handler in budget_allocator.msh.subcampaigns_handlers:
