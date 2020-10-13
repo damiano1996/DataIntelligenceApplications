@@ -141,8 +141,11 @@ In this case, the functions generating  the number of clicks given a bid value c
 the phase we are in.
 As follows the mathematical formulation and the plots of the three curves (one for each sub-campaign):
 </p>
-<i><b>curve = max_n_clicks * (max_value[phase] - np.exp(-param[phase] * x))</b></i>
-<br>
+
+<p align="center">
+    <i><b>curve = max_n_clicks * (max_value[phase] - np.exp(-param[phase] * x))</b></i>
+</p>
+
 We can notice that now the <i>max_value</i> and <i>param</i> variables depends on the phase we are in.
 <br>
 
@@ -175,7 +178,7 @@ belongs to that distribution, is true.
 Let us suppose to draw a sample whose value is x<sub>0</sub> and let μ and σ<sup>2</sup> be respectively the average
 and the standard deviation of the the distribution of the points belonging to the pulled arm. 
 If the point doesn't belong to that distribution the hypothesis test should reject H<sub>0</sub>, 
-with a confidence interval of <h1>TODO: CONFIDENCE INTERVAL%</h1>. So we have:
+with a confidence interval of <h1>TODO: CONFIDENCE INTERVAL%.</h1> So we have:
 <br>
 
 <p align="center">
@@ -194,7 +197,7 @@ to that distribution and so it means that it is changed. In this case we reset t
 
 <p>
 In the following plots a comparison of the performance of three algorithms (i.e. <i>Combinatorial bandit algorithm 
-without sliding window</i>, <i>Combinatorial bandit algorithm with sliding window</i> and i>Change detection
+without sliding window</i>, <i>Combinatorial bandit algorithm with sliding window</i> and <i>Change detection
 implementation</i>) is shown. As before, for the performance evaluations we have computed the <u>cumulative regret</u> 
 as the difference between the expected reward of the <i>Clairvoyant algorithm</i> and the expected reward of 
 the implemented algorithms. 
