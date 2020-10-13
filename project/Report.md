@@ -143,10 +143,26 @@ We can notice that now the <i>max_value</i> and <i>param</i> variables depends o
 In order to learn the three curves in the case of multiple abrupt phase, we have implemented the <i>DynamicLerner.py</i>
 class as an extension of the standard GP_Learner.
 <br>
-In practice it implements a sliding window mechanism in which we pull a new arm and add the collected rewards until
+It implements a sliding window mechanism in which we pull a new arm and add the collected rewards until
 the length of the window. When the window is full, for each new pulled arm we get, we delete the last recent value
 and add the new one to the collected rewards.
 </p>
+
+<h6>Another implementation: Changes Detection</h6>
+For solving this problem we have implemented, in the <i>DLChangeDetect.py</i> class, an innovative method 
+which is based on the concept of the Statistical test.
+<br>
+We recall that a statistical test is a procedure for deciding whether a hypothesis about a quantitative feature
+of a population is true or false. Then for testing a hypothesis, we draw a random sample and calculate an appropriate
+statistic on its items. If, in doing so, we obtain a value of the statistic that would occur rarely when the hypothesis
+is true, we would have reason to reject the hypothesis.
+<br>
+To detect change, we need to compare two sources of data and decide whether the hypothesis H<sub>0</sub>, that 
+they come from the same distribution, is true.
+Pr(|μ ̂_0- μ ̂_1 |/√(σ_0^2⁡〖+σ_1^2 〗 )>h)
+<br>
+
+$$x_{1,2} = {-b\pm\sqrt{b^2 - 4ac} \over 2a}.$$
 
 Plot the cumulative regret and compare it with the cumulative regret that a non-sliding-window algorithm would obtain.
 
