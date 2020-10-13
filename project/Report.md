@@ -61,8 +61,10 @@ expected number of clicks have been defined in the <i>SubCampaign.py</i> class.<
 As follows the mathematical formulation the curves of the function generating  the number of clicks given a bid value
 and the plots of the three curves (one for each sub-campaign):
 </p>
-<i><b>curve = max_n_clicks * (max_value - np.exp(-param * x))</b></i>
 
+<p align="center">
+<i><b>curve = max_n_clicks * (max_value - np.exp(-param * x))</b></i>
+</p>
 where:
 <ul>
 <li><i><b>max_n_clicks</b></i>: is the maximum number of clicks the considered sub-campaign can reach in a day</li>
@@ -173,7 +175,7 @@ with a confidence interval of [TODO: CONFIDENCE INTERVAL]%. So we have:
 <br>
 
 <p align="center">
-Pr[(|x<sub>0</sub> - μ| / sqrt(σ<sup>2</sup>) > h)] = [TODO: p-value]
+ <i><b>Pr[(|x<sub>0</sub> - μ| / sqrt(σ<sup>2</sup>) > h)] = [TODO: p-value]</b></i>
 </p>
 
 We have that the critical z-score when using a c confidence level are [TODO: z-score asssociated] standard deviations.
