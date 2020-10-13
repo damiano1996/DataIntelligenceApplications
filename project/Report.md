@@ -69,7 +69,9 @@ where:
 <li><i><b>max_value</b></i> and <i><b>param</b></i>: are values associated to each sub-campaign defining the actual bidding curve</li>
 </ul>
 <br>
-<h6> [3 FUNCTIONS PLOT] </h6>
+
+[TODO: 3 FUNCTIONS PLOT]
+
 <br>
 
 <p>
@@ -101,8 +103,9 @@ Once we have filled the entire table, we have the best solution in the last row,
 i.e. when all the 3 sub-campaigns are considered.
 </p>
 
-<p>
+####### Performance evaluation
 
+<p>
 Finally, in order to evaluate the performance of the algorithm we have computed the <u>cumulative regret</u> as the difference
 between the expected reward of the <i>Clairvoyant algorithm</i> and the expected reward of the implemented 
 combinatorial bandit algorithm. 
@@ -110,7 +113,7 @@ combinatorial bandit algorithm.
 As follows the plot of the cumulative regret
 </p>
 
-####### [CUMULATIVE REGRET PLOT] + "Eventuali Considerazioni"  
+####### [TODO: CUMULATIVE REGRET PLOT] + "Eventuali Considerazioni"  
 
 
 ##### 2.2 Budget allocation optimization and abrupt phases
@@ -136,7 +139,9 @@ As follows the mathematical formulation and the plots of the three curves (one f
 <br>
 We can notice that now the <i>max_value</i> and <i>param</i> variables depends on the phase we are in.
 <br>
-<h6> [3 FUNCTIONS PLOT] </h6>
+
+######### [TODO: 3 FUNCTIONS PLOT]
+
 <br>
 
 <p>
@@ -144,7 +149,7 @@ In order to learn the three curves in the case of multiple abrupt phase, we have
 class as an extension of the standard GP_Learner.
 <br>
 It implements a sliding window mechanism in which we pull a new arm and add the collected rewards until
-the length of the window. When the window is full, for each new pulled arm we get, we delete the last recent value
+the length of the window is reached. When the window is full, for each new pulled arm we get, we delete the last recent value
 and add the new one to the collected rewards.
 </p>
 
@@ -157,16 +162,43 @@ of a population is true or false. Then for testing a hypothesis, we draw a rando
 statistic on its items. If, in doing so, we obtain a value of the statistic that would occur rarely when the hypothesis
 is true, we would have reason to reject the hypothesis.
 <br>
-To detect change, we need to compare two sources of data and decide whether the hypothesis H<sub>0</sub>, that 
-they come from the same distribution, is true.
-Pr(|μ ̂_0- μ ̂_1 |/√(σ_0^2⁡〖+σ_1^2 〗 )>h)
+To detect change in our scenario, we need to compare the value of the new drawn sample with the distribution of 
+the points belonging to the same arm in order to decide whether the hypothesis H<sub>0</sub>,that the new drawn point  
+belongs to that distribution, is true.
 <br>
-<font size="3">
-$
-r_{xy} = \frac{\sum_{i=1}^n (x_i-\overline{x})(y_i-\overline{y})}{\sigma_x \sigma_y}
-$
-</font>
-Plot the cumulative regret and compare it with the cumulative regret that a non-sliding-window algorithm would obtain.
+Let us suppose to draw a sample whose value is x<sub>0</sub> and let μ and σ<sup>2</sup> be respectively the average
+and the standard deviation of the the distribution of the points belonging to the pulled arm. 
+If the point doesn't belong to that distribution the hypothesis test should reject H<sub>0</sub>, 
+with a confidence interval of [TODO: CONFIDENCE INTERVAL]%. So we have:
+<br>
+
+<p align="center">
+Pr[(|x<sub>0</sub> - μ| / sqrt(σ<sup>2</sup>) > h)] = [TODO: p-value]
+</p>
+
+We have that the critical z-score when using a c confidence level are [TODO: z-score asssociated] standard deviations.
+
+In the <i>DLChangeDetect.py</i> class we have implemented such change detector. When an arm is pulled more than 
+<i>'min_len'</i> times (min_len indicates the minimum number of data we considering in an arm), 
+for each pull we run the statistical test. When the test reject H<sub>0</sub>, it means that the point doesn't belong 
+to that distribution and so it means that it is changed. In this case we reset the arm 
+<br>
+
+####### Performance evaluation
+
+<p>
+In order to evaluate the performance of the algorithm, we have computed the <u>cumulative regret</u> as the difference
+between the expected reward of the <i>Clairvoyant algorithm</i> and the expected reward of the implemented algorithms. 
+In the plot we can see the comparison of the cumulative regrets in the three cases:
+<uo>
+<li>Combinatorial bandit algorithm without sliding window</li>
+<li>Combinatorial bandit algorithm with sliding window</li>
+<li>Change detection implementation</li>
+</uo> 
+<br>
+</p>
+
+######### [TODO: REGRET OF PART 3] + "Eventuali Considerazioni" 
 
 ##### 2.3 Learning the price
 Design a learning algorithm for pricing when the users that will 
