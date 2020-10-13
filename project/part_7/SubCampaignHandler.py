@@ -1,7 +1,11 @@
 import numpy as np
 
 from project.part_6.Advertising import Advertising
+from project.part_2.GPTS_Learner import GPTS_Learner
+from project.dia_pckg.Config import *
 
+## bisogna far restituire click per subcampaign e aggiornare relative curve
+## le curve dell'advertising sono aggiornate da advertising tramite get_daily_clicks, solo quelle del pricing vanno guardate
 
 class SubCampaignHandler:
     """
@@ -11,9 +15,9 @@ class SubCampaignHandler:
     def __init__(self,
                  class_name,
                  subcampaign_idx,
+                 n_arms_pricing,
                  n_arms_advertising,
-                 bidding_environment,
-                 arm):
+                 bidding_environment):
         """
         :param class_name:
         :param multi_class_handler:
@@ -25,14 +29,14 @@ class SubCampaignHandler:
         self.class_name = class_name
 
         self.n_arms_advertising = n_arms_advertising
-
-        self.arm = arm
+        self.n_arms_pricing = n_arms_pricing
 
         self.advertising = Advertising(bidding_environment=bidding_environment,
                                        n_arms=self.n_arms_advertising,
                                        subcampaign_idx=subcampaign_idx)
 
         self.window_size = 5
+        self.learner = GPTS_Learner(n_arms=self.n_arms_pricing, arms=self.get_candidate_prices())
         self.window_revenue = np.array([])
         self.window_clicks = np.array([])
 
@@ -94,3 +98,16 @@ class SubCampaignHandler:
 
         self.total_revenue = np.sum(self.window_revenue)
         self.total_clicks = np.sum(self.window_clicks)
+
+    def get_candidate_prices(self):
+        """
+            This method return the candidate prices, one price for each arm.
+            The "indices" array contains the positions of the specified prices in the aggregate curve
+        :return:
+        """
+        arm_distance = int(product_config['max_price'] / self.n_arms_pricing)
+        prices = [int(arm_distance * arm) for arm in range(1, self.n_arms_pricing+1)]
+        return prices
+
+    def update_conversion_rate(self, arm, value_conv_rate):
+        self.learner.update(arm, value_conv_rate)

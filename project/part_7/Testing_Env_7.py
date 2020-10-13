@@ -10,7 +10,7 @@ from project.dia_pckg.Environment import Environment
 from project.dia_pckg.Product import Product
 from project.dia_pckg.plot_style.cb91visuals import *
 from project.part_4.MultiClassHandler import MultiClassHandler
-from project.part_7.MultiSubcampaignHandler import CampaignHandler
+from project.part_7.MultiSubcampaignHandler import MultiSubcampaignHandler
 from project.part_7.BudgetAllocator import BudgetAllocator
 
 # np.random.seed(0)
@@ -27,16 +27,27 @@ def execute_experiment(args):
     mch = args['multiclasshandler']
     budget_allocators = []
 
-    msh = CampaignHandler()
+    msh = MultiSubcampaignHandler(mch, n_arms_pricing, n_arms_advertising)
 
     for pricing_arm in range(0, pricing_arms):
         budget_allocators.append(BudgetAllocator(pricing_arm, msh, n_arms_advertising, 3))
 
     for d in range(0, n_days):
+        best_click = 0
+        best_pricing = 0
+        best_allocation = None
+
         for ba in budget_allocators:
             allocation, click = ba.compute_best_allocation()
-            _, daily_clicks = msh.update_all_subcampaign_handlers(allocation)
-            env.round(ba.arm_pricing, daily_clicks)
+
+            #aggiungere reward all'if
+            if click > best_click:
+                best_allocation = allocation
+                best_pricing = ba.arm_pricing
+                best_click = click
+
+        _, daily_clicks = msh.update_all_subcampaign_handlers(best_allocation)
+        env.round(best_pricing, daily_clicks)
 
     if plot_advertising:
         for subcampaign_handler in budget_allocator.msh.subcampaigns_handlers:

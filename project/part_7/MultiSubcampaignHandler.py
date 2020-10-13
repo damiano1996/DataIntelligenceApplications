@@ -6,14 +6,13 @@ from project.part_2.Utils import get_idx_arm_from_allocation
 from project.part_7.SubCampaignHandler import SubCampaignHandler
 
 
-class CampaignHandler:
+class MultiSubcampaignHandler:
     def __init__(self,
                  multi_class_handler,
-                 n_arms_advertising,
-                 arm):
+                 n_arms_pricing,
+                 n_arms_advertising):
 
         self.mch = multi_class_handler
-        self.arm = arm
         self.n_arms_advertising = n_arms_advertising
 
         self.bidding_environment = BiddingEnvironment(np.linspace(0, max_bid, self.n_arms_advertising))
@@ -22,9 +21,9 @@ class CampaignHandler:
         for i, class_ in enumerate(self.mch.classes):
             subcampaign_handler = SubCampaignHandler(class_name=class_.name,
                                                      subcampaign_idx=i,
+                                                     n_arms_pricing=n_arms_pricing,
                                                      n_arms_advertising=self.n_arms_advertising,
-                                                     bidding_environment=self.bidding_environment,
-                                                     arm=arm)
+                                                     bidding_environment=self.bidding_environment)
             self.subcampaigns_handlers.append(subcampaign_handler)
 
         self.regret = []
