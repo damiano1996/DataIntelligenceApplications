@@ -12,20 +12,21 @@ class BudgetAllocator:
                  n_arms_pricing,
                  n_arms_advertising,
                  enable_pricing=True,
-                 keep_daily_price=False):
+                 keep_daily_price=False,
+                 arm=None):
         """
         :param multi_class_handler:
         :param n_arms_pricing:
         :param n_arms_advertising:
         """
-
+        self.arm = arm
         self.msh = MultiSubCampaignHandler(multi_class_handler=multi_class_handler,
                                            n_arms_pricing=n_arms_pricing,
                                            n_arms_advertising=n_arms_advertising,
-                                           keep_daily_price=keep_daily_price)
+                                           keep_daily_price=keep_daily_price,
+                                           arm=arm)
 
         self.enable_pricing = enable_pricing
-
         self.n_arms_pricing = self.msh.subcampaigns_handlers[0].pricing.n_arms
         self.n_arms_advertising = self.msh.subcampaigns_handlers[0].advertising.n_arms
         self.n_subcampaigns = len(self.msh.subcampaigns_handlers)

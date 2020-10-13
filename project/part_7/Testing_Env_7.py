@@ -24,22 +24,24 @@ def execute_experiment(args):
     index = args['index']
     env = args['environment']
     mch = args['multiclasshandler']
+    for arm in range(n_arms_pricing):
+        budget_allocator = BudgetAllocator(multi_class_handler=mch,
+                                           n_arms_pricing=pricing_arms,
+                                           n_arms_advertising=10,
+                                           enable_pricing=enable_pricing,
+                                           keep_daily_price=True,
+                                           arm=arm)
 
-    budget_allocator = BudgetAllocator(multi_class_handler=mch,
-                                       n_arms_pricing=pricing_arms,
-                                       n_arms_advertising=10,
-                                       enable_pricing=enable_pricing)
+        current_day, done = env.reset()
 
-    current_day, done = env.reset()
+        while not done:
+            print('day:', current_day)
 
-    while not done:
-        print('day:', current_day)
+            # Handler solve the problem for current day
+            budget_allocator.update()
 
-        # Handler solve the problem for current day
-        budget_allocator.update()
-
-        # Day step
-        current_day, done = env.step()
+            # Day step
+            current_day, done = env.step()
 
     if plot_advertising:
         for subcampaign_handler in budget_allocator.msh.subcampaigns_handlers:

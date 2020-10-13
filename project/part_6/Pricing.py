@@ -12,7 +12,8 @@ class Pricing:
                  class_name,
                  multi_class_handler,
                  n_arms,
-                 keep_daily_price):
+                 keep_daily_price,
+                 arm):
         """
         :param class_name:
         :param multi_class_handler:
@@ -23,7 +24,7 @@ class Pricing:
         self.n_arms = n_arms
         self.class_name = class_name
         self.keep_daily_price = keep_daily_price
-
+        self.arm = arm
         # self.pricing_learner = SWTS_Learner(n_arms=n_arms, arm_prices=self.get_candidate_prices()['prices'], window_size=5000)
         self.learner = TS_Learner(n_arms=self.n_arms, arm_prices=self.get_candidate_prices()['prices'])
 
@@ -49,8 +50,9 @@ class Pricing:
         new_day = True
         while not done:
             user = User(class_name=self.class_name)
-
-            if self.keep_daily_price:
+            if self.arm is not None:
+                pulled_arm = self.arm
+            elif self.keep_daily_price:
                 if new_day:
                     pulled_arm = self.learner.pull_arm_revenue()  # optimize by revenue
             else:

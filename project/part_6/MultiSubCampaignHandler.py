@@ -12,14 +12,15 @@ class MultiSubCampaignHandler:
                  multi_class_handler,
                  n_arms_pricing,
                  n_arms_advertising,
-                 keep_daily_price):
+                 keep_daily_price,
+                 arm):
         """
         :param multi_class_handler:
         :param n_arms_pricing:
         :param n_arms_advertising:
         """
         self.mch = multi_class_handler
-
+        self.arm = arm
         self.n_arms_pricing = n_arms_pricing
         self.n_arms_advertising = n_arms_advertising
 
@@ -33,7 +34,8 @@ class MultiSubCampaignHandler:
                                                      n_arms_pricing=self.n_arms_pricing,
                                                      n_arms_advertising=self.n_arms_advertising,
                                                      bidding_environment=self.bidding_environment,
-                                                     keep_daily_price=keep_daily_price)
+                                                     keep_daily_price=keep_daily_price,
+                                                     arm=arm)
             self.subcampaigns_handlers.append(subcampaign_handler)
 
         self.regret = []

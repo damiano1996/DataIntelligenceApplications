@@ -16,7 +16,8 @@ class SubCampaignHandler:
                  n_arms_pricing,
                  n_arms_advertising,
                  bidding_environment,
-                 keep_daily_price):
+                 keep_daily_price,
+                 arm):
         """
         :param class_name:
         :param multi_class_handler:
@@ -29,8 +30,10 @@ class SubCampaignHandler:
 
         self.n_arms_advertising = n_arms_advertising
 
+        self.arm = arm
+
         self.pricing = Pricing(class_name=class_name, multi_class_handler=multi_class_handler, n_arms=n_arms_pricing,
-                               keep_daily_price=keep_daily_price)
+                               keep_daily_price=keep_daily_price, arm=arm)
         self.advertising = Advertising(bidding_environment=bidding_environment,
                                        n_arms=self.n_arms_advertising,
                                        subcampaign_idx=subcampaign_idx)
