@@ -26,7 +26,7 @@ a final conclusion summarizing the whole work.
 
 We have studied a possible real world scenario in which a seller wants to increase the number of possible buyers 
 by exploiting advertising tools. The product we have considered is a particular pair of shoes 
-which has a production cost (without loss of generality we can assume that the production cost is null) and sell price.
+which has a production cost (without loss of generality we can assume that the production cost is null) and a sell price.
 <br>
 The analysed campaign consists of three sub-campaigns, each with a different ad to advertise the product
 and each targeting a different class of users. 
@@ -36,7 +36,7 @@ The feature space we have considered is characterized by two binary features:
 * Profession that can be either *student* or *worker*
 <br>
 
-So according to the values of the above described feature, we can distinguish among the following classes of users:
+So according to the values of the above described features, we can distinguish among the following classes of users:
 * *Elagant*: a worker with age>30
 * *Casual*: a student with age<30
 * *Sport*: a worker with age<30
@@ -69,12 +69,13 @@ where:
 <li><i><b>max_value</b></i> and <i><b>param</b></i>: are values associated to each sub-campaign defining the actual bidding curve</li>
 </ul>
 <br>
-[3 FUNCTIONS PLOT]
+<h6> [3 FUNCTIONS PLOT] </h6>
 <br>
 
 <p>
-In order to find the best budget allocation over the three sub-campaignsesign able to maximize the 
-total number of clicks, we have designed a combinatorial bandit algorithm.<br>
+In order to find the best budget allocation over the three sub-campaigns able to maximize the total number of clicks,
+we have designed a combinatorial bandit algorithm.
+<br>
 In the first phase of the algorithm we learn the model of each sub-campaign from the observation we get.
 To do that we have used a GP_Learner that, for each sub-campaign, given the index of the pulled arm, 
 i.e. the index of the chosen bid, returns the reward.
@@ -96,15 +97,58 @@ the previous row (i.e. without considering the new entered sub-campaign) and
 the value of the new considered sub-campaign (considered singularly) s.t. the daily budget over the three sub-campaigns
 sums to the total daily budget.
 <br>
-Once we have filled the entire table, we have the best solution in the last row, i.e. 
-when all the 3 sub-campaigns are considered
-
-
+Once we have filled the entire table, we have the best solution in the last row, 
+i.e. when all the 3 sub-campaigns are considered.
 </p>
+
+<p>
+
+Finally, in order to evaluate the performance of the algorithm we have computed the <u>cumulative regret</u> as the difference
+between the expected reward of the <i>Clairvoyant algorithm</i> and the expected reward of the implemented 
+combinatorial bandit algorithm. 
+<br>
+As follows the plot of the cumulative regret
+</p>
+
+####### [CUMULATIVE REGRET PLOT] + "Eventuali Considerazioni"  
 
 
 ##### 2.2 Budget allocation optimization and abrupt phases
-Design a sliding-window combinatorial bandit algorithm for the case, instead, in which there are the three phases aforementioned. Plot the cumulative regret and compare it with the cumulative regret that a non-sliding-window algorithm would obtain.
+<p>
+The object of this section is the design a sliding-window combinatorial bandit algorithm for 
+optimizing the budget allocation over the three sub-campaigns in order to maximize the total number of clicks,
+in the case in which there are the three abrupt phases. 
+</p>
+
+<p>
+For addressing this task we started from the simplified case of one single phase solved in the previous section and 
+we extended it in order to take in consideration the more general scenario of multiple phases.
+<br>
+For this purpose we have implemented the <i>AbruptBiddingEnvironment.py</i> class which
+extends the <i>BiddingEnvironment.py</i> class. This class works in a scenario of multiple abrupt phases by 
+returning, for each sub-campaign, the reward of a given pulled arm, depending on the phase we are.
+<br>
+In this case, the functions generating  the number of clicks given a bid value can change dynamically, according
+the phase we are in.
+As follows the mathematical formulation and the plots of the three curves (one for each sub-campaign):
+</p>
+<i><b>curve = max_n_clicks * (max_value[phase] - np.exp(-param[phase] * x))</b></i>
+<br>
+We can notice that now the <i>max_value</i> and <i>param</i> variables depends on the phase we are in.
+<br>
+<h6> [3 FUNCTIONS PLOT] </h6>
+<br>
+
+<p>
+In order to learn the three curves in the case of multiple abrupt phase, we have implemented the <i>DynamicLerner.py</i>
+class as an extension of the standard GP_Learner.
+<br>
+In practice it implements a sliding window mechanism in which we pull a new arm and add the collected rewards until
+the length of the window. When the window is full, for each new pulled arm we get, we delete the last recent value
+and add the new one to the collected rewards.
+</p>
+
+Plot the cumulative regret and compare it with the cumulative regret that a non-sliding-window algorithm would obtain.
 
 ##### 2.3 Learning the price
 Design a learning algorithm for pricing when the users that will 
