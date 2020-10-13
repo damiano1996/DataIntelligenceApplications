@@ -1,4 +1,4 @@
-### Title of the Report
+# Title of the Report
 <p align="center"><b>
  Enrico Voltan <sup>[1]</sup>,
  Damiano Derin <sup>[2]</sup>, 
@@ -13,7 +13,7 @@
 [4] andrea.diecidue@mail.polimi.it<br>
 [5] andrea.bionda@mail.polimi.it<br>
 
-#### Abstract
+### Abstract
 The goal of the project is to model a scenario in which a seller exploits advertising tools in order to attract
 more and more users to its website, thus increasing the number of possible buyers.
 The seller has to learn simultaneously the conversion rate and the number of users the advertising tools can attract.
@@ -22,7 +22,7 @@ of the algorithm design choices we adopted in order to reach our goal.
 Then the achieved experimental results will be presented via some useful plots and 
 a final conclusion summarizing the whole work.
 
-#### 1. Introduction
+### 1. Introduction
 
 We have studied a possible real world scenario in which a seller wants to increase the number of possible buyers 
 by exploiting advertising tools. The product we have considered is a particular pair of shoes 
@@ -42,13 +42,15 @@ So according to the values of the above described features, we can distinguish a
 * *Sport*: a worker with age<30
 <br>
 
-#### 2. Algorithm design choices and Results
+### 2. Algorithm design choices and Results
 This section deals with the description of the algorithm design choices we adopted and
 it also contains the most relevant reference to the code.
 For the description we will adopt the following structure: for each sub-section we will describe the actual scenario
 we are interested in by defining its goals and then we focus on how we have solved the problem and 
 the results we have obtained.
-##### 2.1 Budget allocation optimization
+
+#### 2.1 Budget allocation optimization
+
 The goal of this part is to design a combinatorial bandit algorithm to optimize the budget allocation
 over the three sub-campaigns in order to maximize the total number of clicks.
 For this section we can assume, for simplicity,that there is only one phase.
@@ -63,16 +65,18 @@ and the plots of the three curves (one for each sub-campaign):
 </p>
 
 <p align="center">
-<i><b>curve = max_n_clicks * (max_value - np.exp(-param * x))</b></i>
+    <i><b>curve = max_n_clicks * (max_value - np.exp(-param * x))</b></i>
 </p>
+
 where:
 <ul>
 <li><i><b>max_n_clicks</b></i>: is the maximum number of clicks the considered sub-campaign can reach in a day</li>
 <li><i><b>max_value</b></i> and <i><b>param</b></i>: are values associated to each sub-campaign defining the actual bidding curve</li>
 </ul>
+
 <br>
 
-[TODO: 3 FUNCTIONS PLOT]
+# TODO: 3 FUNCTIONS PLOT of Part 2
 
 <br>
 
@@ -105,7 +109,7 @@ Once we have filled the entire table, we have the best solution in the last row,
 i.e. when all the 3 sub-campaigns are considered.
 </p>
 
-####### Performance evaluation
+###### Performance evaluation
 
 <p>
 Finally, in order to evaluate the performance of the algorithm we have computed the <u>cumulative regret</u> as the difference
@@ -115,10 +119,10 @@ combinatorial bandit algorithm.
 As follows the plot of the cumulative regret
 </p>
 
-####### [TODO: CUMULATIVE REGRET PLOT] + "Eventuali Considerazioni"  
+# TODO: CUMULATIVE REGRET PLOT] + "Eventuali Considerazioni"  
 
 
-##### 2.2 Budget allocation optimization and abrupt phases
+#### 2.2 Budget allocation optimization and abrupt phases
 <p>
 The object of this section is the design a sliding-window combinatorial bandit algorithm for 
 optimizing the budget allocation over the three sub-campaigns in order to maximize the total number of clicks,
@@ -142,7 +146,7 @@ As follows the mathematical formulation and the plots of the three curves (one f
 We can notice that now the <i>max_value</i> and <i>param</i> variables depends on the phase we are in.
 <br>
 
-######### [TODO: 3 FUNCTIONS PLOT]
+# TODO: 3 FUNCTIONS PLOT
 
 <br>
 
@@ -171,7 +175,7 @@ belongs to that distribution, is true.
 Let us suppose to draw a sample whose value is x<sub>0</sub> and let μ and σ<sup>2</sup> be respectively the average
 and the standard deviation of the the distribution of the points belonging to the pulled arm. 
 If the point doesn't belong to that distribution the hypothesis test should reject H<sub>0</sub>, 
-with a confidence interval of [TODO: CONFIDENCE INTERVAL]%. So we have:
+with a confidence interval of <h1>TODO: CONFIDENCE INTERVAL%</h1>. So we have:
 <br>
 
 <p align="center">
@@ -189,18 +193,14 @@ to that distribution and so it means that it is changed. In this case we reset t
 <h6> Performance evaluation </h6>
 
 <p>
-In order to evaluate the performance of the algorithm, we have computed the <u>cumulative regret</u> as the difference
-between the expected reward of the <i>Clairvoyant algorithm</i> and the expected reward of the implemented algorithms. 
-In the plot we can see the comparison of the cumulative regrets in the three cases:
-<uo>
-<li>Combinatorial bandit algorithm without sliding window</li>
-<li>Combinatorial bandit algorithm with sliding window</li>
-<li>Change detection implementation</li>
-</uo> 
-<br>
+In the following plots a comparison of the performance of three algorithms (i.e. <i>Combinatorial bandit algorithm 
+without sliding window</i>, <i>Combinatorial bandit algorithm with sliding window</i> and i>Change detection
+implementation</i>) is shown. As before, for the performance evaluations we have computed the <u>cumulative regret</u> 
+as the difference between the expected reward of the <i>Clairvoyant algorithm</i> and the expected reward of 
+the implemented algorithms. 
 </p>
 
-######### [TODO: REGRET OF PART 3] + "Eventuali Considerazioni" 
+# TODO: REGRET OF PART 3 + "Eventuali Considerazioni" 
 
 ##### 2.3 Learning the price
 Design a learning algorithm for pricing when the users that will 
