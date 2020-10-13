@@ -186,7 +186,7 @@ for each pull we run the statistical test. When the test reject H<sub>0</sub>, i
 to that distribution and so it means that it is changed. In this case we reset the arm 
 <br>
 
-####### Performance evaluation
+<h6> Performance evaluation </h6>
 
 <p>
 In order to evaluate the performance of the algorithm, we have computed the <u>cumulative regret</u> as the difference
