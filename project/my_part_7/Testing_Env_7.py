@@ -144,7 +144,7 @@ def execute_experiment(args):
             subcampaign_handler.advertising.learner.plot(unknown_clicks_curve,
                                                          sigma_scale_factor=10,
                                                          chart_path=advertising_chart_root_path +
-                                                                    'subcamaign_' +
+                                                                    'subcampaign_' +
                                                                     str(idx))
 
     print('Total revenue:', int(fix_price_budget_allocator.msh.total_revenue),
@@ -162,4 +162,4 @@ def execute_experiment(args):
 
 
 if __name__ == '__main__':
-    test_part7(n_experiments=4, plot_advertising=False)
+    test_part7(n_experiments=4, plot_advertising=False, enable_pricing=True)

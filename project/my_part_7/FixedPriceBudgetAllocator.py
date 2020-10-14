@@ -31,6 +31,7 @@ class FixedPriceBudgetAllocator(BudgetAllocator):
                           'collected_revenues': np.zeros(shape=(n_arms_pricing,))}
 
         self.best_prices = []
+        self.best_price_index = None
 
     def day_zero_initialization(self):
         """
@@ -76,13 +77,13 @@ class FixedPriceBudgetAllocator(BudgetAllocator):
         print(f'CURRENT CANDIDATE PRICE: {candidate_price}')
 
         # next price:
-        if self.n_updates % self.n_days_same_price == 0:
+        if self.n_updates % self.n_days_same_price == 0:  # and self.best_price_index is None:
             self.fixed_price += 1
             if self.fixed_price >= self.n_arms_pricing:
                 self.fixed_price = 0
                 # all prices have been tested, now we can compute the most promising price
-                best_price = self.cc_prices['candidate_prices'][
-                    int(np.argmax(np.asarray(self.cc_prices['collected_revenues'])))]
+                self.best_price_index = int(np.argmax(np.asarray(self.cc_prices['collected_revenues'])))
+                best_price = self.cc_prices['candidate_prices'][self.best_price_index]
                 print(f'BEST PRICE: {best_price}')
                 self.best_prices.append(best_price)
                 print(self.best_prices)
@@ -90,5 +91,7 @@ class FixedPriceBudgetAllocator(BudgetAllocator):
                 # we can reset or not the collected revenue for the interval
                 # self.cc_prices['collected_revenues'] = np.zeros(shape=(self.n_arms_pricing,))
                 # after testing: this doesn't affect the results
+        # elif self.best_price_index is not None:
+        #     self.fixed_price = self.best_price_index
 
         self.n_updates += 1
