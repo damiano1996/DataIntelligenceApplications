@@ -28,20 +28,20 @@ class Env_7(Environment):
         :return: rewards: price * clicks * %ofbuy for each class
         """
 
-        rewards = {}
-        optimals = {}
+        purchases = {}
 
-        for cl, ck in clicks_per_class:
+
+        for cl, ck in clicks_per_class.items():
             conv_rate = self.mch.get_class(class_name=cl).conv_rates['phase_0']
-            probability = conv_rate['probabilities'][self.arm_prices['indices'][pulled_arm_price]]
+            probability = conv_rate['probabilities'][pulled_arm_price]
 
             if probability < 0:
                 probability = 1e-3
 
-            rewards[cl] = np.random.normal(probability, noise_std) * self.arm_prices['prices'][pulled_arm_price]
+            purchases[cl] = np.random.normal(probability, noise_std) * ck
 
-        super.step()
-        return rewards, optimals
+        super().step()
+        return purchases
 
     def reset(self):
         """

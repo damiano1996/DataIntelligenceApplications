@@ -29,7 +29,7 @@ class MultiSubcampaignHandler:
         self.regret = []
         self.daily_revenue = 0
         self.total_revenue = 0
-        self.daily_clicks = []
+        self.daily_clicks = []  # ARRAY OF DICTIONARIES daily_clicks[DAY] = { "CLASS" : CLICKS }
 
     def update_all_subcampaign_handlers(self, allocations):
         """
@@ -39,24 +39,20 @@ class MultiSubcampaignHandler:
         :return:
         """
 
-        # Learn about data of the current day, given the budget allocations
-        learners = []
-        total_daily_regret = 0
         self.daily_revenue = 0
+        all_day_clicks = {}
         for subcampaign_handler, allocation in zip(self.subcampaigns_handlers, allocations):
             # conversion from percentage to arm index
             pulled_arm = get_idx_arm_from_allocation(allocation=allocation,
                                                      bids=subcampaign_handler.advertising.env.bids)
 
-            subcampaign_daily_clicks = subcampaign_handler.daily_update(pulled_arm)
-            learner = subcampaign_handler.get_updated_parameters()
-            learners.append(learner)
-            # total_daily_regret += subcampaign_daily_regret
-            # self.daily_revenue += subcampaign_daily_revenue
-            self.daily_clicks.append([subcampaign_handler.class_name, subcampaign_daily_clicks])
+            subcampaign_daily_clicks = subcampaign_handler.pull_arms_advertising(pulled_arm)
 
-        # saving revenue and regret
-        # self.total_revenue += self.daily_revenue
-        # self.regret.append(total_daily_regret)
+            all_day_clicks[subcampaign_handler.class_name] = subcampaign_daily_clicks
+        self.daily_clicks.append(all_day_clicks)
+        return all_day_clicks
 
-        return learners, self.daily_clicks
+    def update_all_conversion_rate(self, arm, clicks, purchases):
+        for subcampaign_handler, cl in zip(self.subcampaigns_handlers, clicks.keys()):
+            cr = purchases[cl] / clicks[cl] if clicks[cl] > 0 else 1
+            subcampaign_handler.update_conversion_rate(arm, cr)

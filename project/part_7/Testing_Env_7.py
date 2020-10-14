@@ -3,6 +3,7 @@ from multiprocessing import Pool
 
 import numpy as np
 
+from project.part_7.Env_7 import Env_7
 from project.dia_pckg.Campaign import Campaign
 from project.dia_pckg.Class import Class
 from project.dia_pckg.Config import *
@@ -10,8 +11,8 @@ from project.dia_pckg.Environment import Environment
 from project.dia_pckg.Product import Product
 from project.dia_pckg.plot_style.cb91visuals import *
 from project.part_4.MultiClassHandler import MultiClassHandler
-from project.part_7.BudgetAllocator import BudgetAllocator
 from project.part_7.MultiSubcampaignHandler import MultiSubcampaignHandler
+from project.part_7.BudgetAllocator import BudgetAllocator
 
 # np.random.seed(0)
 
@@ -23,9 +24,11 @@ pricing_arms = 10
 
 def execute_experiment(args):
     index = args['index']
-    env = args['environment']
+    env7 = args['environment']
     mch = args['multiclasshandler']
     budget_allocators = []
+
+    total_reward = 0
 
     msh = MultiSubcampaignHandler(mch, n_arms_pricing, n_arms_advertising)
 
@@ -33,35 +36,44 @@ def execute_experiment(args):
         budget_allocators.append(BudgetAllocator(pricing_arm, msh, n_arms_advertising, 3))
 
     for d in range(0, n_days):
-        best_click = 0
+        print("day "+str(d))
+        best_purch = 0
         best_pricing = 0
-        best_allocation = None
+        avg = 1 / n_subcamp
+        best_allocation = [avg, avg, avg]
+
 
         for ba in budget_allocators:
-            allocation, click = ba.compute_best_allocation()
-
-            # aggiungere reward all'if
-            if click > best_click:
+            allocation, predicted_purchases = ba.compute_best_allocation()
+            if predicted_purchases * (ba.arm_pricing+1) > best_purch * (best_pricing+1):
                 best_allocation = allocation
                 best_pricing = ba.arm_pricing
-                best_click = click
+                best_purch = predicted_purchases
 
-        _, daily_clicks = msh.update_all_subcampaign_handlers(best_allocation)
-        env.round(best_pricing, daily_clicks)
+        daily_clicks = msh.update_all_subcampaign_handlers(best_allocation)
+        real_purch = env7.round(best_pricing, daily_clicks)
+        msh.update_all_conversion_rate(best_pricing,daily_clicks,real_purch)
+
+        total_purch = 0
+        for cl,p in real_purch.items():
+            total_purch += p
+        print(f"price:{best_pricing} reward:{total_purch * best_pricing}")
+        total_reward += total_purch * best_pricing
+    return total_reward
 
     if plot_advertising:
-        for subcampaign_handler in budget_allocator.msh.subcampaigns_handlers:
+        for subcampaign_handler in msh.subcampaigns_handlers:
             unknown_clicks_curve = subcampaign_handler.advertising.env.subs[
                 subcampaign_handler.advertising.sub_idx].means['phase_0']
             subcampaign_handler.advertising.learner.plot(unknown_clicks_curve, sigma_scale_factor=10)
 
-    print('Total revenue:', int(budget_allocator.msh.total_revenue),
-          'Cumulative regret:', int(sum(budget_allocator.regret)),
-          'Final loss:', sum(budget_allocator.regret) / budget_allocator.msh.total_revenue)
+    print('Total revenue:', int(msh.total_revenue))
+    #       'Cumulative regret:', int(sum(budget_allocator.regret)),
+    #       'Final loss:', sum(budget_allocator.regret) / budget_allocator.msh.total_revenue)
 
     print(str(index) + ' has ended')
 
-    return {'agnostic_regret': budget_allocator.msh.regret, 'regret': budget_allocator.regret}
+    return 0#{'agnostic_regret': budget_allocator.msh.regret, 'regret': budget_allocator.regret}
 
 
 if __name__ == '__main__':
@@ -81,34 +93,18 @@ if __name__ == '__main__':
 
     mch = MultiClassHandler(class_1, class_2, class_3)
 
-    base_env = Environment(initial_date=initial_date, n_days=n_days)
+    env7 = Env_7(initial_date,mch,n_arms_pricing)
 
-    # for class_ in mch.classes:
-    #     plt.plot(class_.conv_rates['phase_0']['prices'],
-    #              class_.conv_rates['phase_0']['probabilities'], label=class_.name.upper(), linestyle='--')
-    # plt.plot(mch.aggregate_demand_curve['prices'],
-    #          mch.aggregate_demand_curve['probabilities'], label='aggregate')
-    #
-    # for opt_class_name, opt in mch.classes_opt.items():
-    #     plt.scatter(opt['price'],
-    #                 opt['probability'], marker='o', label=f'opt {opt_class_name.upper()}')
-    # plt.scatter(mch.aggregate_opt['price'],
-    #             mch.aggregate_opt['probability'], marker='o', label='opt aggregate')
-    #
-    # plt.xlabel('Price')
-    # plt.ylabel('Conversion Rate')
-    # plt.legend()
-    # plt.show()
 
-    n_experiments = 10  # the number is small to do a raw test, otherwise set it to 1000
+    n_experiments = 1  # the number is small to do a raw test, otherwise set it to 1000
     agnostic_regret_per_experiment = []  # collect all the regrets achieved
     regret_per_experiment = []
-    args = [{'environment': copy.deepcopy(base_env), 'index': idx, 'multiclasshandler': mch}
+    args = [{'environment': copy.deepcopy(env7), 'index': idx, 'multiclasshandler': mch}
             for idx in range(n_experiments)]  # create arguments for the experiment
 
     with Pool(processes=1) as pool:  # multiprocessing.cpu_count()
         results = pool.map(execute_experiment, args, chunksize=1)
-
+    print(results)
     for result in results:
         agnostic_regret_per_experiment.append(result['agnostic_regret'])
         regret_per_experiment.append(result['regret'])
