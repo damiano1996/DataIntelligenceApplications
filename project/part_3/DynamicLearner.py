@@ -11,7 +11,7 @@ class DynamicLearner(GPTS_Learner):
         super().__init__(n_arms, arms)
 
     def update_observations(self, pulled_arm, reward):
-        if len(self.collected_rewards) == len_window:
+        if len(self.collected_rewards) >= len_window:
             # try:
             #     index_to_pop = np.where(self.pulled_arms == self.arms[arm_idx])[0][0]
             #     self.rewards_per_arm[arm_idx].pop(0)

@@ -66,7 +66,7 @@ def test_part4(n_experiments=10,
     args = [{'environment': copy.deepcopy(env), 'index': idx, 'keep_daily_price': keep_daily_price} for idx in
             range(n_experiments)]  # create arguments for the experiment
 
-    with Pool(processes=multiprocessing.cpu_count()) as pool:
+    with Pool(processes=1) as pool:  # multiprocessing.cpu_count()
         results = pool.map(execute_experiment, args, chunksize=1)
 
     for result in results:
@@ -81,12 +81,16 @@ def test_part4(n_experiments=10,
 
     # Regret computed UN-knowing the class of the users
     area_aggregate = mch.aggregate_opt['price'] * mch.aggregate_opt['probability']
+    for rewards in rewards_per_experiment:
+        plt.plot(np.cumsum(np.asarray(area_aggregate) - np.asarray(rewards)), alpha=0.2, c='C0')
     plt.plot(np.cumsum(np.mean(area_aggregate - rewards_per_experiment, axis=0)),
-             label='Regret of the aggregate model')
+             label='Mean Regret of the Aggregate Model', c='C0')
 
     # Below the regret computed knowing the optimal for each user
+    for opt, rewards in zip(optimals_per_experiment, rewards_per_experiment):
+        plt.plot(np.cumsum(np.asarray(opt) - np.asarray(rewards)), alpha=0.2, c='C1')
     plt.plot(np.cumsum(np.mean(optimals_per_experiment, axis=0) - np.mean(rewards_per_experiment, axis=0)),
-             label='Regret of the true evaluation')
+             label='Mean Regret of the True Evaluation', c='C1')
 
     plt.xlabel('Time')
     plt.ylabel('Regret')

@@ -12,26 +12,24 @@ class BudgetAllocator:
                  n_arms_pricing,
                  n_arms_advertising,
                  enable_pricing=True,
-                 keep_daily_price=False,
-                 arm=None):
+                 keep_daily_price=False):
         """
         :param multi_class_handler:
         :param n_arms_pricing:
         :param n_arms_advertising:
         """
-        self.arm = arm
         self.msh = MultiSubCampaignHandler(multi_class_handler=multi_class_handler,
                                            n_arms_pricing=n_arms_pricing,
                                            n_arms_advertising=n_arms_advertising,
-                                           keep_daily_price=keep_daily_price,
-                                           arm=arm)
+                                           keep_daily_price=keep_daily_price)
 
         self.enable_pricing = enable_pricing
         self.n_arms_pricing = self.msh.subcampaigns_handlers[0].pricing.n_arms
         self.n_arms_advertising = self.msh.subcampaigns_handlers[0].advertising.n_arms
         self.n_subcampaigns = len(self.msh.subcampaigns_handlers)
 
-        self.best_allocation = self.day_zero_initialization()
+        # it has been moved to Testing_Env_6.py, after the initialization of the object.
+        # self.best_allocation = self.day_zero_initialization()
 
         self.regret = [0]
         self.optimal_total_revenue = self.get_optimal_total_revenue()
@@ -56,7 +54,6 @@ class BudgetAllocator:
             n_clicks = subcampaign_handler.total_clicks
             v = subcampaign_handler.total_revenue / n_clicks if n_clicks != 0 else 0
 
-            # v = subcampaign_handler.price
             revenue_clicks = np.multiply(learner_clicks, v) if self.enable_pricing else learner_clicks
 
             table_all_subs = np.append(table_all_subs, np.atleast_2d(revenue_clicks.T), 0)

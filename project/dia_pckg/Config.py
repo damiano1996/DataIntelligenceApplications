@@ -37,7 +37,7 @@ n_abrupts_phases = 3
 # directory to store the curves
 demand_path = 'demand_curves'
 
-len_window = 20
+len_window = 30
 phase_len = n_days // n_abrupts_phases
 # Since n_abrupts_phases is odd and n_days could be even we add 1 to obtain equal phases
 phase_len = phase_len + 1 if n_days % 2 == 0 else phase_len

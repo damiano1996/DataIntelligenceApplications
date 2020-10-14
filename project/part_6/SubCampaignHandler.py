@@ -16,8 +16,7 @@ class SubCampaignHandler:
                  n_arms_pricing,
                  n_arms_advertising,
                  bidding_environment,
-                 keep_daily_price,
-                 arm):
+                 keep_daily_price):
         """
         :param class_name:
         :param multi_class_handler:
@@ -30,10 +29,8 @@ class SubCampaignHandler:
 
         self.n_arms_advertising = n_arms_advertising
 
-        self.arm = arm
-
         self.pricing = Pricing(class_name=class_name, multi_class_handler=multi_class_handler, n_arms=n_arms_pricing,
-                               keep_daily_price=keep_daily_price, arm=arm)
+                               keep_daily_price=keep_daily_price)
         self.advertising = Advertising(bidding_environment=bidding_environment,
                                        n_arms=self.n_arms_advertising,
                                        subcampaign_idx=subcampaign_idx)
@@ -50,7 +47,7 @@ class SubCampaignHandler:
 
         self.price = 0
 
-    def daily_update(self, pulled_arm):
+    def daily_update(self, pulled_arm, pull_fix_arm=None):
         """
             Daily update
         :param pulled_arm: Learned best budget allocation
@@ -58,7 +55,9 @@ class SubCampaignHandler:
         """
         # extracting the daily reward from the TS
         self.daily_clicks = self.advertising.get_daily_clicks(pulled_arm)
-        self.daily_revenue = self.pricing.get_daily_revenue(self.daily_clicks)
+        self.daily_revenue, daily_purchases = self.pricing.get_daily_revenue(self.daily_clicks,
+                                                                             pull_fix_arm=pull_fix_arm)
+
         self.price = self.daily_revenue / self.daily_clicks if self.daily_clicks != 0 else self.price
 
         daily_regret = self.get_daily_regret(self.daily_clicks, self.advertising.optimal_clicks,
@@ -93,11 +92,11 @@ class SubCampaignHandler:
 
     def update_windows(self, daily_revenue, daily_clicks):
         self.window_revenue = np.append(self.window_revenue, daily_revenue)
-        if (self.window_revenue.shape[0] > self.window_size):
+        if self.window_revenue.shape[0] > self.window_size:
             self.window_revenue = np.delete(self.window_revenue, 0)
 
         self.window_clicks = np.append(self.window_clicks, daily_clicks)
-        if (self.window_clicks.shape[0] > self.window_size):
+        if self.window_clicks.shape[0] > self.window_size:
             self.window_clicks = np.delete(self.window_clicks, 0)
 
         self.total_revenue = np.sum(self.window_revenue)
