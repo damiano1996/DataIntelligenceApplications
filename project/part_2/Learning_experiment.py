@@ -20,7 +20,13 @@ def execute_experiment(args):
     click_each_day = pd.DataFrame(columns=['bid_sub1', 'bid_sub2', 'bid_sub3', "click1", "click2", "click3"])
 
     for i in range(0, n_subcamp):
-        learners.append(learner(n_arms, bids))
+        if learner.__name__ == 'DLChangeDetect':
+            dl_change_detect_min_len = args['dl_change_detect_min_len']
+            dl_change_detect_test_stat = args['dl_change_detect_test_stat']
+            learners.append(
+                learner(n_arms, bids, min_len=dl_change_detect_min_len, test_stat=dl_change_detect_test_stat))
+        else:
+            learners.append(learner(n_arms, bids))
 
     for d in range(0, n_obs):
         if first_day:

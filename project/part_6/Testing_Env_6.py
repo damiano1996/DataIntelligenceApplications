@@ -86,7 +86,7 @@ def test_part6(n_experiments=10,
 
     plt.xlabel('Time')
     plt.ylabel('Regret')
-    plt.ylim([0, 2e6])
+    plt.ylim([0, np.cumsum(np.mean(regret_per_experiment, axis=0))[-1]])
     plt.legend()
     plt.savefig(results_chart_path)
     plt.show()

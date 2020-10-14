@@ -16,7 +16,9 @@ from project.part_3.DynamicLearner import DynamicLearner
 
 def test_part3(n_experiments=10,
                chart_path='other_files/testing_part3.png',
-               title='Part 3 - Regret with Three Abrupt Phases'):
+               title='Part 3 - Regret with Three Abrupt Phases',
+               dl_change_detect_min_len=3,
+               dl_change_detect_test_stat=3):
     np.random.seed(0)
 
     bids = np.linspace(0, max_bid, n_arms_advertising)
@@ -32,7 +34,10 @@ def test_part3(n_experiments=10,
                 'n_subcamp': n_subcamp,
                 'n_arms': n_arms_advertising,
                 'n_obs': n_days,
-                'print_span': print_span}
+                'print_span': print_span,
+                'dl_change_detect_min_len': dl_change_detect_min_len,
+                'dl_change_detect_test_stat': dl_change_detect_test_stat
+            }
             args.append(args_i)
 
     with Pool(processes=multiprocessing.cpu_count()) as pool:
@@ -64,7 +69,8 @@ def test_part3(n_experiments=10,
         else:
             opt_clicks_per_experiments[learner_name] = [opt_clicks]
 
-    plt.title(title)
+    ylim = 0
+    plt.title(title, fontsize=14)
     # plot
     for i, ((learner_name, clicks_per_experiment), (opt_clicks_per_experiment)) in enumerate(
             zip(clicks_per_experiments.items(), opt_clicks_per_experiments.values())):
@@ -72,15 +78,27 @@ def test_part3(n_experiments=10,
         for clicks, opts in zip(clicks_per_experiment, opt_clicks_per_experiment):
             plt.plot(np.cumsum(opts - clicks), alpha=0.2, c=f'C{i + 1}')
 
-        plt.plot(np.cumsum(np.mean(opt_clicks_per_experiment, axis=0) - np.mean(clicks_per_experiment, axis=0)),
-                 c=f'C{i + 1}', label=f'{learner_name} - Mean Regret')
+        curve = np.cumsum(np.mean(opt_clicks_per_experiment, axis=0) - np.mean(clicks_per_experiment, axis=0))
+        ylim = curve[-1] if curve[-1] > ylim else ylim
+        plt.plot(curve, c=f'C{i + 1}', label=f'{learner_name} - Mean Regret')
 
     plt.ylabel('Regret')
     plt.xlabel('Time')
     plt.legend()
+    plt.ylim([0, ylim])
+
     plt.savefig(chart_path)
     plt.show()
 
 
 if __name__ == '__main__':
-    test_part3()
+    min_lens = [1, 2, 3, 4, 5]
+    test_stats = [2.5, 3, 4, 5]
+
+    for min_len in min_lens:
+        for test_stat in test_stats:
+            test_part3(n_experiments=10,
+                       chart_path=f'other_files/part3_min-len{min_len}_test-stat{test_stat}.png',
+                       title=f'Part 3 - Regret with Three Abrupt Phases [min_len:{min_len} test_stat:{test_stat}]',
+                       dl_change_detect_min_len=min_len,
+                       dl_change_detect_test_stat=test_stat)

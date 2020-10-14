@@ -51,12 +51,12 @@ class MultiSubcampaignHandler:
             subcampaign_daily_clicks = subcampaign_handler.daily_update(pulled_arm)
             learner = subcampaign_handler.get_updated_parameters()
             learners.append(learner)
-            #total_daily_regret += subcampaign_daily_regret
-            #self.daily_revenue += subcampaign_daily_revenue
+            # total_daily_regret += subcampaign_daily_regret
+            # self.daily_revenue += subcampaign_daily_revenue
             self.daily_clicks.append([subcampaign_handler.class_name, subcampaign_daily_clicks])
 
         # saving revenue and regret
-        #self.total_revenue += self.daily_revenue
-        #self.regret.append(total_daily_regret)
+        # self.total_revenue += self.daily_revenue
+        # self.regret.append(total_daily_regret)
 
         return learners, self.daily_clicks

@@ -2,8 +2,7 @@ import numpy as np
 
 from project.part_2.Optimizer import fit_table
 from project.part_2.Utils import get_idx_arm_from_allocation
-from project.part_7.MultiSubcampaignHandler import MultiSubcampaignHandler
-from project.part_2.GPTS_Learner import GPTS_Learner
+
 
 class BudgetAllocator:
     """
@@ -26,7 +25,7 @@ class BudgetAllocator:
 
         self.best_allocation = self.day_zero_initialization()
         self.regret = []
-        #self.optimal_total_revenue = self.get_optimal_total_revenue()
+        # self.optimal_total_revenue = self.get_optimal_total_revenue()
 
     def day_zero_initialization(self):
         """
@@ -49,22 +48,18 @@ class BudgetAllocator:
             learner_clicks = subcampaign_handler.get_updated_parameters()
 
             n_clicks = subcampaign_handler.total_clicks
-            #v = subcampaign_handler.total_revenue / n_clicks if n_clicks != 0 else 0
+            # v = subcampaign_handler.total_revenue / n_clicks if n_clicks != 0 else 0
             revenue_clicks = np.multiply(learner_clicks, v)
 
             table_all_subs = np.append(table_all_subs, np.atleast_2d(revenue_clicks.T), 0)
 
         self.best_allocation, self.predicted_clicks = fit_table(table_all_subs)
 
-        return np.asarray(self.best_allocation), self.predicted_clicks*self.learner
-
-
-
+        return np.asarray(self.best_allocation), self.predicted_clicks * self.learner
 
     def update_handlers(self):
         self.ch.update_all_subcampaign_handlers(self.best_allocation)
         self.regret.append(self.optimal_total_revenue - self.ch.daily_revenue)
-
 
     def get_optimal_total_revenue(self):
         """

@@ -62,8 +62,19 @@ if __name__ == '__main__':
 
     # PART 3
     print_('PART 3')
-    test_part3(n_experiments=n_experiment,
-               chart_path=f'{charts_path}/part3.png')
+
+    min_lens = [3, 5, 7]
+    test_stats = [2.5, 3, 4, 5]
+
+    for min_len in min_lens:
+        for test_stat in test_stats:
+            test_part3(n_experiments=n_experiment,
+                       chart_path=f'{charts_path}/part3_min-len{min_len}_test-stat{test_stat}.png',
+                       title=f'Part 3 - Regret with Three Abrupt Phases [min_len:{min_len} test_stat:{test_stat}]',
+                       dl_change_detect_min_len=min_len,
+                       dl_change_detect_test_stat=test_stat)
+            print_(f'Sub-test completed.\n'
+                   f'Time: {datetime.now()}\n')
     print_(f'Test completed.\n'
            f'Time: {datetime.now()}\n')
     print_('-' * 60)

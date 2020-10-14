@@ -1,8 +1,9 @@
 import numpy as np
 
-from project.part_6.Advertising import Advertising
-from project.part_2.GPTS_Learner import GPTS_Learner
 from project.dia_pckg.Config import *
+from project.part_2.GPTS_Learner import GPTS_Learner
+from project.part_6.Advertising import Advertising
+
 
 ## bisogna far restituire click per subcampaign e aggiornare relative curve
 ## le curve dell'advertising sono aggiornate da advertising tramite get_daily_clicks, solo quelle del pricing vanno guardate
@@ -57,10 +58,10 @@ class SubCampaignHandler:
         # extracting the daily reward from the TS
         self.daily_clicks = self.advertising.get_daily_clicks(pulled_arm)
 
-        #daily_regret = self.get_daily_regret(self.daily_clicks, self.advertising.optimal_clicks,
+        # daily_regret = self.get_daily_regret(self.daily_clicks, self.advertising.optimal_clicks,
         #                                     self.daily_revenue, self.pricing.optimal_revenue)
 
-        #print('class: ', self.class_name,
+        # print('class: ', self.class_name,
         #      'optimal clicks: ', self.advertising.optimal_clicks,
         #      'collected clicks: ', round(self.daily_clicks),
         #      'optimal revenue: ', round(self.pricing.optimal_revenue * self.advertising.optimal_clicks),
@@ -68,7 +69,7 @@ class SubCampaignHandler:
 
         # self.total_revenue += self.daily_revenue
         # self.total_clicks += self.daily_clicks
-        #self.update_windows(self.daily_revenue, self.daily_clicks)
+        # self.update_windows(self.daily_revenue, self.daily_clicks)
 
         return self.daily_clicks
 
@@ -106,7 +107,7 @@ class SubCampaignHandler:
         :return:
         """
         arm_distance = int(product_config['max_price'] / self.n_arms_pricing)
-        prices = [int(arm_distance * arm) for arm in range(1, self.n_arms_pricing+1)]
+        prices = [int(arm_distance * arm) for arm in range(1, self.n_arms_pricing + 1)]
         return prices
 
     def update_conversion_rate(self, arm, value_conv_rate):

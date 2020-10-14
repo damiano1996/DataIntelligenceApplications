@@ -10,8 +10,8 @@ from project.dia_pckg.Environment import Environment
 from project.dia_pckg.Product import Product
 from project.dia_pckg.plot_style.cb91visuals import *
 from project.part_4.MultiClassHandler import MultiClassHandler
-from project.part_7.MultiSubcampaignHandler import MultiSubcampaignHandler
 from project.part_7.BudgetAllocator import BudgetAllocator
+from project.part_7.MultiSubcampaignHandler import MultiSubcampaignHandler
 
 # np.random.seed(0)
 
@@ -40,7 +40,7 @@ def execute_experiment(args):
         for ba in budget_allocators:
             allocation, click = ba.compute_best_allocation()
 
-            #aggiungere reward all'if
+            # aggiungere reward all'if
             if click > best_click:
                 best_allocation = allocation
                 best_pricing = ba.arm_pricing
