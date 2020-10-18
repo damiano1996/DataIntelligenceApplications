@@ -8,12 +8,12 @@ from project.dia_pckg.plot_style.cb91visuals import *
 
 class GPTS_Learner(Learner):
 
-    def __init__(self, n_arms, arms):
-        super().__init__(n_arms)
+    def __init__(self, arms):
+        super().__init__(len(arms))
 
         alpha = 10.0
         self.arms = arms
-        self.means = np.zeros(n_arms)
+        self.means = np.zeros(len(arms))
         self.sigmas = np.full(self.means.shape, alpha)
         self.pulled_arms = []
 
@@ -39,9 +39,9 @@ class GPTS_Learner(Learner):
         self.update_observations(pulled_arm, reward)
         self.update_model()
 
-    def pull_arm(self):
+    def pull_arm(self, armidx):
         sampled_values = np.random.normal(self.means, self.sigmas)
-        return np.argmax(sampled_values)
+        return sampled_values[armidx]
 
     def pull_arm_sequence(self):
         sampled_values = np.random.normal(self.means, self.sigmas)

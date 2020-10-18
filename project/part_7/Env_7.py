@@ -4,9 +4,9 @@ from project.dia_pckg.Config import *
 from project.dia_pckg.Environment import Environment
 
 
-class Env_7(Environment):
+class Env7(Environment):
 
-    def __init__(self, initial_date, multi_class_handler, n_arms):
+    def __init__(self, multi_class_handler, n_arms):
         """
         :param initial_date: when the campaign begins
         :param users_per_day: number of users per day
@@ -29,7 +29,6 @@ class Env_7(Environment):
         """
 
         purchases = {}
-
 
         for cl, ck in clicks_per_class.items():
             conv_rate = self.mch.get_class(class_name=cl).conv_rates['phase_0']

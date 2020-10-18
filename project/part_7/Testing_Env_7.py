@@ -114,31 +114,28 @@ def execute_experiment(args):
     index = args['index']
     biddingEnvironment = args['bidding_environment']
     purchasesEnvironment = args['purchases_environment']
-    mch = args['multiclasshandler']
     plot_advertising = args['plot_advertising']
     advertising_chart_root_path = args['advertising_chart_root_path']
 
+    fix_price_budget_allocator = FixedPriceBudgetAllocator()
 
-    fix_price_budget_allocator = FixedPriceBudgetAllocator(multi_class_handler=mch)
 
-    fix_price_budget_allocator.day_zero_initialization()
 
     current_day = 0
     done = False
     regret = []
     optimal = fix_price_budget_allocator.compute_optimal_reward()
     while not done:
-
         print('day:', current_day)
         purchases_per_class = {}
         # Handler solve the problem for current day
-        price, allocation = fix_price_budget_allocator.next_price()
-        click_per_class = biddingEnvironment.round(allocation)
-        purchases_per_class = purchasesEnvironment.round(price, click_per_class)
+        arm_price, allocation = fix_price_budget_allocator.next_price()
+        click_per_class = biddingEnvironment.round(allocation.values())
+        purchases_per_class = purchasesEnvironment.round(arm_price, click_per_class)
 
-        regret.append( optimal - (sum(purchases_per_class.values()) * price) )
+        regret.append(optimal - (sum(purchases_per_class.values()) * price))
 
-        fix_price_budget_allocator.update(price,click_per_class,purchases_per_class)
+        fix_price_budget_allocator.update(arm_price,allocation, click_per_class, purchases_per_class)
 
         # Day step
         current_day, done = biddingEnvironment.step()
