@@ -16,7 +16,7 @@ class Env_7(Environment):
         super().__init__(initial_date, n_days)
         self.mch = multi_class_handler
         self.n_arms = n_arms
-        self.arm_prices = self.get_candidate_prices()
+        self.arm_prices = n_arms_pricing
 
     def round(self, pulled_arm_price, clicks_per_class):
         """
@@ -49,14 +49,3 @@ class Env_7(Environment):
         :return: None
         """
         self.current_idx = 0
-
-    def get_candidate_prices(self):
-        """
-            This method return the candidate prices, one price for each arm.
-            The "indices" array contains the positions of the specified prices in the aggregate curve
-        :return:
-        """
-        arm_distance = int(self.mch.aggregate_demand_curve['prices'].shape[0] / self.n_arms)
-        idx = [int(arm_distance * arm) for arm in range(self.n_arms)]
-        prices = self.mch.aggregate_demand_curve['prices'][idx]
-        return {'indices': idx, 'prices': prices}
