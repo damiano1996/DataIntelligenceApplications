@@ -72,12 +72,18 @@ def test_part7(n_experiments=10,
         results = pool.map(execute_experiment, args, chunksize=1)
 
     regret_per_experiment = []
+    regret_notfixed_per_experiment = []
     final_loss_per_experiment = []
+    final_loss_per_experiment_notfixed = []
 
     for result in results:
-        regret_per_experiment.append(result)
-        final_loss_per_experiment.append(sum(result))
+        regret_notfixed_per_experiment.append(result[1])
+        regret_per_experiment.append(result[0])
+        final_loss_per_experiment.append(sum(result[0]))
+        final_loss_per_experiment_notfixed.append(sum(result[1]))
+
     print('\n\nFINAL LOSS:', np.mean(final_loss_per_experiment))
+    print('\n\nFINAL NOT FIXED LOSS:', np.mean(final_loss_per_experiment_notfixed))
     print('\n\nMEAN LOSS:', np.mean(final_loss_per_experiment)/n_days)
 
 
@@ -86,7 +92,11 @@ def test_part7(n_experiments=10,
     for regret in regret_per_experiment:
         plt.plot(np.cumsum(regret), alpha=0.2, c='C2')
     plt.plot(np.cumsum(np.mean(regret_per_experiment, axis=0)), c='C2',
-             label='Mean Regret')  # (Advertising <==> Pricing)')
+             label='Mean Regret')
+    for regret in regret_notfixed_per_experiment:
+        plt.plot(np.cumsum(regret), alpha=0.2, c='C1')
+    plt.plot(np.cumsum(np.mean(regret_notfixed_per_experiment, axis=0)), c='C1',
+             label='Mean Regret Price Not Fixed X Class')
     plt.xlabel('Time')
     plt.ylabel('Regret')
     plt.ylim([0, np.cumsum(np.mean(regret_per_experiment, axis=0))[-1]])
@@ -108,7 +118,9 @@ def execute_experiment(args):
     current_day = 0
     done = False
     regret = []
+    regret_not_fixed = []
     optimal, opt_price = fix_price_budget_allocator.compute_optimal_reward(biddingEnvironment, mch)
+    optimal_not_fixed = fix_price_budget_allocator.get_optimal_reward_not_fixedprice(biddingEnvironment, mch)
     print(f"optimal daily reward: {optimal}")
     print(f"optimal arm price: {opt_price}")
     while not done:
@@ -118,6 +130,8 @@ def execute_experiment(args):
         click_per_class = biddingEnvironment.round(list(allocation.values()))
         purchases_per_class = purchasesEnvironment.round(arm_price, click_per_class)
 
+        regret_not_fixed.append(optimal_not_fixed - (sum(purchases_per_class.values()) * fix_price_budget_allocator.prices[arm_price]))
+
         regret.append(optimal - (sum(purchases_per_class.values()) * fix_price_budget_allocator.prices[arm_price]))
         fix_price_budget_allocator.update(arm_price,allocation, click_per_class, purchases_per_class)
 
@@ -126,8 +140,8 @@ def execute_experiment(args):
 
 
 
-    return regret
+    return regret, regret_not_fixed
 
 
 if __name__ == '__main__':
-    test_part7(n_experiments=1)
+    test_part7(n_experiments=10)
