@@ -3,8 +3,10 @@ from multiprocessing import Pool
 
 import numpy as np
 
+from project.part_7.Env_7 import Env7
 from project.dia_pckg.Class import Class
 from project.dia_pckg.Config import *
+from project.part_2.BiddingEnvironment import BiddingEnvironment
 from project.dia_pckg.Environment import Environment
 from project.dia_pckg.Product import Product
 from project.dia_pckg.plot_style.cb91visuals import *
@@ -13,16 +15,13 @@ from project.part_4.MultiClassHandler import MultiClassHandler
 
 
 def test_part7(n_experiments=10,
-               enable_pricing=True,
-               plot_advertising=True,
-               n_days_same_price=2,
                demand_chart_path='other_files/testing_part7_demandcurves.png',
                demand_chart_title='Part 7 - Demand Curves',
                results_chart_path='other_files/testing_part7_regrets.png',
                results_chart_title='Part 7 - Regret',
-               advertising_chart_root_path='other_files/testing_part7_',
                best_price_chart='other_files/test_part7_bestprices.png',
                best_price_title='Part 7 - Best Candidate Price'):
+
     # one product to sell
     product = Product(product_config=product_config)
 
@@ -37,7 +36,6 @@ def test_part7(n_experiments=10,
 
     mch = MultiClassHandler(class_1, class_2, class_3)
 
-    base_env = Environment(initial_date=initial_date, n_days=n_days)
 
     plt.title(demand_chart_title)
     for class_ in mch.classes:
@@ -58,34 +56,34 @@ def test_part7(n_experiments=10,
     plt.savefig(demand_chart_path)
     plt.show()
 
-    final_loss_per_experiment = []  # collect all the regrets achieved
-    agnostic_regret_per_experiment = []  # collect all the regrets achieved
     regret_per_experiment = []
-    best_prices_experiment = []
-    args = [{'environment': copy.deepcopy(base_env),
-             'index': idx,
-             'multiclasshandler': mch,
-             'enable_pricing': enable_pricing,
-             'plot_advertising': plot_advertising,
-             'advertising_chart_root_path': advertising_chart_root_path,
-             'n_days_same_price': n_days_same_price}
-            for idx in range(n_experiments)]  # create arguments for the experiment
+
+    bids = np.linspace(0,max_bid,n_arms_advertising)
+    print(bids)
+    env_bid = BiddingEnvironment(bids)
+    env_purchases = Env7(mch, n_arms_pricing)
+
+    args = [{
+        'index': idx,
+        'multiclasshandler': mch,
+        "bidding_environment": copy.deepcopy(env_bid),
+        'purchases_environment': copy.deepcopy(env_purchases)}
+        for idx in range(n_experiments)]  # create arguments for the experiment
 
     with Pool(processes=1) as pool:  # multiprocessing.cpu_count()
         results = pool.map(execute_experiment, args, chunksize=1)
 
+    regret_per_experiment = []
+    final_loss_per_experiment = []
+    best_prices_experiment = []
     for result in results:
-        agnostic_regret_per_experiment.append(result['agnostic_regret'])
         regret_per_experiment.append(result['regret'])
         final_loss_per_experiment.append(result['loss'])
-        best_prices_experiment.append(result['best_prices'])
+        best_prices_experiment.append(result['best_price'])
     print('\n\nFINAL LOSS:', np.mean(final_loss_per_experiment))
+    print('\n\nBEST PRICE:', np.bincount(best_prices_experiment).argmax())
 
     plt.title(results_chart_title, fontsize=20)
-    # for agnostic_regret in agnostic_regret_per_experiment:
-    #     plt.plot(np.cumsum(agnostic_regret), alpha=0.1, c='C2')
-    # plt.plot(np.cumsum(np.mean(agnostic_regret_per_experiment, axis=0)),
-    #          c='C2', label='Regret (Advertising <=!=> Pricing)')
 
     for regret in regret_per_experiment:
         plt.plot(np.cumsum(regret), alpha=0.2, c='C2')
@@ -115,8 +113,6 @@ def execute_experiment(args):
     mch = args['multiclasshandler']
     biddingEnvironment = args['bidding_environment']
     purchasesEnvironment = args['purchases_environment']
-    plot_advertising = args['plot_advertising']
-    advertising_chart_root_path = args['advertising_chart_root_path']
 
     fix_price_budget_allocator = FixedPriceBudgetAllocator()
 
@@ -128,43 +124,26 @@ def execute_experiment(args):
     optimal = fix_price_budget_allocator.compute_optimal_reward(biddingEnvironment, mch)
     while not done:
         print('day:', current_day)
-        purchases_per_class = {}
-        # Handler solve the problem for current day
+
         arm_price, allocation = fix_price_budget_allocator.next_price()
-        click_per_class = biddingEnvironment.round(allocation.values())
+        print(allocation)
+        click_per_class = biddingEnvironment.round(list(allocation.values()))
         purchases_per_class = purchasesEnvironment.round(arm_price, click_per_class)
 
         regret.append(optimal - (sum(purchases_per_class.values()) * fix_price_budget_allocator.prices[arm_price]))
-
         fix_price_budget_allocator.update(arm_price,allocation, click_per_class, purchases_per_class)
 
         # Day step
         current_day, done = biddingEnvironment.step()
-        purchasesEnvironment.step()
 
-    if plot_advertising:
-        for idx, subcampaign_handler in enumerate(fix_price_budget_allocator.msh.subcampaigns_handlers):
-            unknown_clicks_curve = subcampaign_handler.advertising.env.subs[
-                subcampaign_handler.advertising.sub_idx].means['phase_0']
-            subcampaign_handler.advertising.learner.plot(unknown_clicks_curve,
-                                                         sigma_scale_factor=10,
-                                                         chart_path=advertising_chart_root_path +
-                                                                    'subcampaign_' +
-                                                                    str(idx))
 
-    print('Total revenue:', int(fix_price_budget_allocator.msh.total_revenue),
-          'Cumulative regret:', int(sum(fix_price_budget_allocator.regret)),
-          'Loss:', sum(fix_price_budget_allocator.regret) / fix_price_budget_allocator.msh.total_revenue)
 
-    print(str(index) + ' has ended')
-
-    print(fix_price_budget_allocator.best_prices)
-
-    return {'agnostic_regret': fix_price_budget_allocator.msh.regret,
-            'regret': fix_price_budget_allocator.regret,
-            'loss': sum(fix_price_budget_allocator.regret) / fix_price_budget_allocator.msh.total_revenue,
-            'best_prices': fix_price_budget_allocator.best_prices}
+    return {
+            'regret': regret,
+            'loss': sum(regret),
+            'best_price': fix_price_budget_allocator.next_price()[0]
+    }
 
 
 if __name__ == '__main__':
-    test_part7(n_experiments=4, plot_advertising=False, enable_pricing=True)
+    test_part7(n_experiments=1)

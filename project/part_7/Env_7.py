@@ -4,7 +4,7 @@ from project.dia_pckg.Config import *
 from project.dia_pckg.Environment import Environment
 
 
-class Env7(Environment):
+class Env7():
 
     def __init__(self, multi_class_handler, n_arms):
         """
@@ -13,7 +13,6 @@ class Env7(Environment):
         :param multi_class_handler: MultiClassHandler object
         :param n_arms: number of arms of the Thomson Sampling algorithm
         """
-        super().__init__(initial_date, n_days)
         self.mch = multi_class_handler
         self.n_arms = n_arms
         self.arm_prices = n_arms_pricing
@@ -29,22 +28,16 @@ class Env7(Environment):
         """
 
         purchases = {}
+        class_names = list(classes_config.keys())
 
-        for cl, ck in clicks_per_class.items():
-            conv_rate = self.mch.get_class(class_name=cl).conv_rates['phase_0']
+        for cl, ck in enumerate(clicks_per_class):
+            conv_rate = self.mch.get_class(class_name=class_names[cl]).conv_rates['phase_0']
             probability = conv_rate['probabilities'][pulled_arm_price]
 
             if probability < 0:
                 probability = 1e-3
 
-            purchases[cl] = np.random.normal(probability, noise_std) * ck
+            purchases[class_names[cl]] = int(np.random.normal(probability, noise_std) * ck)
 
-        super().step()
         return purchases
 
-    def reset(self):
-        """
-            to reset the environment
-        :return: None
-        """
-        self.current_idx = 0

@@ -1,6 +1,7 @@
 import numpy as np
 
 from project.part_2.Optimizer import fit_table
+from project.part_2.Utils import *
 from project.dia_pckg.Config import *
 from project.part_7.SubCampaignHandler import SubCampaignHandler
 
@@ -14,11 +15,12 @@ class FixedPriceBudgetAllocator:
         self.bids = np.linspace(0, max_bid, n_arms_advertising)
         self.prices = np.linspace(product_config["base_price"], product_config["max_price"], n_arms_pricing)  # TODO
         for s in range(n_subcamp):
-            self.subcampaignHandlers.append(SubCampaignHandler(classes_config.keys()[s], bids, self.prices))
+            self.subcampaignHandlers.append(SubCampaignHandler(list(classes_config.keys())[s], self.bids, self.prices))
 
     def update(self, price, allocation, click_per_class, purchases_per_class):
-        for subh in self.subcampaignHandlers:
-            subh.daily_update(price, allocation[subh.class_name], click_per_class[subh.class_name],
+        print(f"UPDATE price={price} allocation={list(allocation.values())} clicks={click_per_class} purch={list(purchases_per_class.values())}")
+        for idx, subh in enumerate(self.subcampaignHandlers):
+            subh.daily_update(price, allocation[subh.class_name], click_per_class[idx],
                               purchases_per_class[subh.class_name])
         self.n_updates += 1
 
@@ -36,13 +38,16 @@ class FixedPriceBudgetAllocator:
     def next_price(self):
         while self.n_updates < n_arms_pricing:
 
-            if self.n_updates > 1:
-                allocation = self.compute_best_allocation(self.n_updates)
+            if self.n_updates > 0:
+                allocation = self.compute_best_allocation(self.n_updates)[0]
             else:
                 avg = 1 / n_subcamp
                 allocation = [avg, avg, avg]
+            allocation_x_class = {}
+            for subh, c in zip(self.subcampaignHandlers, range(len(classes_config))):
+                allocation_x_class[subh.class_name] = get_idx_arm_from_allocation(allocation[c],self.bids)
+            return self.n_updates, allocation_x_class
 
-            return self.n_updates, allocation
         max_estimated_reward = -1
         final_allocation = []
         final_arm_price = -1
@@ -56,7 +61,7 @@ class FixedPriceBudgetAllocator:
                 final_arm_price = arm_price
         allocation_x_class = {}
         for subh, c in zip(self.subcampaignHandlers, range(len(classes_config))):
-            allocation_x_class[subh.class_name] = final_allocation[c]
+            allocation_x_class[subh.class_name] = get_idx_arm_from_allocation(final_allocation[c],self.bids)
         return final_arm_price, allocation_x_class
 
     def compute_optimal_reward(self, biddingEnvironment, mch):

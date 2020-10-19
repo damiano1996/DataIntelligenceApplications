@@ -10,8 +10,8 @@ class SubCampaignHandler:
         prices = prices/np.max(prices)
         bids = bids / np.max(bids)
         self.class_name = class_name
-        self.learnerADV = GPTS_Learner(n_arms_advertising, bids)
-        self.learnerCR = GPTS_Learner(n_arms_pricing, prices)
+        self.learnerADV = GPTS_Learner(bids)
+        self.learnerCR = GPTS_Learner(prices)
 
     def daily_update(self,arm_adv, arm_price, clicks, purchases):
         self.learnerADV.update(arm_adv,clicks)
