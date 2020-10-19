@@ -139,9 +139,8 @@ def execute_experiment(args):
         current_day, done = biddingEnvironment.step()
 
 
-
     return regret, regret_not_fixed
 
 
 if __name__ == '__main__':
-    test_part7(n_experiments=10)
+    test_part7(n_experiments=5)
