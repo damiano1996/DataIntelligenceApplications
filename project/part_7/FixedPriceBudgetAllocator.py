@@ -11,8 +11,8 @@ class FixedPriceBudgetAllocator:
 
         self.n_updates = 0
         self.subcampaignHandlers = []
-        bids = np.linspace(0, max_bid, n_arms_advertising)
-        self.prices = None  # TODO
+        self.bids = np.linspace(0, max_bid, n_arms_advertising)
+        self.prices = np.linspace(product_config["base_price"], product_config["max_price"], n_arms_pricing)  # TODO
         for s in range(n_subcamp):
             self.subcampaignHandlers.append(SubCampaignHandler(classes_config.keys()[s], bids, self.prices))
 
