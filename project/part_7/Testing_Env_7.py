@@ -18,9 +18,7 @@ def test_part7(n_experiments=10,
                demand_chart_path='other_files/testing_part7_demandcurves.png',
                demand_chart_title='Part 7 - Demand Curves',
                results_chart_path='other_files/testing_part7_regrets.png',
-               results_chart_title='Part 7 - Regret',
-               best_price_chart='other_files/test_part7_bestprices.png',
-               best_price_title='Part 7 - Best Candidate Price'):
+               results_chart_title='Part 7 - Regret'):
 
     # one product to sell
     product = Product(product_config=product_config)
@@ -36,25 +34,25 @@ def test_part7(n_experiments=10,
 
     mch = MultiClassHandler(class_1, class_2, class_3)
 
-
-    plt.title(demand_chart_title)
-    for class_ in mch.classes:
-        plt.plot(class_.conv_rates['phase_0']['prices'],
-                 class_.conv_rates['phase_0']['probabilities'], label=class_.name.upper(), linestyle='--')
-    plt.plot(mch.aggregate_demand_curve['prices'],
-             mch.aggregate_demand_curve['probabilities'], label='aggregate')
-
-    for opt_class_name, opt in mch.classes_opt.items():
-        plt.scatter(opt['price'],
-                    opt['probability'], marker='o', label=f'opt {opt_class_name.upper()}')
-    plt.scatter(mch.aggregate_opt['price'],
-                mch.aggregate_opt['probability'], marker='o', label='opt aggregate')
-
-    plt.xlabel('Price')
-    plt.ylabel('Conversion Rate')
-    plt.legend()
-    plt.savefig(demand_chart_path)
-    plt.show()
+    #
+    # plt.title(demand_chart_title)
+    # for class_ in mch.classes:
+    #     plt.plot(class_.conv_rates['phase_0']['prices'],
+    #              class_.conv_rates['phase_0']['probabilities'], label=class_.name.upper(), linestyle='--')
+    # plt.plot(mch.aggregate_demand_curve['prices'],
+    #          mch.aggregate_demand_curve['probabilities'], label='aggregate')
+    #
+    # for opt_class_name, opt in mch.classes_opt.items():
+    #     plt.scatter(opt['price'],
+    #                 opt['probability'], marker='o', label=f'opt {opt_class_name.upper()}')
+    # plt.scatter(mch.aggregate_opt['price'],
+    #             mch.aggregate_opt['probability'], marker='o', label='opt aggregate')
+    #
+    # plt.xlabel('Price')
+    # plt.ylabel('Conversion Rate')
+    # plt.legend()
+    # plt.savefig(demand_chart_path)
+    # plt.show()
 
     regret_per_experiment = []
 
@@ -81,7 +79,9 @@ def test_part7(n_experiments=10,
         final_loss_per_experiment.append(result['loss'])
         best_prices_experiment.append(result['best_price'])
     print('\n\nFINAL LOSS:', np.mean(final_loss_per_experiment))
+    print('\n\nMEAN LOSS:', np.mean(final_loss_per_experiment)/n_days)
     print('\n\nBEST PRICE:', np.bincount(best_prices_experiment).argmax())
+
 
     plt.title(results_chart_title, fontsize=20)
 
@@ -94,17 +94,6 @@ def test_part7(n_experiments=10,
     plt.ylim([0, np.cumsum(np.mean(regret_per_experiment, axis=0))[-1]])
     plt.legend()
     plt.savefig(results_chart_path)
-    plt.show()
-
-    plt.title(best_price_title, fontsize=14)
-    for best_prices in best_prices_experiment:
-        plt.plot(best_prices, alpha=0.2, c='C2')
-    plt.plot(np.mean(best_prices_experiment, axis=0), c='C2')
-    plt.xlabel('Time')
-    plt.ylabel('Price USD')
-    # plt.ylim([0, np.max(np.mean(np.asarray(best_prices_experiment), axis=0))])
-    # plt.legend()
-    plt.savefig(best_price_chart)
     plt.show()
 
 
@@ -121,12 +110,13 @@ def execute_experiment(args):
     current_day = 0
     done = False
     regret = []
-    optimal = fix_price_budget_allocator.compute_optimal_reward(biddingEnvironment, mch)
+    optimal, opt_price = fix_price_budget_allocator.compute_optimal_reward(biddingEnvironment, mch)
+    print(f"optimal daily reward: {optimal}")
+    print(f"optimal arm price: {opt_price}")
     while not done:
         print('day:', current_day)
 
         arm_price, allocation = fix_price_budget_allocator.next_price()
-        print(allocation)
         click_per_class = biddingEnvironment.round(list(allocation.values()))
         purchases_per_class = purchasesEnvironment.round(arm_price, click_per_class)
 

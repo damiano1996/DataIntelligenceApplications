@@ -66,7 +66,7 @@ class FixedPriceBudgetAllocator:
 
     def compute_optimal_reward(self, biddingEnvironment, mch):
         optimal_reward = -1
-
+        best_price = -1
         for arm_price in range(n_arms_pricing):
             table_all_subs = np.ndarray(shape=(0, n_arms_advertising), dtype=np.float32)
             for idx, subh in enumerate(self.subcampaignHandlers):
@@ -78,5 +78,6 @@ class FixedPriceBudgetAllocator:
             result = fit_table(table_all_subs)
             purch_atprice = result[1]
             if optimal_reward < purch_atprice * self.prices[arm_price]:
+                best_price = arm_price
                 optimal_reward = purch_atprice * self.prices[arm_price]
-        return optimal_reward
+        return optimal_reward, best_price

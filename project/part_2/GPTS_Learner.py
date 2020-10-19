@@ -40,7 +40,7 @@ class GPTS_Learner(Learner):
         self.update_model()
 
     def pull_arm(self, armidx):
-        sampled_values = np.random.normal(self.means, self.sigmas)
+        sampled_values = np.random.normal(self.means, self.sigmas * 3)
         return sampled_values[armidx]
 
     def pull_arm_sequence(self):
