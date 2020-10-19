@@ -1,0 +1,13 @@
+\BOOKMARK [0][-]{chapter.1}{Introduction: Scenario Setup}{}% 1
+\BOOKMARK [0][-]{chapter.2}{Advertising: Clicks Maximization}{}% 2
+\BOOKMARK [1][-]{section.2.1}{Algorithm Design Choices and Results}{chapter.2}% 3
+\BOOKMARK [0][-]{chapter.3}{Advertising: Handling Abrupt Phases}{}% 4
+\BOOKMARK [0][-]{chapter.4}{Pricing: Learning the Best Price}{}% 5
+\BOOKMARK [1][-]{section.4.1}{Demand Curves}{chapter.4}% 6
+\BOOKMARK [1][-]{section.4.2}{Environment}{chapter.4}% 7
+\BOOKMARK [1][-]{section.4.3}{Learner Algorithm Selection}{chapter.4}% 8
+\BOOKMARK [1][-]{section.4.4}{Experiments}{chapter.4}% 9
+\BOOKMARK [1][-]{section.4.5}{Results}{chapter.4}% 10
+\BOOKMARK [0][-]{chapter.5}{Pricing: Context Generation}{}% 11
+\BOOKMARK [0][-]{chapter.6}{Adverting and Pricing: Combining the Algorithms}{}% 12
+\BOOKMARK [0][-]{chapter.7}{Advertising and Pricing: Fixed Prices}{}% 13
