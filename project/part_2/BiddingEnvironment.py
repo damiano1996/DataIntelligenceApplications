@@ -8,6 +8,7 @@ from project.dia_pckg.SubCampaign import SubCampaign
 class BiddingEnvironment(Environment):
 
     def __init__(self, bids):
+        super().__init__(initial_date, n_days)
         self.bids = bids
         self.subs = [SubCampaign(bids=bids, sigma=noise_std, max_n_clicks=max_n_clicks),
                      SubCampaign(bids=bids, sigma=noise_std, max_n_clicks=max_n_clicks),
@@ -30,6 +31,9 @@ class BiddingEnvironment(Environment):
                                            self.subs[sub_idx].sigmas[f'phase_{phase}'][pulled_arm])
         received_clicks = 0 if received_clicks < 0 else received_clicks
         return int(received_clicks)
+
+    def get_optimal_clicks(self, idx, phase=0):
+        return self.subs[idx].means[f'phase_{phase}']
 
     def reset(self):
         self.day = 0

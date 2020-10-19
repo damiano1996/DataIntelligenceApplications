@@ -112,6 +112,7 @@ def test_part7(n_experiments=10,
 
 def execute_experiment(args):
     index = args['index']
+    mch = args['multiclasshandler']
     biddingEnvironment = args['bidding_environment']
     purchasesEnvironment = args['purchases_environment']
     plot_advertising = args['plot_advertising']
@@ -124,7 +125,7 @@ def execute_experiment(args):
     current_day = 0
     done = False
     regret = []
-    optimal = fix_price_budget_allocator.compute_optimal_reward()
+    optimal = fix_price_budget_allocator.compute_optimal_reward(biddingEnvironment, mch)
     while not done:
         print('day:', current_day)
         purchases_per_class = {}
@@ -133,7 +134,7 @@ def execute_experiment(args):
         click_per_class = biddingEnvironment.round(allocation.values())
         purchases_per_class = purchasesEnvironment.round(arm_price, click_per_class)
 
-        regret.append(optimal - (sum(purchases_per_class.values()) * price))
+        regret.append(optimal - (sum(purchases_per_class.values()) * fix_price_budget_allocator.prices[arm_price]))
 
         fix_price_budget_allocator.update(arm_price,allocation, click_per_class, purchases_per_class)
 
