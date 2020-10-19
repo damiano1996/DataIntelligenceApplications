@@ -73,14 +73,12 @@ def test_part7(n_experiments=10,
 
     regret_per_experiment = []
     final_loss_per_experiment = []
-    best_prices_experiment = []
+
     for result in results:
-        regret_per_experiment.append(result['regret'])
-        final_loss_per_experiment.append(result['loss'])
-        best_prices_experiment.append(result['best_price'])
+        regret_per_experiment.append(result)
+        final_loss_per_experiment.append(sum(result))
     print('\n\nFINAL LOSS:', np.mean(final_loss_per_experiment))
     print('\n\nMEAN LOSS:', np.mean(final_loss_per_experiment)/n_days)
-    print('\n\nBEST PRICE:', np.bincount(best_prices_experiment).argmax())
 
 
     plt.title(results_chart_title, fontsize=20)
@@ -128,11 +126,7 @@ def execute_experiment(args):
 
 
 
-    return {
-            'regret': regret,
-            'loss': sum(regret),
-            'best_price': fix_price_budget_allocator.next_price()[0]
-    }
+    return regret
 
 
 if __name__ == '__main__':
