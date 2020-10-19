@@ -9,6 +9,7 @@ from project.dia_pckg.plot_style.cb91visuals import *
 class GPTS_Learner(Learner):
 
     def __init__(self, arms):
+
         super().__init__(len(arms))
 
         alpha = 10.0

@@ -13,7 +13,8 @@ class FixedPriceBudgetAllocator:
         self.n_updates = 0
         self.subcampaignHandlers = []
         self.bids = np.linspace(0, max_bid, n_arms_advertising)
-        self.prices = np.linspace(product_config["base_price"], product_config["max_price"], n_arms_pricing)  # TODO
+        self.prices = np.linspace(product_config["base_price"], product_config["max_price"], n_arms_pricing)
+
         for s in range(n_subcamp):
             self.subcampaignHandlers.append(SubCampaignHandler(list(classes_config.keys())[s], self.bids, self.prices))
 
@@ -27,13 +28,16 @@ class FixedPriceBudgetAllocator:
     def compute_best_allocation(self, arm_price):
         table_all_subs = np.ndarray(shape=(0, n_arms_advertising),
                                     dtype=np.float32)
+
         for subh in self.subcampaignHandlers:
             estimated_cr = subh.get_estimated_cr(arm_price)
             estimated_clicks = subh.get_estimated_clicks()
             estimated_purchases = estimated_clicks * estimated_cr
             table_all_subs = np.append(table_all_subs, np.atleast_2d(estimated_purchases.T), 0)
 
-        return fit_table(table_all_subs)
+        result = fit_table(table_all_subs)
+        return result
+
 
     def next_price(self):
         while self.n_updates < n_arms_pricing:
