@@ -1,7 +1,7 @@
-\documentclass{article}
+\documentclass{report}
 
 
-\usepackage{arxiv}
+\usepackage{style/arxiv}
 
 \usepackage[utf8]{inputenc} % allow utf-8 input
 \usepackage[T1]{fontenc}    % use 8-bit T1 fonts
@@ -14,8 +14,15 @@
 \usepackage{lipsum}
 \usepackage{amssymb, amsmath}
 
+% to insert images:
+\usepackage{graphicx}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{float} % Necessario per inserire immagini flottanti
+% \usepackage{subfigure} % Consente l'inserimento di sottofigure
+
 \title{Data Intelligence Applications \\
-Pricing and Advertising}
+Pricing \& Advertising}
 
 
 \author{
@@ -63,16 +70,30 @@ Pricing and Advertising}
 \begin{document}
 \maketitle
 
-\input{abstract}
 
-
+\input{sections/abstract}
 % keywords can be removed
 % \keywords{First keyword \and Second keyword \and More}
 
+\newpage
 
-\input{introduction}
-\input{section_01}
+\tableofcontents
+\newpage
 
+\input{sections/part1} % Introduction
+\newpage
+\input{sections/part2}
+\newpage
+\input{sections/part3}
+\newpage
+\input{sections/part4}
+\newpage
+\input{sections/part5}
+\newpage
+\input{sections/part6}
+\newpage
+\input{sections/part7}
+\newpage
 
 \bibliographystyle{unsrt}  
 %\bibliography{references}  %%% Remove comment to use the external .bib file (using bibtex).
@@ -91,4 +112,4 @@ Pricing and Advertising}
 % \end{thebibliography}
 
 
-\end{document}
+\end{document}ocument}
