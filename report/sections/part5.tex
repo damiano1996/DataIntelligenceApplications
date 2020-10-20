@@ -1,3 +1,17 @@
 \chapter{Pricing: Context Generation}
 
-Design and run a context generation algorithm for the pricing when the budget allocated to each single subcampaign is fixed. At the end of every week, use the collected data to generate contexts and then use these contexts for the following week. Plot the cumulative regret as time increases. In the next steps, do not use the generated contexts, but use all the data together.
+In this part the assignment was to create a context generation algorithm for the pricing when each sub campaign had a fixed budget allocated to it. Contrary to the previous part, in which we had a single price for all three sub campaigns, here it is possible to have different prices for each context.
+
+\section{What is a Context?}
+The idea in this type of problems is that each class of users is identified by a single subset of features. In real problems we have a lot of features and so we can identify many classes of users. Context are useful because we can group these classes together based on the values of their features and we can use a price for each single context, instead of one for each single class, which might be unfeasible if the feature space is very large.
+
+\section{Our Approach}
+When we first approached the problem, we used an algorithm similar to that presented in class, with a tree structure. The idea is that we collect data for some time using the aggregate model of the previous part, then we use this data to make predictions. At the end of the week the algorithm chooses the most promising feature (the one with the highest expected reward) and splits accordingly, creating a new binary subtree, with one context for each leaf node of the tree. This process is repeated using the newly generated contexts instead of the ones used in the previous week, until it is not useful to split anymore (the expected reward is lower than without splitting or there are no more features).
+
+% TODO: aggiungere formule in slide 28 and 29 di context generation
+
+However our problem has very little features (only 2) with very limited values (both are binary), so we chose a different approach. We always start with the aggregate model to collect data, but when the time to split arrives, we evaluate all possible partitions of our feature space, either obtaining again the aggregate model, splitting according to only one feature or splitting according to both features, thus producing one, two or three different contexts (it would be four but we only have three classes).
+
+% TODO: aggiungere i grafici del regret della parte 5
+
+The graphs above measure the regret with respect to two different models: the Aggregate Model (we have only one price for each class) and the True Evalutation (where we use different prices for each class). As we can see, the algorithm performs very well with respect to the Aggregate Model, obtaining better results. On the other hand, the True Evaluation model performs better than the algorithm in the first weeks, but as time goes on the difference becomes smaller and smaller, as the graph grows more and more slowly. 

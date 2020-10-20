@@ -1,7 +1,6 @@
 import numpy as np
 
 from project.dia_pckg.Config import *
-from project.dia_pckg.Environment import Environment
 
 
 class Env7():
@@ -40,4 +39,3 @@ class Env7():
             purchases[class_names[cl]] = int(np.random.normal(probability, noise_std) * ck)
 
         return purchases
-

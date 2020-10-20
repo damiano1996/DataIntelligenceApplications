@@ -6,8 +6,10 @@
 \contentsline {section}{\numberline {4.1}Demand Curves}{6}{section.4.1}%
 \contentsline {section}{\numberline {4.2}Environment}{7}{section.4.2}%
 \contentsline {section}{\numberline {4.3}Learner Algorithm Selection}{7}{section.4.3}%
-\contentsline {section}{\numberline {4.4}Experiments}{7}{section.4.4}%
-\contentsline {section}{\numberline {4.5}Results}{7}{section.4.5}%
-\contentsline {chapter}{\numberline {5}Pricing: Context Generation}{8}{chapter.5}%
-\contentsline {chapter}{\numberline {6}Adverting and Pricing: Combining the Algorithms}{9}{chapter.6}%
-\contentsline {chapter}{\numberline {7}Advertising and Pricing: Fixed Prices}{10}{chapter.7}%
+\contentsline {section}{\numberline {4.4}Experiments}{8}{section.4.4}%
+\contentsline {chapter}{\numberline {5}Pricing: Context Generation}{10}{chapter.5}%
+\contentsline {section}{\numberline {5.1}What is a Context?}{10}{section.5.1}%
+\contentsline {section}{\numberline {5.2}Our Approach}{10}{section.5.2}%
+\contentsline {chapter}{\numberline {6}Adverting and Pricing: Combining the Algorithms}{11}{chapter.6}%
+\contentsline {chapter}{\numberline {7}Advertising and Pricing: Fixed Prices}{12}{chapter.7}%
+\contentsline {chapter}{\numberline {8}Assignments}{13}{chapter.8}%

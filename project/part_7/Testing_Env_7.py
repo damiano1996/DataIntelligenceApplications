@@ -3,15 +3,14 @@ from multiprocessing import Pool
 
 import numpy as np
 
-from project.part_7.Env_7 import Env7
 from project.dia_pckg.Class import Class
 from project.dia_pckg.Config import *
-from project.part_2.BiddingEnvironment import BiddingEnvironment
-from project.dia_pckg.Environment import Environment
 from project.dia_pckg.Product import Product
 from project.dia_pckg.plot_style.cb91visuals import *
-from project.part_7.FixedPriceBudgetAllocator import FixedPriceBudgetAllocator
+from project.part_2.BiddingEnvironment import BiddingEnvironment
 from project.part_4.MultiClassHandler import MultiClassHandler
+from project.part_7.Env_7 import Env7
+from project.part_7.FixedPriceBudgetAllocator import FixedPriceBudgetAllocator
 
 
 def test_part7(n_experiments=10,
@@ -19,7 +18,6 @@ def test_part7(n_experiments=10,
                demand_chart_title='Part 7 - Demand Curves',
                results_chart_path='other_files/testing_part7_regrets.png',
                results_chart_title='Part 7 - Regret'):
-
     # one product to sell
     product = Product(product_config=product_config)
 
@@ -56,7 +54,7 @@ def test_part7(n_experiments=10,
 
     regret_per_experiment = []
 
-    bids = np.linspace(0,max_bid,n_arms_advertising)
+    bids = np.linspace(0, max_bid, n_arms_advertising)
     print(bids)
     env_bid = BiddingEnvironment(bids)
     env_purchases = Env7(mch, n_arms_pricing)
@@ -84,8 +82,7 @@ def test_part7(n_experiments=10,
 
     print('\n\nFINAL LOSS:', np.mean(final_loss_per_experiment))
     print('\n\nFINAL NOT FIXED LOSS:', np.mean(final_loss_per_experiment_notfixed))
-    print('\n\nMEAN LOSS:', np.mean(final_loss_per_experiment)/n_days)
-
+    print('\n\nMEAN LOSS:', np.mean(final_loss_per_experiment) / n_days)
 
     plt.title(results_chart_title, fontsize=20)
 
@@ -113,8 +110,6 @@ def execute_experiment(args):
 
     fix_price_budget_allocator = FixedPriceBudgetAllocator()
 
-
-
     current_day = 0
     done = False
     regret = []
@@ -130,18 +125,16 @@ def execute_experiment(args):
         click_per_class = biddingEnvironment.round(list(allocation.values()))
         purchases_per_class = purchasesEnvironment.round(arm_price, click_per_class)
 
-        regret_not_fixed.append(optimal_not_fixed - (sum(purchases_per_class.values()) * fix_price_budget_allocator.prices[arm_price]))
+        regret_not_fixed.append(optimal_not_fixed - sum(purchases_per_class.values()))
 
         regret.append(optimal - (sum(purchases_per_class.values()) * fix_price_budget_allocator.prices[arm_price]))
-        fix_price_budget_allocator.update(arm_price,allocation, click_per_class, purchases_per_class)
+        fix_price_budget_allocator.update(arm_price, allocation, click_per_class, purchases_per_class)
 
         # Day step
         current_day, done = biddingEnvironment.step()
-
-
 
     return regret, regret_not_fixed
 
 
 if __name__ == '__main__':
-    test_part7(n_experiments=10)
+    test_part7(n_experiments=20)

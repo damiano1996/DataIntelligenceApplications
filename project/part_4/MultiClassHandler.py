@@ -34,12 +34,11 @@ class MultiClassHandler:
             opts[class_.name] = self.get_optimal_price(class_.conv_rates[phase])
         return opts
 
-    #TODO controllare se va bene
+    # TODO controllare se va bene
     def get_conv_rate(self, classname, arm_price, phase='phase_0'):
         for class_ in self.classes:
             if class_.name == classname:
                 return class_.conv_rates[phase]['probabilities'][arm_price]
-
 
     def get_optimal_price(self, conv_rate):
         """
