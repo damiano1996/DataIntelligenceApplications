@@ -51,3 +51,7 @@ n_arms_advertising = 20
 n_arms_pricing = 20
 
 noise_std = 0.05
+
+#PART 7 EXPLORATION
+# TODO
+artificial_noise = 0.1
