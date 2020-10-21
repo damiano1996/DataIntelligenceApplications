@@ -31,7 +31,7 @@ class Env7():
 
         for cl, ck in enumerate(clicks_per_class):
             conv_rate = self.mch.get_class(class_name=class_names[cl]).conv_rates['phase_0']
-            probability = conv_rate['probabilities'][pulled_arm_price]
+            probability = conv_rate['probabilities'][self.get_true_index(pulled_arm_price)]
 
             if probability < 0:
                 probability = 1e-3
@@ -39,3 +39,7 @@ class Env7():
             purchases[class_names[cl]] = int(np.random.normal(probability, noise_std) * ck)
 
         return purchases
+
+    def get_true_index(self, pull_arm):
+        arm_distance = int(self.mch.aggregate_demand_curve['prices'].shape[0] / self.n_arms)
+        return int(arm_distance * pull_arm)
