@@ -9,7 +9,7 @@ from project.part_4.Testing_Env_4 import test_part4
 from project.part_5.Testing_Env_5 import test_part5
 from project.part_6.Testing_Env_6 import test_part6
 
-n_experiment = 5
+n_experiment = 4
 
 testing_setup = {
     'part2': False,

@@ -99,7 +99,7 @@ def test_part7(n_experiments=10,
              label='Mean Regret Price Not Fixed X Class')
     plt.xlabel('Time')
     plt.ylabel('Regret')
-    plt.ylim([0, np.max([final_loss_per_experiment, final_loss_per_experiment_notfixed])])
+    plt.ylim([0, np.max([np.max(final_loss_per_experiment), np.max(final_loss_per_experiment_notfixed)])])
     plt.legend()
     plt.savefig(results_chart_path)
     plt.show()
@@ -122,8 +122,8 @@ def execute_experiment(args):
     regret_not_fixed = []
     optimal, opt_price = fix_price_budget_allocator.compute_optimal_reward(biddingEnvironment, mch)
     optimal_not_fixed = fix_price_budget_allocator.get_optimal_reward_not_fixedprice(biddingEnvironment, mch)
-    print(f"optimal daily reward: {optimal}")
-    print(f"optimal arm price: {opt_price}")
+    print(f'Optimal arm: {opt_price}\n'
+          f'Optimal daily revenue: {optimal} - Optimal daily revenue (not fixed): {optimal_not_fixed}')
 
     while not done:
         print('day:', current_day)
@@ -133,9 +133,10 @@ def execute_experiment(args):
         purchases_per_class = purchasesEnvironment.round(arm_price, click_per_class)
 
         daily_revenue = sum(purchases_per_class.values()) * fix_price_budget_allocator.prices[arm_price]
-        regret_not_fixed.append(optimal_not_fixed - daily_revenue)
 
-        regret.append(optimal - (sum(purchases_per_class.values()) * fix_price_budget_allocator.prices[arm_price]))
+        regret_not_fixed.append(optimal_not_fixed - daily_revenue)
+        regret.append(optimal - daily_revenue)
+
         fix_price_budget_allocator.update(arm_price, allocation, click_per_class, purchases_per_class)
 
         # Day step
@@ -145,4 +146,4 @@ def execute_experiment(args):
 
 
 if __name__ == '__main__':
-    test_part7(n_experiments=1)
+    test_part7(n_experiments=20)

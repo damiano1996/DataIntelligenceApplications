@@ -22,7 +22,10 @@ class FixedPriceBudgetAllocator:
 
     def update(self, price, allocation, click_per_class, purchases_per_class):
         print(
-            f"UPDATE price={price} allocation_arms={list(allocation.values())} clicks={click_per_class} purch={list(purchases_per_class.values())}")
+            f"UPDATE price={price} "
+            f"allocation_arms={list(allocation.values())} "
+            f"clicks={click_per_class} "
+            f"purch={list(purchases_per_class.values())}")
         for idx, subh in enumerate(self.subcampaignHandlers):
             subh.daily_update(price, allocation[subh.class_name], click_per_class[idx],
                               purchases_per_class[subh.class_name])
