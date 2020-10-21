@@ -96,7 +96,7 @@ def test_part7(n_experiments=10,
              label='Mean Regret Price Not Fixed X Class')
     plt.xlabel('Time')
     plt.ylabel('Regret')
-    plt.ylim([0, np.cumsum(np.mean(regret_per_experiment, axis=0))[-1]])
+    plt.ylim([0, np.max([final_loss_per_experiment, final_loss_per_experiment_notfixed])])
     plt.legend()
     plt.savefig(results_chart_path)
     plt.show()

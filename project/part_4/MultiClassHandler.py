@@ -1,4 +1,5 @@
 import numpy as np
+from project.dia_pckg.Config import *
 
 
 class MultiClassHandler:
@@ -38,7 +39,7 @@ class MultiClassHandler:
     def get_conv_rate(self, classname, arm_price, phase='phase_0'):
         for class_ in self.classes:
             if class_.name == classname:
-                return class_.conv_rates[phase]['probabilities'][arm_price]
+                return class_.conv_rates[phase]['probabilities'][self.get_true_index(arm_price)]
 
     def get_optimal_price(self, conv_rate):
         """
@@ -58,3 +59,7 @@ class MultiClassHandler:
 
     def get_optimal(self, class_name):
         return self.classes_opt[class_name]
+
+    def get_true_index(self, pull_arm):
+        arm_distance = int(self.aggregate_demand_curve['prices'].shape[0] / n_arms_pricing)
+        return int(arm_distance * pull_arm)

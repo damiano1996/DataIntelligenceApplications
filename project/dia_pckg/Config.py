@@ -54,4 +54,6 @@ noise_std = 0.05
 
 #PART 7 EXPLORATION
 # TODO
-artificial_noise = 0.1
+artificial_noise_ADV = 10
+artificial_noise_CR = 0.05
+
