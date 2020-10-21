@@ -16,6 +16,8 @@ from project.part_7.FixedPriceBudgetAllocator import FixedPriceBudgetAllocator
 def test_part7(n_experiments=10,
                demand_chart_path='other_files/testing_part7_demandcurves.png',
                demand_chart_title='Part 7 - Demand Curves',
+               artificial_noise_ADV=5,
+               artificial_noise_CR=0.05,
                results_chart_path='other_files/testing_part7_regrets.png',
                results_chart_title='Part 7 - Regret'):
     # one product to sell
@@ -32,25 +34,24 @@ def test_part7(n_experiments=10,
 
     mch = MultiClassHandler(class_1, class_2, class_3)
 
-    #
-    # plt.title(demand_chart_title)
-    # for class_ in mch.classes:
-    #     plt.plot(class_.conv_rates['phase_0']['prices'],
-    #              class_.conv_rates['phase_0']['probabilities'], label=class_.name.upper(), linestyle='--')
-    # plt.plot(mch.aggregate_demand_curve['prices'],
-    #          mch.aggregate_demand_curve['probabilities'], label='aggregate')
-    #
-    # for opt_class_name, opt in mch.classes_opt.items():
-    #     plt.scatter(opt['price'],
-    #                 opt['probability'], marker='o', label=f'opt {opt_class_name.upper()}')
-    # plt.scatter(mch.aggregate_opt['price'],
-    #             mch.aggregate_opt['probability'], marker='o', label='opt aggregate')
-    #
-    # plt.xlabel('Price')
-    # plt.ylabel('Conversion Rate')
-    # plt.legend()
-    # plt.savefig(demand_chart_path)
-    # plt.show()
+    plt.title(demand_chart_title)
+    for class_ in mch.classes:
+        plt.plot(class_.conv_rates['phase_0']['prices'],
+                 class_.conv_rates['phase_0']['probabilities'], label=class_.name.upper(), linestyle='--')
+    plt.plot(mch.aggregate_demand_curve['prices'],
+             mch.aggregate_demand_curve['probabilities'], label='aggregate')
+
+    for opt_class_name, opt in mch.classes_opt.items():
+        plt.scatter(opt['price'],
+                    opt['probability'], marker='o', label=f'opt {opt_class_name.upper()}')
+    plt.scatter(mch.aggregate_opt['price'],
+                mch.aggregate_opt['probability'], marker='o', label='opt aggregate')
+
+    plt.xlabel('Price')
+    plt.ylabel('Conversion Rate')
+    plt.legend()
+    plt.savefig(demand_chart_path)
+    plt.show()
 
     regret_per_experiment = []
 
@@ -63,7 +64,9 @@ def test_part7(n_experiments=10,
         'index': idx,
         'multiclasshandler': mch,
         "bidding_environment": copy.deepcopy(env_bid),
-        'purchases_environment': copy.deepcopy(env_purchases)}
+        'purchases_environment': copy.deepcopy(env_purchases),
+        'artificial_noise_ADV': artificial_noise_ADV,
+        'artificial_noise_CR': artificial_noise_CR}
         for idx in range(n_experiments)]  # create arguments for the experiment
 
     with Pool(processes=1) as pool:  # multiprocessing.cpu_count()
@@ -107,8 +110,11 @@ def execute_experiment(args):
     mch = args['multiclasshandler']
     biddingEnvironment = args['bidding_environment']
     purchasesEnvironment = args['purchases_environment']
+    artificial_noise_ADV = args['artificial_noise_ADV']
+    artificial_noise_CR = args['artificial_noise_CR']
 
-    fix_price_budget_allocator = FixedPriceBudgetAllocator()
+    fix_price_budget_allocator = FixedPriceBudgetAllocator(artificial_noise_ADV=artificial_noise_ADV,
+                                                           artificial_noise_CR=artificial_noise_CR)
 
     current_day = 0
     done = False
@@ -139,4 +145,4 @@ def execute_experiment(args):
 
 
 if __name__ == '__main__':
-    test_part7(n_experiments=5)
+    test_part7(n_experiments=1)

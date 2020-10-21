@@ -2,7 +2,7 @@ import os
 import sys
 from datetime import datetime
 
-from project.my_part_7.Testing_Env_7 import test_part7
+from project.part_7.Testing_Env_7 import test_part7
 from project.part_2.Testing_part2 import test_part2
 from project.part_3.Testing_part3 import test_part3
 from project.part_4.Testing_Env_4 import test_part4
@@ -12,11 +12,11 @@ from project.part_6.Testing_Env_6 import test_part6
 n_experiment = 5
 
 testing_setup = {
-    'part2': True,
-    'part3': True,
-    'part4': True,
-    'part5': True,
-    'part6': True,
+    'part2': False,
+    'part3': False,
+    'part4': False,
+    'part5': False,
+    'part6': False,
     'part7': True
 }
 
@@ -170,30 +170,22 @@ if __name__ == '__main__':
         # PART 7
         print_('PART 7')
 
-        n_days_same_prices = [2, 3]
-        enable_pricings = [True, False]
+        artificial_noise_ADVs = [5, 10, 20]
+        artificial_noise_CRs = [0.3, 0.5, 0.7]
 
-        for n_days_same_price in n_days_same_prices:
-            for enable_pricing in enable_pricings:
+        for artificial_noise_ADV in artificial_noise_ADVs:
+            for artificial_noise_CR in artificial_noise_CRs:
                 test_part7(n_experiments=n_experiment,
-                           enable_pricing=enable_pricing,
-                           plot_advertising=False,
-                           n_days_same_price=n_days_same_price,
                            demand_chart_path=demand_curves_chart_path,
                            demand_chart_title=demand_curves_title,
+                           artificial_noise_ADV=artificial_noise_ADV,
+                           artificial_noise_CR=artificial_noise_CR,
                            results_chart_path=f'{charts_path}/part7_'
-                                              f'enable-pricing{enable_pricing}_'
-                                              f'n-days-same-price{n_days_same_price}.png',
+                                              f'artificial-noise-ADV{artificial_noise_ADV}_'
+                                              f'artificial-noise-CR{artificial_noise_CR}.png',
                            results_chart_title=f'Part 7 - Regret ['
-                                               f'enable_pricing:{enable_pricing} '
-                                               f'n-days-same-price:{n_days_same_price}]',
-                           advertising_chart_root_path=f'{charts_path}/part7_',
-                           best_price_chart=f'{charts_path}/part7_best-prices_'
-                                            f'enable-pricing:{enable_pricing}_'
-                                            f'n-days-same-price{n_days_same_price}.png',
-                           best_price_title='Part 7 - Best Candidate Price ['
-                                            f'enable_pricing:{enable_pricing} '
-                                            f'n-days-same-price:{n_days_same_price}]')
+                                               f'artificial-noise-ADV:{artificial_noise_ADV} '
+                                               f'artificial-noise-CR:{artificial_noise_CR}]')
                 print_(f'Sub-test completed.\n'
                        f'Time: {datetime.now()}\n')
 

@@ -1,6 +1,5 @@
 import numpy as np
 
-from project.dia_pckg.Config import *
 from project.part_2.GPTS_Learner import GPTS_Learner
 
 
@@ -15,10 +14,10 @@ class SubCampaignHandler:
         self.learnerADV.update(arm_adv, clicks)
         self.learnerCR.update(arm_price, purchases)
 
-    def get_estimated_clicks(self):
+    def get_estimated_clicks(self, adv_noise):
         estimated_means = self.learnerADV.pull_arm_sequence()
-        return np.random.normal(estimated_means, [artificial_noise_ADV for i in range(len(estimated_means))])
+        return np.random.normal(estimated_means, [adv_noise for i in range(len(estimated_means))])
 
     # TODO decidere se usare il artificial_noise anche qua
-    def get_estimated_cr(self, arm_price):
-        return np.random.normal(self.learnerCR.pull_arm(arm_price),artificial_noise_CR)
+    def get_estimated_cr(self, arm_price, cr_noise):
+        return np.random.normal(self.learnerCR.pull_arm(arm_price), cr_noise)
