@@ -88,11 +88,12 @@ The experiments has been configured in two ways:
 
 In the end of the tests, the figure \ref{regret4Fig} reports the obtained regrets. The sub figure \textit{(a)} for the first configuration and the sub figure \textit{(b)} for the second.
 
-We plotted two regrets computed with two different optimal revenues. 
+We plotted two regrets computed with two different optimal revenues.
 The regret called \textbf{Mean Regret of the Aggregate Model} has been computed using, as optimal, the optimal point taken from the aggregate model. This is an optimistic regret because it doesn't take into consideration the information about the specific class of the users. In other words, the learner and the clairvoyant algorithm don't know the class of the customers.
-The learner is learning the aggregate model, thus this comparison seams fair, but\\
-since the clairvoyant knows the original class of the users, we introduced the so called \textbf{Mean Regret of the True Evaluation}. Obviously, from the point of view of the learner, this is a pessimistic computation since it is unable to infer more information from the input data.\\
-Anyway, these two ways, to compute the regrets, will be useful in the next chapter, since the learner will be able to infer more information from the data, creating contexts to exploit a finer profiling.\\
+
+The learner is learning the aggregate model, thus this comparison seams fair, but since the clairvoyant knows the original class of the users, we introduced the so called \textbf{Mean Regret of the True Evaluation}. Obviously, from the point of view of the learner, this is a pessimistic computation since it is unable to infer more information from the input data.
+
+Anyway, these two ways, to compute the regrets, will be useful in the next chapter, since the learner will be able to infer more information from the data, creating contexts to exploit a finer profiling.
 You will notice how the two regrets will be pushed down and the regret on the True Evaluation will be more similar to the regret of the Aggregate Model obtained here, proving that a finer profiling improves drastically the performances.
 
 
