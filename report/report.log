@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.21 (MiKTeX 20.10) (preloaded format=pdflatex 2020.10.21)  25 OCT 2020 02:27
+This is pdfTeX, Version 3.14159265-2.6-1.40.21 (MiKTeX 20.10) (preloaded format=pdflatex 2020.10.21)  25 OCT 2020 20:11
 entering extended mode
 **./report.tex
 (report.tex
@@ -681,26 +681,43 @@ Underfull \vbox (badness 2653) has occurred while \output is active []
 File: images/part4_keep-daily-priceTrue.png Graphic file (type png)
 <use images/part4_keep-daily-priceTrue.png>
 Package pdftex.def Info: images/part4_keep-daily-priceTrue.png  used on input l
-ine 105.
+ine 106.
 (pdftex.def)             Requested size: 375.80542pt x 187.90308pt.
 <images/part4_keep-daily-priceFalse.png, id=198, 722.7pt x 361.35pt>
 File: images/part4_keep-daily-priceFalse.png Graphic file (type png)
 <use images/part4_keep-daily-priceFalse.png>
 Package pdftex.def Info: images/part4_keep-daily-priceFalse.png  used on input 
-line 111.
+line 112.
 (pdftex.def)             Requested size: 375.80542pt x 187.90308pt.
 ) [12] (sections/part5.tex [13 <./images/part4_keep-daily-priceTrue.png> <./ima
 ges/part4_keep-daily-priceFalse.png>]
 Chapter 5.
-) [14
+[14
 
-] (sections/part6.tex
+]
+
+LaTeX Warning: Reference `regret5Fig' on page 15 undefined on input line 77.
+
+<images/part5_keep-daily-priceTrue.png, id=218, 722.7pt x 361.35pt>
+File: images/part5_keep-daily-priceTrue.png Graphic file (type png)
+<use images/part5_keep-daily-priceTrue.png>
+Package pdftex.def Info: images/part5_keep-daily-priceTrue.png  used on input l
+ine 87.
+(pdftex.def)             Requested size: 375.80542pt x 187.90308pt.
+<images/part5_keep-daily-priceFalse.png, id=219, 722.7pt x 361.35pt>
+File: images/part5_keep-daily-priceFalse.png Graphic file (type png)
+<use images/part5_keep-daily-priceFalse.png>
+Package pdftex.def Info: images/part5_keep-daily-priceFalse.png  used on input 
+line 93.
+(pdftex.def)             Requested size: 375.80542pt x 187.90308pt.
+) [15] (sections/part6.tex [16 <./images/part5_keep-daily-priceTrue.png> <./ima
+ges/part5_keep-daily-priceFalse.png>]
 Chapter 6.
-) [15
+) [17
 
 ] (sections/part7.tex
 Chapter 7.
-) [16
+) [18
 
 ] (sections/assignments.tex
 Chapter 8.
@@ -714,18 +731,35 @@ Underfull \hbox (badness 10000) in paragraph at lines 7--10
 
  []
 
-) [17
+)
+Underfull \hbox (badness 10000) in paragraph at lines 11--98
+
+ []
+
+[19
 
 ] (report.aux)
-Package rerunfilecheck Info: File `report.out' has not changed.
-(rerunfilecheck)             Checksum: B3921F3133D12D5BD6191D78FF50B9F8;1314.
+
+Package rerunfilecheck Warning: File `report.out' has changed.
+(rerunfilecheck)                Rerun to get outlines right
+(rerunfilecheck)                or use package `bookmark'.
+
+Package rerunfilecheck Info: Checksums for `report.out':
+(rerunfilecheck)             Before: B3921F3133D12D5BD6191D78FF50B9F8;1314
+(rerunfilecheck)             After:  33E16796AC2B7021AC84739F263BAB91;1540.
+
+LaTeX Warning: There were undefined references.
+
+
+LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
+
  ) 
 Here is how much of TeX's memory you used:
- 10752 strings out of 480236
- 171821 string characters out of 2890421
- 622011 words of memory out of 3000000
- 26834 multiletter control sequences out of 15000+200000
- 605203 words of font info for 193 fonts, out of 3000000 for 9000
+ 10781 strings out of 480236
+ 172584 string characters out of 2890421
+ 626011 words of memory out of 3000000
+ 26852 multiletter control sequences out of 15000+200000
+ 605238 words of font info for 195 fonts, out of 3000000 for 9000
  1141 hyphenation exceptions out of 8191
  72i,10n,77p,861b,462s stack positions out of 5000i,500n,10000p,200000b,50000s
 {C:/Program Files/MiKTeX/fonts/enc/dvips/base/8r.enc} <C:\Users\Antonio_2\App
@@ -743,9 +777,9 @@ m10.pfb><C:/Program Files/MiKTeX/fonts/type1/urw/times/utmb8a.pfb><C:/Program F
 iles/MiKTeX/fonts/type1/urw/times/utmbi8a.pfb><C:/Program Files/MiKTeX/fonts/ty
 pe1/urw/times/utmr8a.pfb><C:/Program Files/MiKTeX/fonts/type1/urw/times/utmri8a
 .pfb>
-Output written on report.pdf (17 pages, 576383 bytes).
+Output written on report.pdf (19 pages, 707303 bytes).
 PDF statistics:
- 310 PDF objects out of 1000 (max. 8388607)
- 47 named destinations out of 1000 (max. 500000)
- 32457 words of extra memory for PDF output out of 35830 (max. 10000000)
+ 330 PDF objects out of 1000 (max. 8388607)
+ 53 named destinations out of 1000 (max. 500000)
+ 32467 words of extra memory for PDF output out of 35830 (max. 10000000)
 

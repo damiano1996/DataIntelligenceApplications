@@ -14,7 +14,10 @@
 \contentsline {section}{\numberline {4.4}Experiments}{12}{section.4.4}%
 \contentsline {chapter}{\numberline {5}Pricing: Context Generation}{14}{chapter.5}%
 \contentsline {section}{\numberline {5.1}What is a Context?}{14}{section.5.1}%
-\contentsline {section}{\numberline {5.2}Our Approach}{14}{section.5.2}%
-\contentsline {chapter}{\numberline {6}Adverting and Pricing: Combining the Algorithms}{15}{chapter.6}%
-\contentsline {chapter}{\numberline {7}Advertising and Pricing: Fixed Prices}{16}{chapter.7}%
-\contentsline {chapter}{\numberline {8}Assignments}{17}{chapter.8}%
+\contentsline {section}{\numberline {5.2}Environment, Learner and Demand Curves}{14}{section.5.2}%
+\contentsline {section}{\numberline {5.3}Campaign Scheduler}{14}{section.5.3}%
+\contentsline {section}{\numberline {5.4}Our Approach to Context generation}{15}{section.5.4}%
+\contentsline {section}{\numberline {5.5}Results}{15}{section.5.5}%
+\contentsline {chapter}{\numberline {6}Adverting and Pricing: Combining the Algorithms}{17}{chapter.6}%
+\contentsline {chapter}{\numberline {7}Advertising and Pricing: Fixed Prices}{18}{chapter.7}%
+\contentsline {chapter}{\numberline {8}Assignments}{19}{chapter.8}%
