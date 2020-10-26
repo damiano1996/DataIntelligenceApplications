@@ -1,15 +1,23 @@
 \contentsline {chapter}{\numberline {1}Introduction: Scenario Setup}{3}{chapter.1}%
 \contentsline {chapter}{\numberline {2}Advertising: Clicks Maximization}{4}{chapter.2}%
-\contentsline {section}{\numberline {2.1}Algorithm Design Choices and Results}{4}{section.2.1}%
-\contentsline {chapter}{\numberline {3}Advertising: Handling Abrupt Phases}{5}{chapter.3}%
-\contentsline {chapter}{\numberline {4}Pricing: Learning the Best Price}{6}{chapter.4}%
-\contentsline {section}{\numberline {4.1}Demand Curves}{6}{section.4.1}%
-\contentsline {section}{\numberline {4.2}Environment}{7}{section.4.2}%
-\contentsline {section}{\numberline {4.3}Learner Algorithm Selection}{7}{section.4.3}%
-\contentsline {section}{\numberline {4.4}Experiments}{8}{section.4.4}%
-\contentsline {chapter}{\numberline {5}Pricing: Context Generation}{10}{chapter.5}%
-\contentsline {section}{\numberline {5.1}What is a Context?}{10}{section.5.1}%
-\contentsline {section}{\numberline {5.2}Our Approach}{10}{section.5.2}%
-\contentsline {chapter}{\numberline {6}Adverting and Pricing: Combining the Algorithms}{11}{chapter.6}%
-\contentsline {chapter}{\numberline {7}Advertising and Pricing: Fixed Prices}{12}{chapter.7}%
-\contentsline {chapter}{\numberline {8}Assignments}{13}{chapter.8}%
+\contentsline {section}{\numberline {2.1}Environment}{4}{section.2.1}%
+\contentsline {section}{\numberline {2.2}Algorithm Design Choices}{4}{section.2.2}%
+\contentsline {section}{\numberline {2.3}Performance evaluation}{5}{section.2.3}%
+\contentsline {chapter}{\numberline {3}Advertising: Handling Abrupt Phases}{8}{chapter.3}%
+\contentsline {section}{\numberline {3.1}Sliding window mechanism}{8}{section.3.1}%
+\contentsline {section}{\numberline {3.2}Changes Detection mechanism}{8}{section.3.2}%
+\contentsline {section}{\numberline {3.3}Performance evaluation}{9}{section.3.3}%
+\contentsline {chapter}{\numberline {4}Pricing: Learning the Best Price}{10}{chapter.4}%
+\contentsline {section}{\numberline {4.1}Demand Curves}{10}{section.4.1}%
+\contentsline {section}{\numberline {4.2}Environment}{11}{section.4.2}%
+\contentsline {section}{\numberline {4.3}Learner Algorithm Selection}{11}{section.4.3}%
+\contentsline {section}{\numberline {4.4}Experiments}{12}{section.4.4}%
+\contentsline {chapter}{\numberline {5}Pricing: Context Generation}{14}{chapter.5}%
+\contentsline {section}{\numberline {5.1}What is a Context?}{14}{section.5.1}%
+\contentsline {section}{\numberline {5.2}Environment, Learner and Demand Curves}{14}{section.5.2}%
+\contentsline {section}{\numberline {5.3}Campaign Scheduler}{14}{section.5.3}%
+\contentsline {section}{\numberline {5.4}Our Approach to Context generation}{15}{section.5.4}%
+\contentsline {section}{\numberline {5.5}Results}{15}{section.5.5}%
+\contentsline {chapter}{\numberline {6}Adverting and Pricing: Combining the Algorithms}{17}{chapter.6}%
+\contentsline {chapter}{\numberline {7}Advertising and Pricing: Fixed Prices}{18}{chapter.7}%
+\contentsline {chapter}{\numberline {8}Assignments}{19}{chapter.8}%

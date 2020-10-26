@@ -37,17 +37,16 @@ n_abrupts_phases = 3
 # directory to store the curves
 demand_path = 'demand_curves'
 
-len_window = 30
+len_window = 40
 phase_len = n_days // n_abrupts_phases
 # Since n_abrupts_phases is odd and n_days could be even we add 1 to obtain equal phases
 phase_len = phase_len + 1 if n_days % 2 == 0 else phase_len
 
-print_span = 60  # How often we want to print the graphs
 
 n_subcamp = 3
 
 max_bid = 1
-n_arms_advertising = 10
-n_arms_pricing = 10
+n_arms_advertising = 21
+n_arms_pricing = 21
 
 noise_std = 0.05

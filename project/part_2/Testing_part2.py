@@ -28,7 +28,6 @@ def test_part2(n_experiments=10,
             'n_subcamp': n_subcamp,
             'n_arms': n_arms_advertising,
             'n_obs': n_days,
-            'print_span': print_span
         }
         args.append(args_i)
 

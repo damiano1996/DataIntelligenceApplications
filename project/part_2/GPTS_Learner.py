@@ -11,7 +11,7 @@ class GPTS_Learner(Learner):
     def __init__(self, n_arms, arms):
         super().__init__(n_arms)
 
-        alpha = 10.0
+        alpha = 15.0
         self.arms = arms
         self.means = np.zeros(n_arms)
         self.sigmas = np.full(self.means.shape, alpha)

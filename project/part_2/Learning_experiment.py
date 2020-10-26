@@ -9,10 +9,8 @@ def execute_experiment(args):
     learner = args['learner']
     env = args['environment']
     bids = args['bids']
-    n_arms = args['n_arms']
     n_subcamp = args['n_subcamp']
     n_obs = args['n_obs']
-    print_span = args['print_span']
 
     env.reset()
     first_day = True
@@ -24,9 +22,9 @@ def execute_experiment(args):
             dl_change_detect_min_len = args['dl_change_detect_min_len']
             dl_change_detect_test_stat = args['dl_change_detect_test_stat']
             learners.append(
-                learner(n_arms, bids, min_len=dl_change_detect_min_len, test_stat=dl_change_detect_test_stat))
+                learner(bids, min_len=dl_change_detect_min_len, test_stat=dl_change_detect_test_stat))
         else:
-            learners.append(learner(n_arms, bids))
+            learners.append(learner(bids))
 
     for d in range(0, n_obs):
         if first_day:
@@ -57,14 +55,5 @@ def execute_experiment(args):
             "click2": clicks[1],
             "click3": clicks[2]
         }, ignore_index=True)
-
-        if (d + 1) % print_span == 0:
-            # TIME TO PRINT THE PLOTS
-            # try:
-            # for s in range(0, len(learners)):
-            # learners[s].plot(env.subs[s])
-            # except:
-            #    print(f"not able to plot {learners[0].name}")
-            print(f"DAY: {d}\nPULLED:{pulled}\nCLICKS: {clicks}\nTOT: {clicks.sum()}\n")
 
     return click_each_day, args

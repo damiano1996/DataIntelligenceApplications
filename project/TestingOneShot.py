@@ -9,15 +9,15 @@ from project.part_4.Testing_Env_4 import test_part4
 from project.part_5.Testing_Env_5 import test_part5
 from project.part_6.Testing_Env_6 import test_part6
 
-n_experiment = 4
+n_experiment = 10
 
 testing_setup = {
     'part2': False,
-    'part3': False,
+    'part3': True,
     'part4': False,
     'part5': False,
     'part6': False,
-    'part7': True
+    'part7': False
 }
 
 
@@ -76,18 +76,18 @@ if __name__ == '__main__':
         # PART 3
         print_('PART 3')
 
-        min_lens = [3, 7]
-        test_stats = [2.5, 5]
+        min_lens = [3, 4, 5, 6, 7]
+        test_stat = 2.58
 
         for min_len in min_lens:
-            for test_stat in test_stats:
-                test_part3(n_experiments=n_experiment,
-                           chart_path=f'{charts_path}/part3_min-len{min_len}_test-stat{test_stat}.png',
-                           title=f'Part 3 - Regret with Three Abrupt Phases [min_len:{min_len} test_stat:{test_stat}]',
-                           dl_change_detect_min_len=min_len,
-                           dl_change_detect_test_stat=test_stat)
-                print_(f'Sub-test completed.\n'
-                       f'Time: {datetime.now()}\n')
+            # for test_stat in test_stats:
+            test_part3(n_experiments=n_experiment,
+                       chart_path=f'{charts_path}/part3_min-len{min_len}_test-stat{test_stat}.png',
+                       title=f'Part 3 - Regret with Three Abrupt Phases [min_len:{min_len} test_stat:{test_stat}]',
+                       dl_change_detect_min_len=min_len,
+                       dl_change_detect_test_stat=test_stat)
+            print_(f'Sub-test completed.\n'
+                   f'Time: {datetime.now()}\n')
         print_(f'Test completed.\n'
                f'Time: {datetime.now()}\n')
         print_('-' * 60)

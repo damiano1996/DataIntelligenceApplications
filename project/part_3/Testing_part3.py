@@ -23,6 +23,7 @@ def test_part3(n_experiments=10,
 
     bids = np.linspace(0, max_bid, n_arms_advertising)
     args = []
+
     learners_types = [Learner, DynamicLearner, DLChangeDetect]
     for i in range(n_experiments):
         env_i = AbruptBiddingEnvironment(bids)
@@ -34,7 +35,6 @@ def test_part3(n_experiments=10,
                 'n_subcamp': n_subcamp,
                 'n_arms': n_arms_advertising,
                 'n_obs': n_days,
-                'print_span': print_span,
                 'dl_change_detect_min_len': dl_change_detect_min_len,
                 'dl_change_detect_test_stat': dl_change_detect_test_stat
             }
@@ -93,12 +93,13 @@ def test_part3(n_experiments=10,
 
 if __name__ == '__main__':
     min_lens = [1, 2, 3, 4, 5]
-    test_stats = [2.5, 3, 4, 5]
+    #test_stats = [2.5, 3, 4, 5]
+    test_stat = 2.58
 
     for min_len in min_lens:
-        for test_stat in test_stats:
-            test_part3(n_experiments=10,
-                       chart_path=f'other_files/part3_min-len{min_len}_test-stat{test_stat}.png',
-                       title=f'Part 3 - Regret with Three Abrupt Phases [min_len:{min_len} test_stat:{test_stat}]',
-                       dl_change_detect_min_len=min_len,
-                       dl_change_detect_test_stat=test_stat)
+        #for test_stat in test_stats:
+        test_part3(n_experiments=10,
+                   chart_path=f'other_files/part3_min-len{min_len}_test-stat{test_stat}.png',
+                   title=f'Part 3 - Regret with Three Abrupt Phases [min_len:{min_len} test_stat:{test_stat}]',
+                   dl_change_detect_min_len=min_len,
+                   dl_change_detect_test_stat=test_stat)
