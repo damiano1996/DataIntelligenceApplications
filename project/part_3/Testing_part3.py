@@ -23,6 +23,7 @@ def test_part3(n_experiments=10,
 
     bids = np.linspace(0, max_bid, n_arms_advertising)
     args = []
+
     learners_types = [Learner, DynamicLearner, DLChangeDetect]
     for i in range(n_experiments):
         env_i = AbruptBiddingEnvironment(bids)
@@ -34,7 +35,6 @@ def test_part3(n_experiments=10,
                 'n_subcamp': n_subcamp,
                 'n_arms': n_arms_advertising,
                 'n_obs': n_days,
-                'print_span': print_span,
                 'dl_change_detect_min_len': dl_change_detect_min_len,
                 'dl_change_detect_test_stat': dl_change_detect_test_stat
             }

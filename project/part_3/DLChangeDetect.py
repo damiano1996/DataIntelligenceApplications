@@ -28,7 +28,7 @@ class DLChangeDetect(GPTS_Learner):
             test = np.abs(mean_diff / std) if std != 0 else 0
 
             if test > self.test_stat:
-                print("CAMBIO len=" +
+                print("Change detected: len=" +
                       str(len(self.rewards_per_arm[pulled_arm])) +
                       " std=" + str(std) +
                       " test=" + str(test))

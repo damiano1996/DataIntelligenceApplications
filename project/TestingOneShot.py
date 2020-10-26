@@ -9,7 +9,7 @@ from project.part_4.Testing_Env_4 import test_part4
 from project.part_5.Testing_Env_5 import test_part5
 from project.part_6.Testing_Env_6 import test_part6
 
-n_experiment = 4
+n_experiment = 10
 
 testing_setup = {
     'part2': False,
@@ -76,8 +76,6 @@ if __name__ == '__main__':
         # PART 3
         print_('PART 3')
 
-        # min_lens = [3, 7]
-        # test_stats = [2.5, 5]
         min_lens = [3, 4, 5, 6, 7]
         test_stat = 2.58
 
