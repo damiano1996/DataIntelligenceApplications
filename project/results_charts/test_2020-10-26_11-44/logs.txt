@@ -51,3 +51,26 @@ n_arms_advertising = 10
 n_arms_pricing = 10
 
 noise_std = 0.05
+============================================================
+Testing all parts!
+Time: 2020-10-26 11:44:59.024107
+PART 3
+Sub-test completed.
+Time: 2020-10-26 11:46:47.287034
+
+Sub-test completed.
+Time: 2020-10-26 11:48:42.532140
+
+Sub-test completed.
+Time: 2020-10-26 11:50:50.010799
+
+Sub-test completed.
+Time: 2020-10-26 11:52:55.338704
+
+Sub-test completed.
+Time: 2020-10-26 11:54:49.928701
+
+Test completed.
+Time: 2020-10-26 11:54:49.929702
+
+------------------------------------------------------------
