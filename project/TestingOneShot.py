@@ -12,11 +12,11 @@ from project.part_6.Testing_Env_6 import test_part6
 n_experiment = 4
 
 testing_setup = {
-    'part2': False,
-    'part3': False,
-    'part4': False,
-    'part5': False,
-    'part6': False,
+    'part2': True,
+    'part3': True,
+    'part4': True,
+    'part5': True,
+    'part6': True,
     'part7': True
 }
 

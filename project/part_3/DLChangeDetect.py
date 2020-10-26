@@ -6,8 +6,8 @@ from project.part_2.GPTS_Learner import GPTS_Learner
 # Extension of the standard GP_Learner for implementing a sliding-window combinatorial
 # bandit algorithm due to the presence of multiple abrupt phases
 class DLChangeDetect(GPTS_Learner):
-    def __init__(self, n_arms, arms, min_len=3, test_stat=3):
-        super().__init__(n_arms, arms)
+    def __init__(self, arms, min_len=3, test_stat=3):
+        super().__init__(arms)
         self.min_len = min_len  # minimum number of data in the arm
         self.test_stat = test_stat
 

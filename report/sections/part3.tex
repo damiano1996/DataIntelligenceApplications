@@ -8,9 +8,9 @@ For this purpose we have implemented the \textit{AbruptBiddingEnvironment.py} cl
 
 In this case, the functions generating  the number of clicks given a bid value can change dynamically, according the phase we are in.
 The curves differ from the previous definitions only for the dependence to the phase we are in. As follows the mathematical defintion of the three curve functions:
-\begin{center}
-	$n(x) = c_{M}[phase] * (v_{M}[phase] - e^{-\alpha x})$
-\end{center}
+\begin{equation}
+	n(x) = c_{M}[phase] \cdot (v_{M}[phase] - e^{-\alpha x})
+\end{equation}
 
 In order to learn the three curves in the case of multiple abrupt phases, we have implemented the \textit{DynamicLerner.py} class as an extension of the standard GP\_Learner.\\
 It implements a \textit{sliding window} mechanism in which we pull a new arm and add the collected rewards until the length of the window is reached. When the window is full, for each new pulled arm we get, we delete the last recent value and add the new one to the collected rewards.
@@ -24,10 +24,9 @@ Let us suppose to draw a sample whose value is $x_0$ and let $\mu$ $\sigma^2$ be
 and the standard deviation of the the distribution of the points belonging to the pulled arm. 
 If the point doesn't belong to that distribution the hypothesis test should reject $H_0$, with a \textit{confidence interval of 99\%} So we have:
 
-\begin{center}
-		
-	 $\mathbb{P}\Big(\frac{|x_0 - \mu|}{\sqrt{\sigma^2}} > h \Big) = 0.01 $
-\end{center}
+\begin{equation}
+	 \mathbb{P}\left(\frac{|x_0 - \mu|}{\sqrt{\sigma^2}} > h \right) = 0.01
+\end{equation}
 
 We have that the critical z-score when using a 99\% confidence level are $\pm 2.58$ standard deviations.\\
 

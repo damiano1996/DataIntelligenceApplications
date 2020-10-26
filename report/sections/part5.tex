@@ -2,7 +2,7 @@
 
 In this chapter we want to further expand what we have seen in the previous one.
 In the general case, since we have access to many information about our clients, we can not only identify different classes of users, with different buying powers, but also understand to which class a new user belongs, based on the information we have about him (given, for example, by cookies).
-The idea is to exploit this knowledge in order to charge different prices to each class and so maximise our revenue.
+The idea is to exploit this knowledge in order to charge different prices to each class and so maximize our revenue.
 To do so, we will use the idea of the \textbf{context}, which will be explained in the next section.
 We will then explain the differences in the environment used in this chapter, tackle the approaches we followed to create the algorithm and analyze the final results.
 
@@ -39,7 +39,9 @@ The lower bound is a measure of how much we are guaranteed to gain, the reward w
 
 	For the lower bound of the probability we used the Hoeffding bound since the probability has limited values.
 
-\begin{center}$x - \sqrt{-\frac{\log_n{d}} {2 n}}$\end{center}
+\begin{equation}
+	x - \sqrt{-\frac{\log_n{d}} {2 n}}
+\end{equation}
 where:
 \begin{itemize}
 	\item $n$ : is the number of samples.
@@ -49,7 +51,9 @@ where:
 
 	For the reward, we had to use a different formula, since its values are unlimited.
 
-\begin{center}$x - t \sqrt{\frac{sq} {n}}$\end{center}
+\begin{equation}
+	x - t \sqrt{\frac{sq} {n}}
+\end{equation}
 where:
 \begin{itemize}
 	\item $n$ : is the number of samples.

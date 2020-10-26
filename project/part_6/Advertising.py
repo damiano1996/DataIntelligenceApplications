@@ -17,7 +17,7 @@ class Advertising:
 
         self.env = bidding_environment
 
-        self.learner = GPTS_Learner(self.n_arms, self.env.bids)
+        self.learner = GPTS_Learner(self.env.bids)
 
         self.daily_clicks = 0
         self.optimal_clicks = self.get_optimal()

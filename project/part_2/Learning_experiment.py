@@ -24,9 +24,9 @@ def execute_experiment(args):
             dl_change_detect_min_len = args['dl_change_detect_min_len']
             dl_change_detect_test_stat = args['dl_change_detect_test_stat']
             learners.append(
-                learner(n_arms, bids, min_len=dl_change_detect_min_len, test_stat=dl_change_detect_test_stat))
+                learner(bids, min_len=dl_change_detect_min_len, test_stat=dl_change_detect_test_stat))
         else:
-            learners.append(learner(n_arms, bids))
+            learners.append(learner(bids))
 
     for d in range(0, n_obs):
         if first_day:

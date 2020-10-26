@@ -14,9 +14,9 @@ In the following chapter we are going to:
 The \textbf{Environment} returns the reward associated to each sub-campaign, by iterating over the days for the entire time horizon.\\
 In our setting, it computes the optimal number of clicks knowing the real functions, one for each sub-campaign, generating  the number of clicks given a bid value \textbf{\textit{n(x)}}:\\
 
-\begin{center}
-	$n(x) = c_{M} * (v_{M} - e^{-\alpha x})$
-\end{center}
+\begin{equation}
+	n(x) = c_{M} \cdot (v_{M} - e^{-\alpha x})
+\end{equation}
 
 where:
 \begin{itemize}
@@ -43,9 +43,9 @@ Afterward, the model of each sub-campaign is updated using those observations an
 
 In order to properly used a GP regressor, we had to normalize the data. The bid space was already defined in range [0,1] and so the input variable has not to be normalized. So, we only needed to normalize the target and we have done it in the construction of the gaussian process.\\
 A Gaussian proccess is completely defined by its mean and its covariance.Since we don't have any prior information we assumed to have zero mean and the covariance given by the squared exponential kernel function \textbf{k(x,x')}:
-\begin{center}
-	$k(x,x') = \theta^{2} e^{-\frac{(x-x')^2}{2 l^2}}$
-\end{center}
+\begin{equation}
+	k(x,x') = \theta^{2} e^{-\frac{(x-x')^2}{2 l^2}}
+\end{equation}
 where:
 \begin{itemize}
 	\item \textit{l} :is the \textit{lengthscale};

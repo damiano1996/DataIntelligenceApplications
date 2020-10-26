@@ -7,8 +7,8 @@ from project.part_2.GPTS_Learner import GPTS_Learner
 # Extension of the standard GP_Learner for implementing a sliding-window combinatorial
 # bandit algorithm due to the presence of multiple abrupt phases
 class DynamicLearner(GPTS_Learner):
-    def __init__(self, n_arms, arms):
-        super().__init__(n_arms, arms)
+    def __init__(self, arms):
+        super().__init__(arms)
 
     def update_observations(self, pulled_arm, reward):
         if len(self.collected_rewards) >= len_window:
