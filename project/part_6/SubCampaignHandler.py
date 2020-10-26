@@ -38,6 +38,7 @@ class SubCampaignHandler:
         self.window_size = 5
         self.window_revenue = np.array([])
         self.window_clicks = np.array([])
+        self.campaign_value = 0
 
         self.total_revenue = 0
         self.total_clicks = 0
@@ -69,8 +70,8 @@ class SubCampaignHandler:
               'optimal revenue: ', round(self.pricing.optimal_revenue * self.advertising.optimal_clicks),
               'collected revenue: ', int(self.daily_revenue))
 
-        # self.total_revenue += self.daily_revenue
-        # self.total_clicks += self.daily_clicks
+        self.total_revenue += self.daily_revenue
+        self.total_clicks += self.daily_clicks
         self.update_windows(self.daily_revenue, self.daily_clicks)
 
         return daily_regret, self.daily_revenue
@@ -91,6 +92,9 @@ class SubCampaignHandler:
         return self.advertising.learner.pull_arm_sequence()
 
     def update_windows(self, daily_revenue, daily_clicks):
+        #if (self.keep_daily_price):
+            
+        #else:
         self.window_revenue = np.append(self.window_revenue, daily_revenue)
         if self.window_revenue.shape[0] > self.window_size:
             self.window_revenue = np.delete(self.window_revenue, 0)
@@ -99,5 +103,6 @@ class SubCampaignHandler:
         if self.window_clicks.shape[0] > self.window_size:
             self.window_clicks = np.delete(self.window_clicks, 0)
 
-        self.total_revenue = np.sum(self.window_revenue)
-        self.total_clicks = np.sum(self.window_clicks)
+        self.campaign_value = np.sum(self.window_revenue) / np.sum(self.window_clicks) if np.sum(self.window_clicks) > 0 else 0
+
+

@@ -12,15 +12,15 @@ from project.part_4.MultiClassHandler import MultiClassHandler
 from project.part_6.BudgetAllocator import BudgetAllocator
 
 
-def test_part6(n_experiments=10,
+def test_part6(n_experiments=50,
                enable_pricing=True,
-               plot_advertising=True,
-               keep_daily_price=True,
-               demand_chart_path='other_files/testing_part6_demandcurves.png',
+               plot_advertising=False,
+               keep_daily_price=False,
+               demand_chart_path='project/part_6/other_files/testing_part6_demandcurves.png',
                demand_chart_title='Part 6 - Demand Curves',
-               results_chart_path='other_files/testing_part6_regrets.png',
+               results_chart_path='project/part_6/other_files/testing_part6_regrets.png',
                results_chart_title='Part 6 - Regret',
-               advertising_chart_root_path='other_files/testing_part6_'):
+               advertising_chart_root_path='project/part_6/other_files/testing_part6_'):
     # one product to sell
     product = Product(product_config=product_config)
 
@@ -68,7 +68,7 @@ def test_part6(n_experiments=10,
              'advertising_chart_root_path': advertising_chart_root_path}
             for idx in range(n_experiments)]  # create arguments for the experiment
 
-    with Pool(processes=1) as pool:  # multiprocessing.cpu_count()
+    with Pool(processes=10) as pool:  # multiprocessing.cpu_count()
         results = pool.map(execute_experiment, args, chunksize=1)
 
     for result in results:
@@ -80,17 +80,17 @@ def test_part6(n_experiments=10,
     plt.title(results_chart_title, fontsize=20)
     # for agnostic_regret in agnostic_regret_per_experiment:
     #     plt.plot(np.cumsum(agnostic_regret), alpha=0.1, c='C2')
-    # plt.plot(np.cumsum(np.mean(agnostic_regret_per_experiment, axis=0)),
-    #          c='C2', label='Regret (Advertising <=!=> Pricing)')
+    plt.plot(np.cumsum(np.mean(agnostic_regret_per_experiment, axis=0)),
+          c='C1', label='Agnostic Regret')
 
-    for regret in regret_per_experiment:
-        plt.plot(np.cumsum(regret), alpha=0.2, c='C2')
+    #for regret in regret_per_experiment:
+        #plt.plot(np.cumsum(regret), alpha=0.2, c='C2')
     plt.plot(np.cumsum(np.mean(regret_per_experiment, axis=0)),
-             c='C2', label='Mean Regret')  # (Advertising <==> Pricing)')
+             c='C2', label='Real Regret')  # (Advertising <==> Pricing)')
 
     plt.xlabel('Time')
     plt.ylabel('Regret')
-    plt.ylim([0, np.cumsum(np.mean(regret_per_experiment, axis=0))[-1]])
+    #plt.ylim([0, np.cumsum(np.mean(regret_per_experiment, axis=0))[-1]])
     plt.legend()
     plt.savefig(results_chart_path)
     plt.show()
@@ -125,13 +125,8 @@ def execute_experiment(args):
 
     if plot_advertising:
         for idx, subcampaign_handler in enumerate(budget_allocator.msh.subcampaigns_handlers):
-            unknown_clicks_curve = subcampaign_handler.advertising.env.subs[
-                subcampaign_handler.advertising.sub_idx].means['phase_0']
-            subcampaign_handler.advertising.learner.plot(unknown_clicks_curve,
-                                                         sigma_scale_factor=10,
-                                                         chart_path=advertising_chart_root_path +
-                                                                    'subcamaign_' +
-                                                                    str(idx))
+            unknown_clicks_curve = subcampaign_handler.advertising.env.subs[subcampaign_handler.advertising.sub_idx].means['phase_0']
+            subcampaign_handler.advertising.learner.plot(unknown_clicks_curve, sigma_scale_factor=10, chart_path=advertising_chart_root_path +'subcamaign_' +str(idx))
 
     print('Total revenue:', int(budget_allocator.msh.total_revenue),
           'Cumulative regret:', int(sum(budget_allocator.regret)),

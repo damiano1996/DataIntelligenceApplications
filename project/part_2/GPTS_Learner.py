@@ -8,12 +8,12 @@ from project.dia_pckg.plot_style.cb91visuals import *
 
 class GPTS_Learner(Learner):
 
-    def __init__(self, arms):
-        super().__init__(len(arms))
+    def __init__(self, n_arms, arms):
+        super().__init__(n_arms)
 
         alpha = 10.0
         self.arms = arms
-        self.means = np.zeros(len(arms))
+        self.means = np.zeros(n_arms)
         self.sigmas = np.full(self.means.shape, alpha)
         self.pulled_arms = []
 
@@ -39,20 +39,20 @@ class GPTS_Learner(Learner):
         self.update_observations(pulled_arm, reward)
         self.update_model()
 
-    def pull_arm(self, armidx):
+    def pull_arm(self):
         sampled_values = np.random.normal(self.means, self.sigmas)
-        return sampled_values[armidx]
+        return np.argmax(sampled_values)
 
     def pull_arm_sequence(self):
         sampled_values = np.random.normal(self.means, self.sigmas)
         return sampled_values
 
-    def plot(self, unknown_function, sigma_scale_factor=20, chart_path=None):
+    def plot(self, unknown_function, sigma_scale_factor=20):
         x_pred = np.atleast_2d(self.arms).T
         y_pred, sigma = self.gp.predict(x_pred, return_std=True)
 
         plt.figure(0)
-        plt.title(f'Clicks Over Budget')  # TODO: Va bene questo titolo?
+        plt.title(f'Regret')
         plt.plot(x_pred, unknown_function, ':', label=r'Unknown function')
         plt.scatter(self.pulled_arms, self.collected_rewards, marker='o', label=r'Observed Clicks')
         plt.plot(x_pred, y_pred, '-', label=r'Predicted Clicks')
@@ -60,9 +60,7 @@ class GPTS_Learner(Learner):
                  np.concatenate([y_pred - 1.96 * sigma * sigma_scale_factor,
                                  (y_pred + 1.96 * sigma * sigma_scale_factor)[::-1]]),
                  alpha=.2, fc='C2', ec='None', label='95% conf interval')
-        plt.xlabel('Budget')  # TODO: Va bene?
-        plt.ylabel('Clicks')
+        plt.xlabel('$x$')
+        plt.ylabel('$n(x)$')
         plt.legend(loc='lower right')
-        if chart_path is not None:
-            plt.savefig(chart_path)
         plt.show()
