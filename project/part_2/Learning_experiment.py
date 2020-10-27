@@ -44,6 +44,12 @@ def execute_experiment(args):
 
         clicks = env.round(pulled)
 
+        # TODO rimuovere, è per testing
+        if (learner.__name__ == 'DLChangeDetect'):
+            print('DAY: ' + str(d)  + '\n ALLOC: ' + str(allocations))
+
+        #print('DAY: ' + str(d) + '\n LEARNER: ' + str(learner.__name__) + '\n ALLOC: ' + str(allocations))
+
         for x in range(0, n_subcamp):
             learners[x].update(pulled[x], clicks[x])
 

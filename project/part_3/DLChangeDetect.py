@@ -10,6 +10,7 @@ class DLChangeDetect(GPTS_Learner):
         super().__init__(arms)
         self.min_len = min_len  # minimum number of data in the arm
         self.test_stat = test_stat
+        self.day = 0
 
     def index_is_of_arm(self, pulled_arm):
         indices = np.array([])
@@ -28,7 +29,7 @@ class DLChangeDetect(GPTS_Learner):
             test = np.abs(mean_diff / std) if std != 0 else 0
 
             if test > self.test_stat:
-                print("Change detected: len=" +
+                print("Change detected (DAY: " + str(self.day) + "): len=" +
                       str(len(self.rewards_per_arm[pulled_arm])) +
                       " std=" + str(std) +
                       " test=" + str(test))
@@ -41,3 +42,5 @@ class DLChangeDetect(GPTS_Learner):
         self.collected_rewards = np.append(self.collected_rewards, reward)
 
         self.pulled_arms = np.append(self.pulled_arms, self.arms[pulled_arm])
+
+        self.day = self.day+1

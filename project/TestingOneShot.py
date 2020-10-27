@@ -11,7 +11,7 @@ from project.part_6.Testing_Env_6 import test_part6
 from project.part_7_binomial.Testing_Env_7 import test_part7 as t7_binomial
 from project.part_7_normal.Testing_Env_7 import test_part7 as t7_normal
 
-n_experiment = 3
+n_experiment = 1
 np.random.seed(0)
 
 testing_setup = {
