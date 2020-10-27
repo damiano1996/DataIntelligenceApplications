@@ -18,7 +18,7 @@ def test_part7(n_experiments=10,
                artificial_noise_ADV=5,
                artificial_noise_CR=0.05,
                results_chart_path='other_files/testing_part7_regrets.png',
-               results_chart_title='Part 7 - Regret'):
+               results_chart_title='Part 7 BINOMIAL - Regret'):
     # one product to sell
     product = Product(product_config=product_config)
 
@@ -70,18 +70,13 @@ def test_part7(n_experiments=10,
         results = pool.map(execute_experiment, args, chunksize=1)
 
     regret_per_experiment = []
-    regret_notfixed_per_experiment = []
     final_loss_per_experiment = []
-    final_loss_per_experiment_notfixed = []
 
     for result in results:
-        regret_notfixed_per_experiment.append(result[1])
-        regret_per_experiment.append(result[0])
-        final_loss_per_experiment.append(sum(result[0]))
-        final_loss_per_experiment_notfixed.append(sum(result[1]))
+        regret_per_experiment.append(result)
+        final_loss_per_experiment.append(sum(result))
 
     print('\n\nFINAL LOSS:', np.mean(final_loss_per_experiment))
-    print('\n\nFINAL NOT FIXED LOSS:', np.mean(final_loss_per_experiment_notfixed))
     print('\n\nMEAN LOSS:', np.mean(final_loss_per_experiment) / n_days)
 
     plt.title(results_chart_title, fontsize=20)
@@ -90,13 +85,9 @@ def test_part7(n_experiments=10,
         plt.plot(np.cumsum(regret), alpha=0.2, c='C2')
     plt.plot(np.cumsum(np.mean(regret_per_experiment, axis=0)), c='C2',
              label='Mean Regret')
-    for regret in regret_notfixed_per_experiment:
-        plt.plot(np.cumsum(regret), alpha=0.2, c='C1')
-    plt.plot(np.cumsum(np.mean(regret_notfixed_per_experiment, axis=0)), c='C1',
-             label='Mean Regret Price Not Fixed X Class')
     plt.xlabel('Time')
     plt.ylabel('Regret')
-    plt.ylim([0, np.max([np.max(final_loss_per_experiment), np.max(final_loss_per_experiment_notfixed)])])
+    plt.ylim([0, np.max(final_loss_per_experiment)])
     plt.legend()
     plt.savefig(results_chart_path)
     plt.show()
@@ -138,4 +129,4 @@ def execute_experiment(args):
 
 
 if __name__ == '__main__':
-    test_part7(n_experiments=1)
+    test_part7(n_experiments=5)
