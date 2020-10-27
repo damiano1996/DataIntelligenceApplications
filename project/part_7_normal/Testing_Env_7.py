@@ -17,7 +17,7 @@ def test_part7(n_experiments=10,
                demand_chart_path='other_files/testing_part7_demandcurves.png',
                demand_chart_title='Part 7 - Demand Curves',
                artificial_noise_ADV=0,
-               artificial_noise_CR=0,
+               artificial_noise_CR=0.05,
                results_chart_path='other_files/testing_part7_regrets.png',
                results_chart_title='Part 7 NORMAL - Regret'):
     # one product to sell
