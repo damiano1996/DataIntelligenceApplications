@@ -14,7 +14,7 @@ from project.part_3.DLChangeDetect import DLChangeDetect
 from project.part_3.DynamicLearner import DynamicLearner
 
 
-def test_part3(n_experiments=10,
+def test_part3(n_experiments=3,
                chart_path='other_files/testing_part3.png',
                title='Part 3 - Regret with Three Abrupt Phases',
                dl_change_detect_min_len=3,
@@ -24,7 +24,9 @@ def test_part3(n_experiments=10,
     bids = np.linspace(0, max_bid, n_arms_advertising)
     args = []
 
-    learners_types = [Learner, DynamicLearner, DLChangeDetect]
+    # learners_types = [Learner, DynamicLearner, DLChangeDetect]
+    # learners_types = [DynamicLearner, DLChangeDetect, Learner]
+    learners_types = [DLChangeDetect, Learner, DynamicLearner]
     for i in range(n_experiments):
         env_i = AbruptBiddingEnvironment(bids)
         for learner in learners_types:
