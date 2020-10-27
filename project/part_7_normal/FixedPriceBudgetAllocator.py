@@ -1,6 +1,6 @@
 from project.dia_pckg.Config import *
 from project.part_2.Utils import *
-from project.part_7.SubCampaignHandler import SubCampaignHandler
+from project.part_7_normal.SubCampaignHandler import SubCampaignHandler
 
 
 class FixedPriceBudgetAllocator:

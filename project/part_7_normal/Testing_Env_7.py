@@ -9,15 +9,15 @@ from project.dia_pckg.Product import Product
 from project.dia_pckg.plot_style.cb91visuals import *
 from project.part_2.BiddingEnvironment import BiddingEnvironment
 from project.part_4.MultiClassHandler import MultiClassHandler
-from project.part_7.Env_7 import Env7
-from project.part_7.FixedPriceBudgetAllocator import FixedPriceBudgetAllocator
+from project.part_7_normal.Env_7 import Env7
+from project.part_7_normal.FixedPriceBudgetAllocator import FixedPriceBudgetAllocator
 
 
 def test_part7(n_experiments=10,
                demand_chart_path='other_files/testing_part7_demandcurves.png',
                demand_chart_title='Part 7 - Demand Curves',
-               artificial_noise_ADV=5,
-               artificial_noise_CR=0.05,
+               artificial_noise_ADV=20,
+               artificial_noise_CR=0,
                results_chart_path='other_files/testing_part7_regrets.png',
                results_chart_title='Part 7 - Regret'):
     # one product to sell
@@ -146,4 +146,4 @@ def execute_experiment(args):
 
 
 if __name__ == '__main__':
-    test_part7(n_experiments=20)
+    test_part7(n_experiments=5)

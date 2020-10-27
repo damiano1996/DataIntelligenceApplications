@@ -63,3 +63,8 @@ class TS_Learner(Learner):
         """
         real_reward = bernoulli_reward * self.arm_prices[pulled_arm]  # calculate the real reward (isBought*price)
         return real_reward
+
+    def get_mean_reward_from_arm(self, arm):
+        probability = np.random.beta(self.beta_parameters[arm, 0],
+                                     self.beta_parameters[arm, 1])
+        return probability
