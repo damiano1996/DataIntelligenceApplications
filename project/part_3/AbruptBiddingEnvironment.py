@@ -17,7 +17,14 @@ class AbruptBiddingEnvironment(BiddingEnvironment):
         self.day = 0
 
     def phase(self):
-        return (self.day / phase_len) % n_abrupts_phases
+        d = self.day
+        p = 0
+        for p, phase_l in enumerate(phase_lens):
+            d -= phase_l
+            if d < 0:
+                return p
+        return p
+    #(self.day / phase_len) % n_abrupts_phases
 
     def round(self, pulled_arms):
         return super(AbruptBiddingEnvironment, self).round(pulled_arms, int(self.phase()))

@@ -30,6 +30,7 @@ def test_part3(n_experiments=25,
         env_i = AbruptBiddingEnvironment(bids)
         for learner in learners_types:
             args_i = {
+                'index':i,
                 'learner': learner,
                 'environment': copy.deepcopy(env_i),
                 'bids': bids,
@@ -62,23 +63,33 @@ def test_part3(n_experiments=25,
 
         # the optimal number of clicks depends by the phase, thus we have to compute the optimal for each phase
         opt_clicks = np.arange(0, n_days, 1)
+        start = 0
+        end = 0
         for phase in range(n_abrupts_phases):
+
             opt_phase_clicks = compute_clairvoyant(args['environment'], phase=phase)[1]
-            opt_clicks[int(phase * phase_len):int((phase + 1) * phase_len)] = opt_phase_clicks
-            #TODO: rimuovere, è per il testing
-            ## print('Optimal [phase = ' + str(phase) + ']: ' + str(opt_phase_clicks) + str(compute_clairvoyant(args['environment'], phase=phase)[0]))
+            start += 0 if phase == 0 else phase_lens[phase - 1]
+            end += phase_lens[phase]
+            opt_clicks[start:end] = opt_phase_clicks
+
         # adding to dictionary
         if learner_name in list(opt_clicks_per_experiments.keys()):
             opt_clicks_per_experiments[learner_name].append(opt_clicks)
         else:
             opt_clicks_per_experiments[learner_name] = [opt_clicks]
 
+
+
     ylim = 0
     plt.title(title, fontsize=14)
     # plot
     for i, ((learner_name, clicks_per_experiment), (opt_clicks_per_experiment)) in enumerate(
             zip(clicks_per_experiments.items(), opt_clicks_per_experiments.values())):
-
+        print(f"learner: {learner_name}")
+        print("clicks")
+        print(sum(clicks_per_experiment))
+        print("opt")
+        print(sum(opt_clicks_per_experiment))
         for clicks, opts in zip(clicks_per_experiment, opt_clicks_per_experiment):
             plt.plot(np.cumsum(opts - clicks), alpha=0.2, c=f'C{i + 1}')
 

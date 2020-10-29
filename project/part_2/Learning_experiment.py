@@ -64,5 +64,6 @@ def execute_experiment(args):
             "click2": clicks[1],
             "click3": clicks[2]
         }, ignore_index=True)
-
+    if "index" in args:
+        print(f"end of experiment {args['index']}")
     return click_each_day, args

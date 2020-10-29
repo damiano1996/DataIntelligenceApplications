@@ -1,4 +1,5 @@
 import numpy as np
+from project.dia_pckg.Config import *
 
 
 class SubCampaign:
@@ -21,11 +22,11 @@ class SubCampaign:
         self.product = product
         self.campaign = campaign
 
-        self.param_for_phase = np.random.choice(np.arange(2, 10, 1), 3)
-        self.max_value_phase = np.random.choice(np.arange(0.3, 1, 0.1), 3)
+        self.param_for_phase = np.random.choice(np.arange(2, 10, 1), n_abrupts_phases)
+        self.max_value_phase = np.random.choice(np.arange(0.3, 1, 0.1), n_abrupts_phases)
 
-        self.means = {f'phase_{i}': self.phase_curve(bids, phase=i) for i in range(3)}
-        self.sigmas = {f'phase_{i}': np.multiply(self.means[f'phase_{i}'], sigma) for i in range(3)}
+        self.means = {f'phase_{i}': self.phase_curve(bids, phase=i) for i in range(n_abrupts_phases)}
+        self.sigmas = {f'phase_{i}': np.multiply(self.means[f'phase_{i}'], sigma) for i in range(n_abrupts_phases)}
 
     def phase_curve(self, x, phase=0):
         curve = self.max_n_clicks * (self.max_value_phase[phase] - np.exp(-self.param_for_phase[phase] * x))
