@@ -1,14 +1,14 @@
 import numpy as np
 
-from project.part_2.GPTS_Learner import GPTS_Learner
+from project.part_2.GP_Learner import GP_Learner
 
 
 class SubCampaignHandler:
 
     def __init__(self, class_name, bids, prices):
         self.class_name = class_name
-        self.learnerADV = GPTS_Learner(bids)
-        self.learnerCR = GPTS_Learner(prices)
+        self.learnerADV = GP_Learner(bids)
+        self.learnerCR = GP_Learner(prices)
 
     def daily_update(self, arm_price, arm_adv, clicks, purchases):
         self.learnerADV.update(arm_adv, clicks)

@@ -6,7 +6,7 @@ from project.dia_pckg.Learner import Learner
 from project.dia_pckg.plot_style.cb91visuals import *
 
 
-class GPTS_Learner(Learner):
+class GP_Learner(Learner):
 
     def __init__(self, arms):
         super().__init__(len(arms))

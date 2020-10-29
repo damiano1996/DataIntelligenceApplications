@@ -1,4 +1,4 @@
-GPTS_Learner:
+GP_Learner:
 Con V:
 Total revenue: 5604700 Cumulative regret: 396497 Final loss: 0.07074370861756264
     Best bidding clairvoyant (best_allocation, n_clicks): [0.5555555555555556, 0.4444444444444444, 0.0]

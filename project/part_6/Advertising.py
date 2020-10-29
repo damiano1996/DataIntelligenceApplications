@@ -1,4 +1,4 @@
-from project.part_2.GPTS_Learner import GPTS_Learner
+from project.part_2.GP_Learner import GP_Learner
 from project.part_2.Utils import compute_clairvoyant, get_idx_arm_from_allocation
 
 
@@ -17,7 +17,7 @@ class Advertising:
 
         self.env = bidding_environment
 
-        self.learner = GPTS_Learner(self.env.bids)
+        self.learner = GP_Learner(self.env.bids)
 
         self.daily_clicks = 0
         self.optimal_clicks = self.get_optimal()

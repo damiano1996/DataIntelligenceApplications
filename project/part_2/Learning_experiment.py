@@ -22,7 +22,10 @@ def execute_experiment(args):
             dl_change_detect_min_len = args['dl_change_detect_min_len']
             dl_change_detect_test_stat = args['dl_change_detect_test_stat']
             learners.append(
-                learner(bids, min_len=dl_change_detect_min_len, test_stat=dl_change_detect_test_stat))
+                learner(bids, min_len=dl_change_detect_min_len, z_score=dl_change_detect_test_stat))
+        elif learner.__name__ == 'DynamicLearner':
+            win_length = args['win_length']
+            learners.append(learner(bids, win_length))
         else:
             learners.append(learner(bids))
 
@@ -45,8 +48,8 @@ def execute_experiment(args):
         clicks = env.round(pulled)
 
         # TODO rimuovere, è per testing
-        if (learner.__name__ == 'DLChangeDetect'):
-            print('DAY: ' + str(d)  + '\n ALLOC: ' + str(allocations))
+        # if (learner.__name__ == 'DLChangeDetect'):
+        #     print('DAY: ' + str(d)  + '\n ALLOC: ' + str(allocations))
 
         #print('DAY: ' + str(d) + '\n LEARNER: ' + str(learner.__name__) + '\n ALLOC: ' + str(allocations))
 

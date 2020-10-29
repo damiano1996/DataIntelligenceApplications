@@ -1,15 +1,15 @@
 import numpy as np
 
-from project.part_2.GPTS_Learner import GPTS_Learner
+from project.part_2.GP_Learner import GP_Learner
 
 
 # Extension of the standard GP_Learner for implementing a sliding-window combinatorial
 # bandit algorithm due to the presence of multiple abrupt phases
-class DLChangeDetect(GPTS_Learner):
-    def __init__(self, arms, min_len=3, test_stat=3):
+class DLChangeDetect(GP_Learner):
+    def __init__(self, arms, min_len=3, z_score=2.58):
         super().__init__(arms)
         self.min_len = min_len  # minimum number of data in the arm
-        self.test_stat = test_stat
+        self.z_score = z_score
         self.day = 0
 
     def index_is_of_arm(self, pulled_arm):
@@ -28,7 +28,7 @@ class DLChangeDetect(GPTS_Learner):
 
             test = np.abs(mean_diff / std) if std != 0 else 0
 
-            if test > self.test_stat:
+            if test > self.z_score:
                 print("Change detected (DAY: " + str(self.day) + "): len=" +
                       str(len(self.rewards_per_arm[pulled_arm])) +
                       " std=" + str(std) +

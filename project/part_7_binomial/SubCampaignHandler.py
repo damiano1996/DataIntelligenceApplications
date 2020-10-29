@@ -1,6 +1,6 @@
 import numpy as np
 
-from project.part_2.GPTS_Learner import GPTS_Learner
+from project.part_2.GP_Learner import GP_Learner
 from project.part_6.Pricing import Pricing
 
 
@@ -8,7 +8,7 @@ class SubCampaignHandler:
 
     def __init__(self, class_name, bids, prices, multiclasshandler):
         self.class_name = class_name
-        self.learnerADV = GPTS_Learner(bids)
+        self.learnerADV = GP_Learner(bids)
         self.prices = prices
         self.pricing = Pricing(class_name, multiclasshandler, len(prices), True)
 

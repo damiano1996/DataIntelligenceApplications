@@ -4,7 +4,7 @@
 
 # campaign
 initial_date = '20200101'
-n_days = 365
+n_days = 200
 
 # Seller wallet and ambitions
 seller_max_budget = 20000  # $
@@ -38,8 +38,8 @@ n_abrupts_phases = 3
 demand_path = 'demand_curves'
 
 # PART 3 CONFIG
-multiple_len_window = [round(n_days/6)]#, round(n_days/3), round(2*n_days/3)]
-min_lens = [10]
+multiple_len_window = [30]#round(n_days/6), round(n_days/3), round(2*n_days/3)]
+min_lens = [3, 6, 10]
 z_score = 2.58
 phase_len = n_days // n_abrupts_phases
 # Since n_abrupts_phases is odd and n_days could be even we add 1 to obtain equal phases
@@ -54,3 +54,20 @@ n_arms_pricing = 21
 
 
 noise_std = 0.05
+============================================================
+Testing all parts!
+Time: 2020-10-28 21:30:44.261632
+PART 3
+Sub-test completed.
+Time: 2020-10-28 21:57:09.323171
+
+Sub-test completed.
+Time: 2020-10-28 22:23:25.924721
+
+Sub-test completed.
+Time: 2020-10-28 22:50:19.736124
+
+Test completed.
+Time: 2020-10-28 22:50:19.736124
+
+------------------------------------------------------------

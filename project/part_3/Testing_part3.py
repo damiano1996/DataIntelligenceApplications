@@ -6,7 +6,7 @@ import numpy as np
 
 from project.dia_pckg.Config import *
 from project.dia_pckg.plot_style.cb91visuals import *
-from project.part_2.GPTS_Learner import GPTS_Learner as Learner
+from project.part_2.GP_Learner import GP_Learner as Learner
 from project.part_2.Learning_experiment import execute_experiment
 from project.part_2.Utils import compute_clairvoyant
 from project.part_3.AbruptBiddingEnvironment import AbruptBiddingEnvironment
@@ -14,18 +14,18 @@ from project.part_3.DLChangeDetect import DLChangeDetect
 from project.part_3.DynamicLearner import DynamicLearner
 
 
-def test_part3(n_experiments=3,
+def test_part3(n_experiments=25,
                chart_path='other_files/testing_part3.png',
                title='Part 3 - Regret with Three Abrupt Phases',
+               win_length=30,
                dl_change_detect_min_len=3,
-               dl_change_detect_test_stat=3):
+               dl_change_detect_test_stat=2.58):
     np.random.seed(0)
 
     bids = np.linspace(0, max_bid, n_arms_advertising)
     args = []
 
     learners_types = [Learner, DynamicLearner, DLChangeDetect]
-    
     for i in range(n_experiments):
         env_i = AbruptBiddingEnvironment(bids)
         for learner in learners_types:
@@ -36,6 +36,7 @@ def test_part3(n_experiments=3,
                 'n_subcamp': n_subcamp,
                 'n_arms': n_arms_advertising,
                 'n_obs': n_days,
+                'win_length': win_length,
                 'dl_change_detect_min_len': dl_change_detect_min_len,
                 'dl_change_detect_test_stat': dl_change_detect_test_stat
             }
@@ -65,7 +66,7 @@ def test_part3(n_experiments=3,
             opt_phase_clicks = compute_clairvoyant(args['environment'], phase=phase)[1]
             opt_clicks[int(phase * phase_len):int((phase + 1) * phase_len)] = opt_phase_clicks
             #TODO: rimuovere, è per il testing
-            print('Optimal [phase = ' + str(phase) + ']: ' + str(opt_phase_clicks) + str(compute_clairvoyant(args['environment'], phase=phase)[0]))
+            ## print('Optimal [phase = ' + str(phase) + ']: ' + str(opt_phase_clicks) + str(compute_clairvoyant(args['environment'], phase=phase)[0]))
         # adding to dictionary
         if learner_name in list(opt_clicks_per_experiments.keys()):
             opt_clicks_per_experiments[learner_name].append(opt_clicks)
@@ -95,14 +96,12 @@ def test_part3(n_experiments=3,
 
 
 if __name__ == '__main__':
-    min_lens = [4]#[1, 2, 3, 4, 5]
-    #test_stats = [2.5, 3, 4, 5]
-    test_stat = 2.58
 
     for min_len in min_lens:
-        #for test_stat in test_stats:
-        test_part3(n_experiments=1,
-                   chart_path=f'other_files/part3_min-len{min_len}_test-stat{test_stat}.png',
-                   title=f'Part 3 - Regret with Three Abrupt Phases [min_len:{min_len} test_stat:{test_stat}]',
-                   dl_change_detect_min_len=min_len,
-                   dl_change_detect_test_stat=test_stat)
+        for lw in multiple_len_window:
+            test_part3(n_experiments=25,
+                       chart_path=f'other_files/part3_min-len{min_len}_test-stat{z_score}_window_length:{lw}.png',
+                       title=f'Part 3 - Regret with Three Abrupt Phases [min_len:{min_len} z_score:{z_score} window_length:{lw}]',
+                       win_length=lw,
+                       dl_change_detect_min_len=min_len,
+                       dl_change_detect_test_stat=z_score)
