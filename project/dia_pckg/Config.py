@@ -37,9 +37,9 @@ classes_config = {
 demand_path = 'demand_curves'
 
 # PART 3 CONFIG
-min_lens = [6]
+min_lens = [5]
 z_score = 2.58
-phase_lens = [30, 40, 10, 60]#n_days // n_abrupts_phases
+phase_lens = [66, 67, 67]#n_days // n_abrupts_phases
 n_abrupts_phases = len(phase_lens)
 n_days = sum(phase_lens)
 

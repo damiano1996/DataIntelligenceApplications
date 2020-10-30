@@ -119,7 +119,7 @@ class FixedPriceBudgetAllocator:
             hypothetical_pulled_arm = get_idx_arm_from_allocation(
                 allocation=allocation,
                 bids=self.bids)
-            opt = mch.get_optimal(class_name=subcampaign_handler.class_name)
+            opt = self.mch.get_optimal(class_name=subcampaign_handler.class_name)
             optimal_revenue = opt['price'] * opt['probability']
             optimal_clicks = biddingEnvironment.get_optimal_clicks(sub_idx)[hypothetical_pulled_arm]
             optimal_total_revenue += optimal_clicks * optimal_revenue

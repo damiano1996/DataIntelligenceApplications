@@ -16,7 +16,6 @@ def test_part7(n_experiments=10,
                demand_chart_path='other_files/testing_part7_demandcurves.png',
                demand_chart_title='Part 7 - Demand Curves',
                artificial_noise_ADV=0,
-               artificial_noise_CR=0.05,
                results_chart_path='other_files/testing_part7_regrets.png',
                results_chart_title='Part 7 BINOMIAL - Regret'):
     # one product to sell
@@ -62,8 +61,7 @@ def test_part7(n_experiments=10,
         'index': idx,
         'multiclasshandler': mch,
         "bidding_environment": copy.deepcopy(env_bid),
-        'artificial_noise_ADV': artificial_noise_ADV,
-        'artificial_noise_CR': artificial_noise_CR}
+        'artificial_noise_ADV': artificial_noise_ADV}
         for idx in range(n_experiments)]  # create arguments for the experiment
 
     with Pool(processes=1) as pool:  # multiprocessing.cpu_count()

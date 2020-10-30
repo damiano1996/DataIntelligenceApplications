@@ -85,11 +85,9 @@ def test_part3(n_experiments=25,
     # plot
     for i, ((learner_name, clicks_per_experiment), (opt_clicks_per_experiment)) in enumerate(
             zip(clicks_per_experiments.items(), opt_clicks_per_experiments.values())):
-        print(f"learner: {learner_name}")
-        print("clicks")
-        print(sum(clicks_per_experiment))
-        print("opt")
-        print(sum(opt_clicks_per_experiment))
+        #print(f"learner: {learner_name}")
+        #print("regret")
+        #print(sum(opt_clicks_per_experiment[learner_name])-sum(clicks_per_experiment[learner_name]))
         for clicks, opts in zip(clicks_per_experiment, opt_clicks_per_experiment):
             plt.plot(np.cumsum(opts - clicks), alpha=0.2, c=f'C{i + 1}')
 
@@ -111,8 +109,8 @@ if __name__ == '__main__':
     for min_len in min_lens:
         for lw in multiple_len_window:
             test_part3(n_experiments=25,
-                       chart_path=f'other_files/part3_min-len{min_len}_test-stat{z_score}_window_length:{lw}.png',
-                       title=f'Part 3 - Regret with Three Abrupt Phases [min_len:{min_len} z_score:{z_score} window_length:{lw}]',
+                       chart_path=f'other_files/part3_min-len{min_len}_test-stat{z_score}_window_length{lw}.png',
+                       title=f'Part 3 - Regret with {n_abrupts_phases} Abrupt Phases [min_len:{min_len} z_score:{z_score} window_length:{lw}]',
                        win_length=lw,
                        dl_change_detect_min_len=min_len,
                        dl_change_detect_test_stat=z_score)

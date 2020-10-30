@@ -41,7 +41,7 @@ def print_(text):
     print(text)
     with open(logs_path, "a") as file:
         file.write(text + '\n')
-    block_print()
+    #block_print()
 
 
 def read_configs():
@@ -87,7 +87,7 @@ if __name__ == '__main__':
             for lw in multiple_len_window:
                 test_part3(n_experiments=n_experiment,
                            chart_path=f'{charts_path}/part3_min-len{min_len}_z_score{z_score}.png',
-                           title=f'Part 3 - Regret with Three Abrupt Phases [min_len:{min_len} z_score:{z_score} window_length:{lw}]',
+                           title=f'Part 3 - Regret with {n_abrupts_phases} Abrupt Phases [min_len:{min_len} z_score:{z_score} window_length:{lw}]',
                            win_length=lw,
                            dl_change_detect_min_len=min_len,
                            dl_change_detect_test_stat=z_score)
