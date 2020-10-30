@@ -93,10 +93,10 @@ def test_part7(n_experiments=10,
         plt.plot(np.cumsum(regret), alpha=0.2, c='C2')
     plt.plot(np.cumsum(np.mean(regret_per_experiment, axis=0)), c='C2',
              label='Mean Regret')
-    for regret in regret_notfixed_per_experiment:
-        plt.plot(np.cumsum(regret), alpha=0.2, c='C1')
-    plt.plot(np.cumsum(np.mean(regret_notfixed_per_experiment, axis=0)), c='C1',
-             label='Mean Regret Price Not Fixed X Class')
+    # for regret in regret_notfixed_per_experiment:
+    #     plt.plot(np.cumsum(regret), alpha=0.2, c='C1')
+    # plt.plot(np.cumsum(np.mean(regret_notfixed_per_experiment, axis=0)), c='C1',
+    #          label='Mean Regret Price Not Fixed X Class')
     plt.xlabel('Time')
     plt.ylabel('Regret')
     plt.ylim([0, np.max([np.max(final_loss_per_experiment), np.max(final_loss_per_experiment_notfixed)])])

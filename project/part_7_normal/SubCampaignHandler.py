@@ -18,6 +18,5 @@ class SubCampaignHandler:
         estimated_means = self.learnerADV.pull_arm_sequence()
         return np.random.normal(estimated_means, [adv_noise for i in range(len(estimated_means))])
 
-    # TODO decidere se usare il artificial_noise anche qua
     def get_estimated_cr(self, arm_price, cr_noise):
         return np.random.normal(self.learnerCR.pull_arm(arm_price), cr_noise)
