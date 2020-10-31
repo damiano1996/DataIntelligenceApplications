@@ -20,7 +20,7 @@ class SubCampaignHandler:
 
     def get_estimated_clicks(self, adv_noise):
         estimated_means = self.learnerADV.pull_arm_sequence()
-        return np.random.normal(estimated_means, [adv_noise for i in range(len(estimated_means))])
+        return np.random.normal(estimated_means, [max([0,adv_noise * estimated_means[i]]) for i in range(len(estimated_means))])
 
     def get_estimated_reward(self, arm_price):
         return self.pricing.learner.get_mean_reward_from_arm(arm_price) * self.prices[arm_price]

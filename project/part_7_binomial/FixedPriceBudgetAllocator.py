@@ -46,9 +46,13 @@ class FixedPriceBudgetAllocator:
         return result
 
     def next_price(self):
-        if self.n_updates == 0:
-            avg = 1 / n_subcamp
-            allocation = [avg, avg, avg]
+        while self.n_updates < 2: #n_arms_pricing:
+
+            if self.n_updates > 0:
+                allocation = self.compute_best_allocation(self.n_updates)[0]
+            else:
+                avg = 1 / n_subcamp
+                allocation = [avg, avg, avg]
             allocation_x_class = {}
             for subh, c in zip(self.subcampaignHandlers, range(len(classes_config))):
                 allocation_x_class[subh.class_name] = get_idx_arm_from_allocation(allocation[c], self.bids)

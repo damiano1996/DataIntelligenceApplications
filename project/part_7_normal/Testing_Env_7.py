@@ -16,7 +16,7 @@ from project.part_7_normal.FixedPriceBudgetAllocator import FixedPriceBudgetAllo
 def test_part7(n_experiments=10,
                demand_chart_path='other_files/testing_part7_demandcurves.png',
                demand_chart_title='Part 7 - Demand Curves',
-               artificial_noise_ADV=0,
+               artificial_noise_ADV=0.0,
                artificial_noise_CR=0.05,
                results_chart_path='other_files/testing_part7_regrets.png',
                results_chart_title='Part 7 NORMAL - Regret'):
@@ -73,18 +73,18 @@ def test_part7(n_experiments=10,
         results = pool.map(execute_experiment, args, chunksize=1)
 
     regret_per_experiment = []
-    regret_notfixed_per_experiment = []
+    #regret_notfixed_per_experiment = []
     final_loss_per_experiment = []
-    final_loss_per_experiment_notfixed = []
+    #final_loss_per_experiment_notfixed = []
 
     for result in results:
-        regret_notfixed_per_experiment.append(result[1])
-        regret_per_experiment.append(result[0])
-        final_loss_per_experiment.append(sum(result[0]))
-        final_loss_per_experiment_notfixed.append(sum(result[1]))
+        #regret_notfixed_per_experiment.append(result[1])
+        regret_per_experiment.append(result)
+        final_loss_per_experiment.append(sum(result))
+        #final_loss_per_experiment_notfixed.append(sum(result[1]))
 
     print('\n\nFINAL LOSS:', np.mean(final_loss_per_experiment))
-    print('\n\nFINAL NOT FIXED LOSS:', np.mean(final_loss_per_experiment_notfixed))
+    #print('\n\nFINAL NOT FIXED LOSS:', np.mean(final_loss_per_experiment_notfixed))
     print('\n\nMEAN LOSS:', np.mean(final_loss_per_experiment) / n_days)
 
     plt.title(results_chart_title, fontsize=20)
@@ -99,7 +99,7 @@ def test_part7(n_experiments=10,
     #          label='Mean Regret Price Not Fixed X Class')
     plt.xlabel('Time')
     plt.ylabel('Regret')
-    plt.ylim([0, np.max([np.max(final_loss_per_experiment), np.max(final_loss_per_experiment_notfixed)])])
+    plt.ylim([0, np.max(final_loss_per_experiment)])
     plt.legend()
     plt.savefig(results_chart_path)
     plt.show()
@@ -114,16 +114,17 @@ def execute_experiment(args):
     artificial_noise_CR = args['artificial_noise_CR']
 
     fix_price_budget_allocator = FixedPriceBudgetAllocator(artificial_noise_ADV=artificial_noise_ADV,
-                                                           artificial_noise_CR=artificial_noise_CR)
+                                                           artificial_noise_CR=artificial_noise_CR,
+                                                           multiclasshandler=mch)
 
     current_day = 0
     done = False
     regret = []
-    regret_not_fixed = []
+    #regret_not_fixed = []
     optimal, opt_price = fix_price_budget_allocator.compute_optimal_reward(biddingEnvironment, mch)
-    optimal_not_fixed = fix_price_budget_allocator.get_optimal_reward_not_fixedprice(biddingEnvironment, mch)
+    # optimal_not_fixed = fix_price_budget_allocator.get_optimal_reward_not_fixedprice(biddingEnvironment, mch)
     print(f'Optimal arm: {opt_price}\n'
-          f'Optimal daily revenue: {optimal} - Optimal daily revenue (not fixed): {optimal_not_fixed}')
+          f'Optimal daily revenue: {optimal} ')#- Optimal daily revenue (not fixed): {optimal_not_fixed}')
 
     while not done:
         print('day:', current_day)
@@ -134,16 +135,16 @@ def execute_experiment(args):
 
         daily_revenue = sum(purchases_per_class.values()) * fix_price_budget_allocator.prices[arm_price]
 
-        regret_not_fixed.append(optimal_not_fixed - daily_revenue)
+        #regret_not_fixed.append(optimal_not_fixed - daily_revenue)
         regret.append(optimal - daily_revenue)
 
-        fix_price_budget_allocator.update(arm_price, allocation, click_per_class, purchases_per_class)
+        fix_price_budget_allocator.complete_update(arm_price, allocation, click_per_class, purchases_per_class)
 
         # Day step
         current_day, done = biddingEnvironment.step()
 
-    return regret, regret_not_fixed
+    return regret#, regret_not_fixed
 
 
 if __name__ == '__main__':
-    test_part7(n_experiments=5)
+    test_part7(n_experiments=3)
