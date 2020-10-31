@@ -2,30 +2,28 @@ import numpy as np
 
 from project.dia_pckg.Config import *
 
-
+"""
+Purchases Environment:
+Each day compute the number of purchases for each class from the corresponding clicks
+"""
 class Env7():
 
+    """
+        multi_class_handler: keep the information and params for each class
+        n_arms: number of different prices
+    """
     def __init__(self, multi_class_handler, n_arms):
-        """
-        :param initial_date: when the campaign begins
-        :param users_per_day: number of users per day
-        :param multi_class_handler: MultiClassHandler object
-        :param n_arms: number of arms of the Thomson Sampling algorithm
-        """
         self.mch = multi_class_handler
         self.n_arms = n_arms
         self.arm_prices = n_arms_pricing
 
+    """
+        pulled_arm_price: arm corresponding to the daily price
+        clicks_per_class: number of clicks for each class
+        return the purchases for each class
+        return the purchases for each class
+    """
     def round(self, pulled_arm_price, clicks_per_class):
-        """
-        Returns reward x each class
-            This method performs a round considering the number of steps per day
-            Only after n rounds it perform a step in the implemented class
-        :param pulled_arm_price: arm to pull
-        :param clicks_per_class: dict of how many clicks on that day for each class
-        :return: rewards: price * clicks * %ofbuy for each class
-        """
-
         purchases = {}
         class_names = list(classes_config.keys())
 
@@ -40,6 +38,10 @@ class Env7():
 
         return purchases
 
+    """
+     pull_arm: selected arm
+     returns the price corresponding to the selected arm
+    """
     def get_true_index(self, pull_arm):
         arm_distance = int(self.mch.aggregate_demand_curve['prices'].shape[0] / self.n_arms)
         return int(arm_distance * pull_arm)
