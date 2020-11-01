@@ -81,16 +81,16 @@ def test_part6(n_experiments=50,
     # for agnostic_regret in agnostic_regret_per_experiment:
     #     plt.plot(np.cumsum(agnostic_regret), alpha=0.1, c='C2')
     plt.plot(np.cumsum(np.mean(agnostic_regret_per_experiment, axis=0)),
-          c='C1', label='Agnostic Regret')
+             c='C1', label='Agnostic Regret')
 
-    #for regret in regret_per_experiment:
-        #plt.plot(np.cumsum(regret), alpha=0.2, c='C2')
+    # for regret in regret_per_experiment:
+    # plt.plot(np.cumsum(regret), alpha=0.2, c='C2')
     plt.plot(np.cumsum(np.mean(regret_per_experiment, axis=0)),
              c='C2', label='Real Regret')  # (Advertising <==> Pricing)')
 
     plt.xlabel('Time')
     plt.ylabel('Regret')
-    #plt.ylim([0, np.cumsum(np.mean(regret_per_experiment, axis=0))[-1]])
+    # plt.ylim([0, np.cumsum(np.mean(regret_per_experiment, axis=0))[-1]])
     plt.legend()
     plt.savefig(results_chart_path)
     plt.show()
@@ -125,8 +125,11 @@ def execute_experiment(args):
 
     if plot_advertising:
         for idx, subcampaign_handler in enumerate(budget_allocator.msh.subcampaigns_handlers):
-            unknown_clicks_curve = subcampaign_handler.advertising.env.subs[subcampaign_handler.advertising.sub_idx].means['phase_0']
-            subcampaign_handler.advertising.learner.plot(unknown_clicks_curve, sigma_scale_factor=10, chart_path=advertising_chart_root_path +'subcamaign_' +str(idx))
+            unknown_clicks_curve = \
+            subcampaign_handler.advertising.env.subs[subcampaign_handler.advertising.sub_idx].means['phase_0']
+            subcampaign_handler.advertising.learner.plot(unknown_clicks_curve, sigma_scale_factor=10,
+                                                         chart_path=advertising_chart_root_path + 'subcamaign_' + str(
+                                                             idx))
 
     print('Total revenue:', int(budget_allocator.msh.total_revenue),
           'Cumulative regret:', int(sum(budget_allocator.regret)),

@@ -92,9 +92,9 @@ class SubCampaignHandler:
         return self.advertising.learner.pull_arm_sequence()
 
     def update_windows(self, daily_revenue, daily_clicks):
-        #if (self.keep_daily_price):
-            
-        #else:
+        # if (self.keep_daily_price):
+
+        # else:
         self.window_revenue = np.append(self.window_revenue, daily_revenue)
         if self.window_revenue.shape[0] > self.window_size:
             self.window_revenue = np.delete(self.window_revenue, 0)
@@ -103,6 +103,5 @@ class SubCampaignHandler:
         if self.window_clicks.shape[0] > self.window_size:
             self.window_clicks = np.delete(self.window_clicks, 0)
 
-        self.campaign_value = np.sum(self.window_revenue) / np.sum(self.window_clicks) if np.sum(self.window_clicks) > 0 else 0
-
-
+        self.campaign_value = np.sum(self.window_revenue) / np.sum(self.window_clicks) if np.sum(
+            self.window_clicks) > 0 else 0

@@ -50,7 +50,7 @@ class BudgetAllocator:
 
         for subcampaign_handler in self.msh.subcampaigns_handlers:
             learner_clicks = subcampaign_handler.get_updated_parameters()
-            v = subcampaign_handler.campaign_value 
+            v = subcampaign_handler.campaign_value
 
             revenue_clicks = np.multiply(learner_clicks, v) if self.enable_pricing else learner_clicks
 

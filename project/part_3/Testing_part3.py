@@ -1,5 +1,4 @@
 import copy
-import multiprocessing
 from multiprocessing import Pool
 
 import numpy as np
@@ -66,7 +65,6 @@ def test_part3(n_experiments=25,
         start = 0
         end = 0
         for phase in range(n_abrupts_phases):
-
             opt_phase_clicks = compute_clairvoyant(args['environment'], phase=phase)[1]
             start += 0 if phase == 0 else phase_lens[phase - 1]
             end += phase_lens[phase]
@@ -78,16 +76,14 @@ def test_part3(n_experiments=25,
         else:
             opt_clicks_per_experiments[learner_name] = [opt_clicks]
 
-
-
     ylim = 0
     plt.title(title, fontsize=14)
     # plot
     for i, ((learner_name, clicks_per_experiment), (opt_clicks_per_experiment)) in enumerate(
             zip(clicks_per_experiments.items(), opt_clicks_per_experiments.values())):
-        #print(f"learner: {learner_name}")
-        #print("regret")
-        #print(sum(opt_clicks_per_experiment[learner_name])-sum(clicks_per_experiment[learner_name]))
+        # print(f"learner: {learner_name}")
+        # print("regret")
+        # print(sum(opt_clicks_per_experiment[learner_name])-sum(clicks_per_experiment[learner_name]))
         for clicks, opts in zip(clicks_per_experiment, opt_clicks_per_experiment):
             plt.plot(np.cumsum(opts - clicks), alpha=0.2, c=f'C{i + 1}')
 

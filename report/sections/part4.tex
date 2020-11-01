@@ -73,6 +73,17 @@ We mainly tested two algorithms:
 We tested both the algorithms during the implementation phase, but since the SWTS is more sensible to the window size, and finding a good one requires a lot of testing, we kept the TS as final choice.\\
 This decision has been motivated by the fact that there aren't abrupt phases, thus there is no impelling reason to "forget the past" as done by SWTS.
 
+An additional note must be done for the pulling phase of the TS algorithm. The standard implementation of the TS pulls the arm in this way:
+\begin{equation}
+a_t \leftarrow \argmax_{a \in A} \{\tilde{\theta}_a\}
+\end{equation}
+Where $A$ is the set of arms; $\tilde{\theta}_a$  is the sampled random value from the beta distribution for arm $a$.\\
+This implementation maximize the demand, but since we are interested in the maximization of the total revenue, we pull the arms as below:
+\begin{equation}
+a_t \leftarrow \argmax_{a \in A} \{\tilde{\theta}_a \cdot price_a\}
+\end{equation}
+Where $price_a$ is the price targeted by the arm $a$.\\
+This allow us to maximize the area under the demand curve.
 
 \section{Experiments}
 

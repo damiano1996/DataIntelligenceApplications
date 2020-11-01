@@ -24,7 +24,8 @@ class AbruptBiddingEnvironment(BiddingEnvironment):
             if d < 0:
                 return p
         return p
-    #(self.day / phase_len) % n_abrupts_phases
+
+    # (self.day / phase_len) % n_abrupts_phases
 
     def round(self, pulled_arms):
         return super(AbruptBiddingEnvironment, self).round(pulled_arms, int(self.phase()))

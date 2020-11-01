@@ -13,6 +13,8 @@
 \usepackage{microtype}      % microtypography
 \usepackage{lipsum}
 \usepackage{amssymb, amsmath}
+\DeclareMathOperator*{\argmax}{argmax} % thin space, limits underneath in displays
+
 
 % to insert images:
 \usepackage{graphicx}
@@ -22,6 +24,11 @@
 % \usepackage{subfigure} % Consente l'inserimento di sottofigure
 
 \DeclareCaptionType{equ}[][]
+
+% TODO: rivedere meglio
+\newenvironment*{emptyenv}{}{}
+
+
 
 \title{Data Intelligence Applications \\
 Pricing \& Advertising}

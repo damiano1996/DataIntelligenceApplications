@@ -1,4 +1,5 @@
 import numpy as np
+
 from project.dia_pckg.Config import *
 
 
@@ -28,7 +29,7 @@ class MultiClassHandler:
 
     def get_classes_optimals(self, phase='phase_0'):
         """
-        :return: (aggregate_optimal, class_1_optimal, class_2_optimal, class_3_optimal)
+        :return: dictionary containing the: aggregate_optimal, class_1_optimal, class_2_optimal, class_3_optimal
         """
         opts = {}
         for class_ in self.classes:
@@ -43,7 +44,7 @@ class MultiClassHandler:
     def get_optimal_price(self, conv_rate):
         """
             This method computes the max area
-        :param conv_rate: (price, probability)
+        :param conv_rate: dictionary containing the: price, probability
         :return:
         """
         areas = conv_rate['prices'] * conv_rate['probabilities']

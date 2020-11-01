@@ -43,4 +43,4 @@ class DLChangeDetect(GP_Learner):
 
         self.pulled_arms = np.append(self.pulled_arms, self.arms[pulled_arm])
 
-        self.day = self.day+1
+        self.day = self.day + 1

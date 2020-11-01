@@ -6,12 +6,14 @@ from project.dia_pckg.Config import *
 Purchases Environment:
 Each day compute the number of purchases for each class from the corresponding clicks
 """
-class Env7():
 
+
+class Env7():
     """
         multi_class_handler: keep the information and params for each class
         n_arms: number of different prices
     """
+
     def __init__(self, multi_class_handler, n_arms):
         self.mch = multi_class_handler
         self.n_arms = n_arms
@@ -23,6 +25,7 @@ class Env7():
         return the purchases for each class
         return the purchases for each class
     """
+
     def round(self, pulled_arm_price, clicks_per_class):
         purchases = {}
         class_names = list(classes_config.keys())
@@ -42,6 +45,7 @@ class Env7():
      pull_arm: selected arm
      returns the price corresponding to the selected arm
     """
+
     def get_true_index(self, pull_arm):
         arm_distance = int(self.mch.aggregate_demand_curve['prices'].shape[0] / self.n_arms)
         return int(arm_distance * pull_arm)

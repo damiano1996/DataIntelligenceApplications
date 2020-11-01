@@ -39,14 +39,14 @@ demand_path = 'demand_curves'
 # PART 3 CONFIG
 min_lens = [5]
 z_score = 2.58
-phase_lens = [30, 30, 30]#n_days // n_abrupts_phases
+phase_lens = [30, 30, 30]  # n_days // n_abrupts_phases
 n_abrupts_phases = len(phase_lens)
 n_days = sum(phase_lens)
 
-multiple_len_window = [round(n_days/6)]#, round(n_days/3), round(2*n_days/3)]
+multiple_len_window = [round(n_days / 6)]  # , round(n_days/3), round(2*n_days/3)]
 
 # Since n_abrupts_phases is odd and n_days could be even we add 1 to obtain equal phases
-#phase_len = phase_len + 1 if n_days % 2 == 0 else phase_len
+# phase_len = phase_len + 1 if n_days % 2 == 0 else phase_len
 
 
 n_subcamp = 3
@@ -54,6 +54,5 @@ n_subcamp = 3
 max_bid = 1
 n_arms_advertising = 21
 n_arms_pricing = 21
-
 
 noise_std = 0.05

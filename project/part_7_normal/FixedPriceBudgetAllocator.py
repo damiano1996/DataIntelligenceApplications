@@ -1,7 +1,7 @@
 from project.dia_pckg.Config import *
 from project.part_2.Utils import *
-from project.part_7_normal.SubCampaignHandler import SubCampaignHandler
 from project.part_7_binomial.FixedPriceBudgetAllocator import FixedPriceBudgetAllocator as fp_binomial
+from project.part_7_normal.SubCampaignHandler import SubCampaignHandler
 
 
 class FixedPriceBudgetAllocator(fp_binomial):
@@ -16,7 +16,8 @@ class FixedPriceBudgetAllocator(fp_binomial):
         self.subcampaignHandlers = []
 
         for s in range(n_subcamp):
-            self.subcampaignHandlers.append(SubCampaignHandler(list(classes_config.keys())[s], self.bids, self.prices,multiclasshandler))
+            self.subcampaignHandlers.append(
+                SubCampaignHandler(list(classes_config.keys())[s], self.bids, self.prices, multiclasshandler))
 
     def complete_update(self, price, allocation, click_per_class, purchases_per_class):
         print(
@@ -26,7 +27,7 @@ class FixedPriceBudgetAllocator(fp_binomial):
             f"purch={list(purchases_per_class.values())}")
         for idx, subh in enumerate(self.subcampaignHandlers):
             subh.comlete_daily_update(price, allocation[subh.class_name], click_per_class[idx],
-                              purchases_per_class[subh.class_name])
+                                      purchases_per_class[subh.class_name])
         self.n_updates += 1
 
     def compute_best_allocation(self, arm_price):
@@ -41,4 +42,3 @@ class FixedPriceBudgetAllocator(fp_binomial):
 
         result = fit_table(table_all_subs)
         return result
-

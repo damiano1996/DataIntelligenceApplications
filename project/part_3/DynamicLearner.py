@@ -1,6 +1,5 @@
 import numpy as np
 
-from project.dia_pckg.Config import *
 from project.part_2.GP_Learner import GP_Learner
 
 
@@ -21,5 +20,3 @@ class DynamicLearner(GP_Learner):
         self.rewards_per_arm[pulled_arm].append(reward)
         self.pulled_arms.append(self.arms[pulled_arm])
         self.collected_rewards = np.append(self.collected_rewards, reward)
-
-

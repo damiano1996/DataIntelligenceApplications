@@ -3,10 +3,11 @@ import numpy as np
 from project.part_2.GP_Learner import GP_Learner
 from project.part_7_binomial.SubCampaignHandler import SubCampaignHandler as subh
 
+
 class SubCampaignHandler(subh):
 
-    def __init__(self, class_name, bids, prices,multiclasshandler):
-        super().__init__(class_name, bids, prices,multiclasshandler)
+    def __init__(self, class_name, bids, prices, multiclasshandler):
+        super().__init__(class_name, bids, prices, multiclasshandler)
         self.learnerCR = GP_Learner(prices)
 
     def comlete_daily_update(self, arm_price, arm_adv, clicks, purchases):

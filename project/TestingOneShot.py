@@ -1,8 +1,8 @@
 import os
 import sys
 from datetime import datetime
-import numpy as np
 
+import numpy as np
 
 from project.dia_pckg.Config import *
 from project.part_2.Testing_part2 import test_part2
@@ -41,7 +41,7 @@ def print_(text):
     print(text)
     with open(logs_path, "a") as file:
         file.write(text + '\n')
-    #block_print()
+    # block_print()
 
 
 def read_configs():
@@ -186,11 +186,11 @@ if __name__ == '__main__':
                             artificial_noise_ADV=artificial_noise_ADV,
                             artificial_noise_CR=artificial_noise_CR,
                             results_chart_path=f'{charts_path}/part7_'
-                                              f'artificial-noise-ADV{artificial_noise_ADV}_'
-                                              f'artificial-noise-CR{artificial_noise_CR}.png',
+                                               f'artificial-noise-ADV{artificial_noise_ADV}_'
+                                               f'artificial-noise-CR{artificial_noise_CR}.png',
                             results_chart_title=f'Part 7 - Regret ['
-                                               f'artificial-noise-ADV:{artificial_noise_ADV} '
-                                               f'artificial-noise-CR:{artificial_noise_CR}]')
+                                                f'artificial-noise-ADV:{artificial_noise_ADV} '
+                                                f'artificial-noise-CR:{artificial_noise_CR}]')
                 print_(f'Sub-test completed.\n'
                        f'Time: {datetime.now()}\n')
 
@@ -209,16 +209,16 @@ if __name__ == '__main__':
             for artificial_noise_ADV in artificial_noise_ADVs:
                 for artificial_noise_CR in artificial_noise_CRs:
                     t7_normal(n_experiments=n_experiment,
-                               demand_chart_path=demand_curves_chart_path,
-                               demand_chart_title=demand_curves_title,
-                               artificial_noise_ADV=artificial_noise_ADV,
-                               artificial_noise_CR=artificial_noise_CR,
-                               results_chart_path=f'{charts_path}/part7_'
-                                                  f'artificial-noise-ADV{artificial_noise_ADV}_'
-                                                  f'artificial-noise-CR{artificial_noise_CR}.png',
-                               results_chart_title=f'Part 7 - Regret ['
-                                                   f'artificial-noise-ADV:{artificial_noise_ADV} '
-                                                   f'artificial-noise-CR:{artificial_noise_CR}]')
+                              demand_chart_path=demand_curves_chart_path,
+                              demand_chart_title=demand_curves_title,
+                              artificial_noise_ADV=artificial_noise_ADV,
+                              artificial_noise_CR=artificial_noise_CR,
+                              results_chart_path=f'{charts_path}/part7_'
+                                                 f'artificial-noise-ADV{artificial_noise_ADV}_'
+                                                 f'artificial-noise-CR{artificial_noise_CR}.png',
+                              results_chart_title=f'Part 7 - Regret ['
+                                                  f'artificial-noise-ADV:{artificial_noise_ADV} '
+                                                  f'artificial-noise-CR:{artificial_noise_CR}]')
                     print_(f'Sub-test completed.\n'
                            f'Time: {datetime.now()}\n')
 
@@ -226,4 +226,3 @@ if __name__ == '__main__':
                    f'Time: {datetime.now()}\n')
             print_('-' * 60)
             # ---------------------------------------------------
-

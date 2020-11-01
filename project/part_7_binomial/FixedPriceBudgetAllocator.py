@@ -15,7 +15,8 @@ class FixedPriceBudgetAllocator:
         self.prices = np.linspace(product_config["base_price"], product_config["max_price"], n_arms_pricing)
 
         for s in range(n_subcamp):
-            self.subcampaignHandlers.append(SubCampaignHandler(list(classes_config.keys())[s], self.bids, self.prices, multiclasshandler))
+            self.subcampaignHandlers.append(
+                SubCampaignHandler(list(classes_config.keys())[s], self.bids, self.prices, multiclasshandler))
 
     def pull_arm_price(self, arm_price, click_per_class):
         rewards = {}
@@ -46,7 +47,7 @@ class FixedPriceBudgetAllocator:
         return result
 
     def next_price(self):
-        while self.n_updates < 2: #n_arms_pricing:
+        while self.n_updates < 2:  # n_arms_pricing:
 
             if self.n_updates > 0:
                 allocation = self.compute_best_allocation(self.n_updates)[0]
