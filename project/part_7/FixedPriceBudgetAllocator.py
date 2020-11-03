@@ -1,11 +1,15 @@
 from project.dia_pckg.Config import *
 from project.part_2.Utils import *
-from project.part_7_binomial.SubCampaignHandler import SubCampaignHandler
+from project.part_7.SubCampaignHandler import SubCampaignHandler
 
 
 class FixedPriceBudgetAllocator:
 
     def __init__(self, artificial_noise_ADV, multiclasshandler):
+        """
+        @param artificial_noise_ADV: how much exploration on the advertising learners
+        @param multiclasshandler: classes information
+        """
 
         self.artificial_noise_ADV = artificial_noise_ADV
         self.mch = multiclasshandler
@@ -25,22 +29,34 @@ class FixedPriceBudgetAllocator:
         return rewards
 
     def update(self, allocation, click_per_class):
-        print(
-            f"UPDATE "
-            f"allocation_arms={list(allocation.values())} "
-            f"clicks={click_per_class}")
+        """
+        get the advertising information of the past day and update the learner
+        @param allocation: budget allocated on each sub-campaign
+        @param click_per_class: click received on each sub-campaign
+        """
+        # print(
+        #     f"UPDATE "
+        #     f"allocation_arms={list(allocation.values())} "
+        #     f"clicks={click_per_class}")
         for idx, subh in enumerate(self.subcampaignHandlers):
             subh.daily_update(allocation[subh.class_name], click_per_class[idx])
         self.n_updates += 1
 
     def compute_best_allocation(self, arm_price):
+        """
+        Given an arm corresponding to a price compute the best budget allocation on each sub-campaign
+        for each sub-campaign ask for the conversion rate and the estimated clicks for each budget allocation,
+        use the optimizer to predict the best allocation
+        @param arm_price: arm corresponding to a specific price
+        @return: best allocation, expected purchases
+        """
         table_all_subs = np.ndarray(shape=(0, n_arms_advertising),
                                     dtype=np.float32)
 
         for subh in self.subcampaignHandlers:
-            estimated_reward = subh.get_estimated_reward(arm_price)
+            estimated_cr = subh.get_estimated_cr(arm_price)
             estimated_clicks = subh.get_estimated_clicks(self.artificial_noise_ADV)
-            estimated_purchases = estimated_clicks * estimated_reward
+            estimated_purchases = estimated_clicks * estimated_cr
             table_all_subs = np.append(table_all_subs, np.atleast_2d(estimated_purchases.T), 0)
 
         result = fit_table(table_all_subs)
