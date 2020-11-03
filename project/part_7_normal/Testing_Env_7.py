@@ -19,7 +19,7 @@ def test_part7(n_experiments=10,
                artificial_noise_ADV=0.0,
                artificial_noise_CR=0.05,
                results_chart_path='other_files/testing_part7_regrets.png',
-               results_chart_title='Part 7 NORMAL - Regret'):
+               results_chart_title='Part 7 NORMAL - Regret '):
     # one product to sell
     product = Product(product_config=product_config)
 
@@ -87,7 +87,13 @@ def test_part7(n_experiments=10,
     # print('\n\nFINAL NOT FIXED LOSS:', np.mean(final_loss_per_experiment_notfixed))
     print('\n\nMEAN LOSS:', np.mean(final_loss_per_experiment) / n_days)
 
-    plt.title(results_chart_title, fontsize=20)
+    daily_loss = np.mean(final_loss_per_experiment) / n_days
+    fix_price_budget_allocator = FixedPriceBudgetAllocator(artificial_noise_ADV=artificial_noise_ADV,
+                                                           artificial_noise_CR=artificial_noise_CR,
+                                                           multiclasshandler=mch)
+    optimal, opt_price = fix_price_budget_allocator.compute_optimal_reward(env_bid, mch)
+
+    plt.title(results_chart_title + f"{daily_loss*100/optimal}%", fontsize=20)
 
     for regret in regret_per_experiment:
         plt.plot(np.cumsum(regret), alpha=0.2, c='C2')

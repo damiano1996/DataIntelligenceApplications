@@ -15,9 +15,9 @@ from project.part_7_binomial.FixedPriceBudgetAllocator import FixedPriceBudgetAl
 def test_part7(n_experiments=10,
                demand_chart_path='other_files/testing_part7_demandcurves.png',
                demand_chart_title='Part 7 - Demand Curves',
-               artificial_noise_ADV=0.01,
+               artificial_noise_ADV=0.02,
                results_chart_path='other_files/testing_part7_regrets.png',
-               results_chart_title='Part 7 BINOMIAL - Regret'):
+               results_chart_title='Part 7 BINOMIAL - Regret: '):
     # one product to sell
     product = Product(product_config=product_config)
 
@@ -74,10 +74,14 @@ def test_part7(n_experiments=10,
         regret_per_experiment.append(result)
         final_loss_per_experiment.append(sum(result))
 
+    daily_loss = np.mean(final_loss_per_experiment) / n_days
+    fix_price_budget_allocator = FixedPriceBudgetAllocator(artificial_noise_ADV=artificial_noise_ADV,multiclasshandler=mch)
+    optimal, opt_price = fix_price_budget_allocator.compute_optimal_reward(env_bid, mch)
+
     print('\n\nFINAL LOSS:', np.mean(final_loss_per_experiment))
     print('\n\nMEAN LOSS:', np.mean(final_loss_per_experiment) / n_days)
 
-    plt.title(results_chart_title, fontsize=20)
+    plt.title(results_chart_title + f"{daily_loss*100/optimal}%", fontsize=20)
 
     for regret in regret_per_experiment:
         plt.plot(np.cumsum(regret), alpha=0.2, c='C2')
@@ -117,6 +121,7 @@ def execute_experiment(args):
         daily_revenue = sum(reward_per_class.values())
 
         regret.append(optimal - daily_revenue)
+        print(f"regret%: {int((optimal - daily_revenue)*10000/optimal)/100.0}")
 
         fix_price_budget_allocator.update(allocation, click_per_class)
 
