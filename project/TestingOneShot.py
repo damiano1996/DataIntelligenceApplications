@@ -9,8 +9,7 @@ from project.part_3.Testing_part3 import test_part3
 from project.part_4.Testing_Env_4 import test_part4
 from project.part_5.Testing_Env_5 import test_part5
 from project.part_6.Testing_Env_6 import test_part6
-from project.part_7.Testing_Env_7 import test_part7 as t7_binomial
-from project.part_7_normal.Testing_Env_7 import test_part7 as t7_normal
+from project.part_7.Testing_Env_7 import test_part7
 
 n_experiment = 15
 np.random.seed(0)
@@ -177,7 +176,7 @@ if __name__ == '__main__':
         artificial_noise_ADVs = [0.0, 0.02, 0.05, 0.1]
 
         for artificial_noise_ADV in artificial_noise_ADVs:
-            t7_binomial(n_experiments=n_experiment,
+            test_part7(n_experiments=n_experiment,
                         execution_type="binomial",
                         demand_chart_path=demand_curves_chart_path,
                         demand_chart_title=demand_curves_title,
@@ -203,7 +202,7 @@ if __name__ == '__main__':
 
             for artificial_noise_ADV in artificial_noise_ADVs:
                 for artificial_noise_CR in artificial_noise_CRs:
-                    t7_normal(n_experiments=n_experiment,
+                    test_part7(n_experiments=n_experiment,
                               execution_type="normal",
                               demand_chart_path=demand_curves_chart_path,
                               demand_chart_title=demand_curves_title,
