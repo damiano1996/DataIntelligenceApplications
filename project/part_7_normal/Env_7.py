@@ -35,7 +35,8 @@ class Env7:
             if probability < 0:
                 probability = 1e-3
 
-            purchases[class_names[cl]] = int(np.random.normal(probability, noise_std) * ck)
+            noise = np.sqrt(probability * (1 - probability) * ck)
+            purchases[class_names[cl]] = int(np.random.normal(probability * ck, noise))
 
         return purchases
 
