@@ -4,7 +4,7 @@ from project.part_2.Utils import compute_clairvoyant, get_idx_arm_from_allocatio
 
 class Advertising:
     """
-        This class is an extension of parts 2 and 3
+        This class is an extension of parts 2 and 3, solves the advertising part of the algorithm
     """
 
     def __init__(self, bidding_environment, n_arms, subcampaign_idx):

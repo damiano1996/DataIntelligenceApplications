@@ -5,7 +5,7 @@ from project.part_4.TS_Learner import TS_Learner
 
 class Pricing:
     """
-        This class is an extension of parts 4 and 5
+        This class is an extension of parts 4 and 5, solves the pricing part of the algorithm
     """
 
     def __init__(self,

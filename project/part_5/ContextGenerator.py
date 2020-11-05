@@ -18,8 +18,15 @@ class ContextGenerator:
         self.report = ''
 
     def get_weekly_contexts(self, last_contexts, rewards_counters, delta=0.9):
+        """
+        This function is called at the end of a week to generate the new contexts.
+        :last_contexts: contexts used in the previous week
+        :rewards_counters: the data collected so far by the algorithm, organized by feature
+        :delta: is a value that defines the confidence we want to have when we decide to split
+        """
         self.report = 'Generation context '
 
+        # The first week we always start from the aggregate model to collect data
         if len(last_contexts) == 0:
             # create aggregate context
             my_features = [feat for feat in classes_config.values()]
@@ -27,16 +34,24 @@ class ContextGenerator:
                 'context_1': Context(features=my_features, mab_algorithm=self.mab_algorithm, mab_args=self.mab_args)}
             self.report += 'aggregate '
 
+        # Every other week we decide which model is better to use
         else:
+            # father corresponds to the aggregate model
             father_rewards = self.get_rewards_from_features([[[0, 0], [0, 1], [1, 1]]], rewards_counters)
+
+            # son1 corresponds to the contexts generates by splitting according to feature profession
             son1_rewards = self.get_rewards_from_features([[[0, 0]], [[1, 1], [0, 1]]], rewards_counters)
+
+            # son2 corresponds to the contexts generates by splitting according to feature age
             son2_rewards = self.get_rewards_from_features([[[0, 0], [0, 1]], [[1, 1]]], rewards_counters)
+
             father_low_bound = self.get_context_low_bound(father_rewards, delta)
             son1_low_bound = self.get_context_low_bound(son1_rewards, delta)
             son2_low_bound = self.get_context_low_bound(son2_rewards, delta)
 
             best_son_low_bound = max([son1_low_bound, son2_low_bound])
             if best_son_low_bound > father_low_bound:
+                # now we consider the case in which we learn the three models separately
                 son_rewards = self.get_rewards_from_features([[[0, 0]], [[0, 1]], [[1, 1]]], rewards_counters)
                 son_low_bound = self.get_context_low_bound(son_rewards, delta)
 
@@ -65,19 +80,10 @@ class ContextGenerator:
         print(self.report)
         return new_contexts
 
-    def is_worth_split(self, father_features, son_features, reward_counters, delta=0.9):
-        father_rewards = self.get_rewards_from_features(father_features, reward_counters)
-        son_rewards = self.get_rewards_from_features(son_features, reward_counters)
-
-        father_low_bound = self.get_context_low_bound(father_rewards, delta)
-        son_low_bound = self.get_context_low_bound(son_rewards, delta)
-
-        # print('father: ' + str(father_low_bound), 'son: ' + str(son_low_bound))
-        # print()
-
-        return True if son_low_bound >= father_low_bound else False
-
     def get_context_low_bound(self, feature_rewards, delta):
+        """
+        This function computes the lower bound of both reward and probability of a single context
+        """
         expected_low_bound = 0
         for rewards in feature_rewards:
             reward_low_bound = self.get_gaussian_low_bound(rewards, delta)  # Lower bound on the expected reward
@@ -88,6 +94,9 @@ class ContextGenerator:
         return expected_low_bound
 
     def get_bernoullian_low_bound(self, rewards, delta):
+        """
+        the Bernoulli Distribution is used for the probability, so we use this formula for the lower bound
+        """
         rewards[rewards > 0] = 1
         x = np.mean(rewards)  # Mean value
         log_d = math.log(delta, math.e)  # Natural logarithm of delta
@@ -96,6 +105,9 @@ class ContextGenerator:
         return low_bound
 
     def get_gaussian_low_bound(self, rewards, delta):
+        """
+        Since rewards have infinitely many values, we have to use this formula for the lower bound
+        """
         x = np.mean(rewards)  # Mean value
         s_q = np.var(rewards, ddof=1)  # Corrected variance
         n = len(rewards)  # Number of samples
@@ -104,6 +116,9 @@ class ContextGenerator:
         return low_bound
 
     def get_rewards_from_features(self, features, reward_counters):
+        """
+
+        """
         rewards = []
         for combinations in features:
             rew = np.empty((0))
@@ -114,9 +129,10 @@ class ContextGenerator:
 
     def initialize_contexts(self, last_contexts, new_context_features):
         """
-        :param last_contexts:
-        :param new_contexts:
-        :return:
+        This function is used to initialize the contexts for the next week
+        :param last_contexts: contexts used in the previous week
+        :param new_context_features: the structure of the new contexts
+        :return: the newly generated contexts
         """
         new_contexts = {}
 

@@ -6,7 +6,10 @@ from project.part_6.MultiSubCampaignHandler import MultiSubCampaignHandler
 
 
 class BudgetAllocator:
-
+    """
+    This class decides how much budget to allocate to each sub-campaign, using information collected in the past and
+    solving the updated Knapsack problem
+    """
     def __init__(self,
                  multi_class_handler,
                  n_arms_pricing,
@@ -36,7 +39,7 @@ class BudgetAllocator:
 
     def day_zero_initialization(self):
         """
-            Initialize allocations for day zero
+        At the very first day of the algorithm, allocations are initialized to an average value for each sub-campaign
         """
         avg = 1 / self.n_subcampaigns
         allocation = [avg, avg, avg]
@@ -44,7 +47,10 @@ class BudgetAllocator:
         return allocation
 
     def update(self):
-
+        """
+        This method retrieves the information we have collected so far and updates the table we use to solve the
+        Knapsack problem
+        """
         table_all_subs = np.ndarray(shape=(0, len(self.msh.subcampaigns_handlers[0].advertising.env.bids)),
                                     dtype=np.float32)
 
