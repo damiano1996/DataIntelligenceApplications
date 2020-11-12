@@ -49,7 +49,7 @@ where:
 	\item $d$ : is a value that defines how much confidence we want.
 \end{itemize}
 
-	For the reward, we had to use a different formula, since its values are unlimited.
+	For the reward we had to use a different formula, since its values are unlimited.
 
 \begin{equation}
 	x - t \sqrt{\frac{sq} {n}}
@@ -81,6 +81,7 @@ This was done to compare the results of the algorithms we have built.
 As we can see in figure \ref{regret5Fig}, the algorithm largely outperforms the Aggregate Model, because it knows the classes of the users and can choose a price for each of them.
 In the first weeks we observe a small growth before the decrease, this is because the algorithm starts from the aggregate model and is still learning the correct prices.
 We can also see that the initial growth lasts longer when we keep a daily price, because by fixing the price it takes longer to learn the curve.
+This comparison was mainly done to show the improvements with respect to the algorithm in Chapter 4.
 On the other hand, the True Evaluation model performs better than the algorithm in the first weeks, but as time goes on the difference becomes smaller and smaller, as the algorithm learns the best prices.
 
 \begin{figure}[!htb]

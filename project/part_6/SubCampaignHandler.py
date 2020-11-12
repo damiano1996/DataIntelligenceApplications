@@ -50,9 +50,10 @@ class SubCampaignHandler:
 
     def daily_update(self, pulled_arm, pull_fix_arm=None):
         """
-            Daily update
+        When called, this method computes the number of clicks for the day given the allocated budget and the revenue
+        obtained during the day
         :param pulled_arm: Learned best budget allocation
-        :return:
+        :return: regret and reward for the day
         """
         # extracting the daily reward from the TS
         self.daily_clicks = self.advertising.get_daily_clicks(pulled_arm)
@@ -78,6 +79,7 @@ class SubCampaignHandler:
 
     def get_daily_regret(self, daily_clicks, optimal_daily_clicks, daily_revenue, optimal_daily_revenue):
         """
+        Computes the daily regret, given the optimal values extracted from the advertising and pricing algorithms
         :param daily_clicks:
         :param optimal_daily_clicks:
         :param daily_revenue:
@@ -92,9 +94,13 @@ class SubCampaignHandler:
         return self.advertising.learner.pull_arm_sequence()
 
     def update_windows(self, daily_revenue, daily_clicks):
-        # if (self.keep_daily_price):
-
-        # else:
+        """
+        The window allows us to forget old values, that might not be as relevant for the solution of the Knapsack
+        problem
+        """
+        #if (self.keep_daily_price):
+            
+        #else:
         self.window_revenue = np.append(self.window_revenue, daily_revenue)
         if self.window_revenue.shape[0] > self.window_size:
             self.window_revenue = np.delete(self.window_revenue, 0)
@@ -103,5 +109,6 @@ class SubCampaignHandler:
         if self.window_clicks.shape[0] > self.window_size:
             self.window_clicks = np.delete(self.window_clicks, 0)
 
-        self.campaign_value = np.sum(self.window_revenue) / np.sum(self.window_clicks) if np.sum(
-            self.window_clicks) > 0 else 0
+        self.campaign_value = np.sum(self.window_revenue) / np.sum(self.window_clicks) if np.sum(self.window_clicks) > 0 else 0
+
+

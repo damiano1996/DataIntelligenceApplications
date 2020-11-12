@@ -39,7 +39,7 @@ class CampaignScheduler(ContextGenerator):
 
     def pull_arm_from_user(self, user, keep_daily_price, new_day):
         """
-            Return the pulled arm from the context in which the user belongs
+            Returns the pulled arm from the context whom the user belongs
         :param user: User object
         :return: pulled arm
         """
