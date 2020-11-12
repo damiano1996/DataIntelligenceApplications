@@ -31,11 +31,6 @@ class Normal_FixedPriceBudgetAllocator(fp_binomial):
         @param click_per_class: click received on each sub-campaign
         @param purchases_per_class: purchases received from users from each class
         """
-        # print(
-        #     f"UPDATE price={price} "
-        #     f"allocation_arms={list(allocation.values())} "
-        #     f"clicks={click_per_class} "
-        #     f"purch={list(purchases_per_class.values())}")
         for idx, subh in enumerate(self.subcampaignHandlers):
             subh.comlete_daily_update(price, allocation[subh.class_name], click_per_class[idx],
                                       purchases_per_class[subh.class_name])
