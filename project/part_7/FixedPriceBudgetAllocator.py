@@ -23,6 +23,12 @@ class FixedPriceBudgetAllocator:
                 SubCampaignHandler(list(classes_config.keys())[s], self.bids, self.prices, multiclasshandler))
 
     def pull_arm_price(self, arm_price, click_per_class):
+        """
+        takes the daily number of click and the price of the day and returns the number of purchases
+        @param arm_price:
+        @param click_per_class:
+        @return:
+        """
         rewards = {}
         for idx, subh in enumerate(self.subcampaignHandlers):
             rewards[subh.class_name] = subh.get_daily_reward(click_per_class[idx], arm_price)
@@ -63,6 +69,10 @@ class FixedPriceBudgetAllocator:
         return result
 
     def next_price(self):
+        """
+        Compute the best price based on the demand curves learned so far
+        @return: the predicted best price
+        """
         while self.n_updates < 2:  # n_arms_pricing:
 
             if self.n_updates > 0:
@@ -92,6 +102,13 @@ class FixedPriceBudgetAllocator:
         return final_arm_price, allocation_x_class
 
     def compute_optimal_reward(self, biddingEnvironment, mch):
+        """
+        Given the bidding Environment with the exact budget-clicks curves and the multiCampaignHandler with the exact Price-ConversioneRate curves
+        it compute the best allocation and price with the corresponding reward.
+        @param biddingEnvironment: the Environment for the Advertising campaign
+        @param mch: The handler with the information of each class demand curves
+        @return: the optimal reward and the best price
+        """
         optimal_reward = -1
         best_price = -1
         for arm_price in range(n_arms_pricing):
@@ -109,40 +126,3 @@ class FixedPriceBudgetAllocator:
                 optimal_reward = purch_atprice * self.prices[arm_price]
         return optimal_reward, best_price
 
-    def get_optimal_reward_not_fixedprice(self, biddingEnvironment):
-        """
-            This function is to compute the total optimal revenue, for the computation of the non-agnostic regret.
-            Note: the so called "agnostic" regret is the regret in which the optimal revenue
-                is computed using the "optimal number of clicks",
-                but the "optimal number of clicks" is NOT computed knowing the pricing.
-                Below, we compute the "optimal number of clicks" using the pricing!
-        """
-        table_all_subs = np.ndarray(shape=(0, len(self.bids)),
-                                    dtype=np.float32)
-
-        # for loop to initialize the table with the product between the unknown curves and the optimal revenues
-        for sub_idx, subcampaign_handler in enumerate(self.subcampaignHandlers):
-            unknown_clicks_curve = biddingEnvironment.get_optimal_clicks(sub_idx)
-            opt = self.mch.get_optimal(class_name=subcampaign_handler.class_name)
-            optimal_revenue = opt['price'] * opt['probability']
-
-            revenue_clicks = np.multiply(unknown_clicks_curve, optimal_revenue)
-            table_all_subs = np.append(table_all_subs, np.atleast_2d(revenue_clicks.T), 0)
-
-        # computation of the optimal allocation
-        optimal_allocation = fit_table(table_all_subs)[0]
-
-        # Once we have computed the optimal allocation, we can compute the total revenue
-        # using the pricing
-        optimal_total_revenue = 0
-        for sub_idx, (allocation, subcampaign_handler) in enumerate(zip(optimal_allocation,
-                                                                        self.subcampaignHandlers)):
-            hypothetical_pulled_arm = get_idx_arm_from_allocation(
-                allocation=allocation,
-                bids=self.bids)
-            opt = self.mch.get_optimal(class_name=subcampaign_handler.class_name)
-            optimal_revenue = opt['price'] * opt['probability']
-            optimal_clicks = biddingEnvironment.get_optimal_clicks(sub_idx)[hypothetical_pulled_arm]
-            optimal_total_revenue += optimal_clicks * optimal_revenue
-
-        return optimal_total_revenue

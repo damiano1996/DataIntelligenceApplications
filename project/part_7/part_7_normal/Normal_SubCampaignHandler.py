@@ -4,7 +4,7 @@ from project.part_2.GP_Learner import GP_Learner
 from project.part_7.SubCampaignHandler import SubCampaignHandler as subh
 
 
-class SubCampaignHandler(subh):
+class Normal_SubCampaignHandler(subh):
 
     def __init__(self, class_name, bids, prices, multiclasshandler):
         super().__init__(class_name, bids, prices, multiclasshandler)

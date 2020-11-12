@@ -10,8 +10,8 @@ from project.dia_pckg.plot_style.cb91visuals import *
 from project.part_2.BiddingEnvironment import BiddingEnvironment
 from project.part_4.MultiClassHandler import MultiClassHandler
 from project.part_7.FixedPriceBudgetAllocator import FixedPriceBudgetAllocator as PBAbinomial
-from project.part_7_normal.FixedPriceBudgetAllocator import FixedPriceBudgetAllocator as PBAnormal
-from project.part_7_normal.Env_7 import Env7
+from project.part_7.part_7_normal.Normal_FixedPriceBudgetAllocator import Normal_FixedPriceBudgetAllocator as PBAnormal
+from project.part_7.part_7_normal.Env_7 import Env7
 
 
 def test_part7(n_experiments=10,
@@ -36,24 +36,24 @@ def test_part7(n_experiments=10,
 
     mch = MultiClassHandler(class_1, class_2, class_3)
 
-    # plt.title(demand_chart_title)
-    # for class_ in mch.classes:
-    #     plt.plot(class_.conv_rates['phase_0']['prices'],
-    #              class_.conv_rates['phase_0']['probabilities'], label=class_.name.upper(), linestyle='--')
-    # plt.plot(mch.aggregate_demand_curve['prices'],
-    #          mch.aggregate_demand_curve['probabilities'], label='aggregate')
-    #
-    # for opt_class_name, opt in mch.classes_opt.items():
-    #     plt.scatter(opt['price'],
-    #                 opt['probability'], marker='o', label=f'opt {opt_class_name.upper()}')
-    # plt.scatter(mch.aggregate_opt['price'],
-    #             mch.aggregate_opt['probability'], marker='o', label='opt aggregate')
-    #
-    # plt.xlabel('Price')
-    # plt.ylabel('Conversion Rate')
-    # plt.legend()
-    # plt.savefig(demand_chart_path)
-    # plt.show()
+    plt.title(demand_chart_title)
+    for class_ in mch.classes:
+        plt.plot(class_.conv_rates['phase_0']['prices'],
+                 class_.conv_rates['phase_0']['probabilities'], label=class_.name.upper(), linestyle='--')
+    plt.plot(mch.aggregate_demand_curve['prices'],
+             mch.aggregate_demand_curve['probabilities'], label='aggregate')
+
+    for opt_class_name, opt in mch.classes_opt.items():
+        plt.scatter(opt['price'],
+                    opt['probability'], marker='o', label=f'opt {opt_class_name.upper()}')
+    plt.scatter(mch.aggregate_opt['price'],
+                mch.aggregate_opt['probability'], marker='o', label='opt aggregate')
+
+    plt.xlabel('Price')
+    plt.ylabel('Conversion Rate')
+    plt.legend()
+    plt.savefig(demand_chart_path)
+    plt.show()
 
     bids = np.linspace(0, max_bid, n_arms_advertising)
     execute_experiment = None

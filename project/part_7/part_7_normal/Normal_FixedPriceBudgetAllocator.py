@@ -1,10 +1,9 @@
 from project.dia_pckg.Config import *
-from project.part_2.Utils import *
 from project.part_7.FixedPriceBudgetAllocator import FixedPriceBudgetAllocator as fp_binomial
-from project.part_7_normal.SubCampaignHandler import SubCampaignHandler
+from project.part_7.part_7_normal.Normal_SubCampaignHandler import Normal_SubCampaignHandler
 
 
-class FixedPriceBudgetAllocator(fp_binomial):
+class Normal_FixedPriceBudgetAllocator(fp_binomial):
 
     def __init__(self,
                  artificial_noise_ADV,
@@ -22,7 +21,7 @@ class FixedPriceBudgetAllocator(fp_binomial):
 
         for s in range(n_subcamp):
             self.subcampaignHandlers.append(
-                SubCampaignHandler(list(classes_config.keys())[s], self.bids, self.prices, multiclasshandler))
+                Normal_SubCampaignHandler(list(classes_config.keys())[s], self.bids, self.prices, multiclasshandler))
 
     def complete_update(self, price, allocation, click_per_class, purchases_per_class):
         """
