@@ -12,7 +12,7 @@ class Normal_SubCampaignHandler(subh):
 
     def comlete_daily_update(self, arm_price, arm_adv, clicks, purchases):
         """
-        update the learners with the information of the past day
+        update the learners with the information gathered the past day
         @param arm_price: arm corresponding to the price proposed
         @param arm_adv: arm corresponding to the budget allocated on the sub-campaign
         @param clicks: click received from the sub-campaign

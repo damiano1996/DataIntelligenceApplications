@@ -56,9 +56,7 @@ def test_part7(n_experiments=10,
     plt.show()
 
     bids = np.linspace(0, max_bid, n_arms_advertising)
-    execute_experiment = None
     print(bids)
-    args = []
     if execution_type == "binomial":
         execute_experiment = execute_experiment_binomial
         args = [{
@@ -92,7 +90,8 @@ def test_part7(n_experiments=10,
 
     print('\n\nMEAN LOSS:', np.mean(percentage_loss_per_experiment))
 
-    plt.title(results_chart_title + f"{execution_type} REGRET: {np.mean(percentage_loss_per_experiment) * 100}%", fontsize=20)
+    plt.title(results_chart_title + f"{execution_type} REGRET: {np.mean(percentage_loss_per_experiment) * 100}%",
+              fontsize=20)
 
     for regret in regret_per_experiment:
         plt.plot(np.cumsum(regret), alpha=0.2, c='C2')
@@ -121,13 +120,18 @@ def execute_experiment_binomial(args):
           f'Optimal daily revenue: {optimal}')
 
     while not done:
+        # predict the best price and allocation for the day
         arm_price, allocation = fix_price_budget_allocator.next_price()
+
+        # gather the daily information about click and purchases for each class
         click_per_class = bidding_environment.round(list(allocation.values()))
         reward_per_class = fix_price_budget_allocator.pull_arm_price(arm_price, click_per_class)
 
+        # compute daily regret
         daily_revenue = sum(reward_per_class.values())
         regret.append(optimal - daily_revenue)
 
+        # update budget allocator with the gathered information
         fix_price_budget_allocator.update(allocation, click_per_class)
 
         # Day step
@@ -156,14 +160,18 @@ def execute_experiment_normal(args):
           f'Optimal daily revenue: {optimal} ')
 
     while not done:
-
+        # predict the best price and allocation for the day
         arm_price, allocation = fix_price_budget_allocator.next_price()
+
+        # gather the daily information about click and purchases for each class
         click_per_class = bidding_environment.round(list(allocation.values()))
         purchases_per_class = purchases_environment.round(arm_price, click_per_class)
 
+        # compute daily regret
         daily_revenue = sum(purchases_per_class.values()) * fix_price_budget_allocator.prices[arm_price]
         regret.append(optimal - daily_revenue)
 
+        # update budget allocator with the gathered information
         fix_price_budget_allocator.complete_update(arm_price, allocation, click_per_class, purchases_per_class)
 
         # Day step

@@ -1,1 +1,1 @@
-name = 'my_part_7'
+name = 'part_7'
