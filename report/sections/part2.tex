@@ -2,7 +2,7 @@
 
 In this section we focus on the advertising and more precisely on the clicks maximization problem.
 The goal of this part is to optimize the budget allocation over the three sub-campaigns in order to maximize the total number of clicks we can get.
-In particular given the assignment~\ref{assPart2} we have designed a combinatorial bandit algorithm for addreassing this task.\\
+In particular given the assignment~\ref{assPart2} we have designed a combinatorial bandit algorithm for addressing this task.\\
 In the following chapter we are going to:
 \begin{itemize}
 	\item describe the environment setup;
@@ -25,7 +25,7 @@ where:
 \end{itemize}
 
 
-The Environment, given the index of the bid chosen by the Learner, returns the collection of rewards associated to each sub-campaign in a completely transparant way to the learning algorithm.
+The Environment, given the index of the bid chosen by the Learner, returns the collection of rewards associated to each sub-campaign in a completely transparent way to the learning algorithm.
 How the learner works and its implementation will be described in the following section.
 
 
@@ -34,17 +34,17 @@ How the learner works and its implementation will be described in the following 
 
 This section deals with the description of the algorithm design choices we adopted and
 it also contains the most relevant reference to the code.
-In the class \textit{BiddingEnvironment.py}, which extends the class \textit{Environment.py} we have defined the actual environment we are working in, described in section before, with the definition of the bids space and the three curves \textit{n(x)}.
+In the class \textit{Bidding Environment}, which extends the class \textit{Environment} we have defined the actual environment we are working in, described in section before, with the definition of the bids space and the three curves \textit{n(x)}.
 In order to find the best budget allocation over the three sub-campaigns able to maximize the total number of clicks, we have designed a combinatorial bandit algorithm.
 
 In the first phase of the algorithm, we learn the model of each sub-campaign from the observation we get.
-To do that in \textit{GP\_Learner.py} we have used a \textit{Gaussian process regressor}.
+To do that in \textit{Gaussian Process (GP) Learner} we have used a \textit{Gaussian Process regressor}.
 Afterward, the model of each sub-campaign is updated using those observations and the GP will reduce the uncertainty of its estimation.
 In this way, for each new collected sample, the function estimated by the GP approaches to the real function.
 
 
 In order to properly used a GP regressor, we had to normalize the data. The bid space was already defined in range [0,1] and so the input variable has not to be normalized. So, we only needed to normalize the target and we have done it in the construction of the gaussian process.\\
-A Gaussian proccess is completely defined by its mean and its covariance.Since we don't have any prior information we assumed to have zero mean and the covariance given by the squared exponential kernel function \textbf{k(x,x')}:
+A Gaussian process is completely defined by its mean and its covariance. Since we don't have any prior information we assumed to have zero mean and the covariance given by the squared exponential kernel function \textbf{k(x, x')}:
 \begin{equation}
 	k(x,x') = \theta^{2} e^{-\frac{(x-x')^2}{2 l^2}}
 \end{equation}
@@ -53,12 +53,12 @@ where:
 	\item \textit{l}: is the \textit{lengthscale};
 	\item $\theta$: is the \textit{scale factor}
 \end{itemize}
-The optimal value of the two hyperparameters have been found by maximiziation of the marginal likelihood during the fit proccess.
+The optimal value of the two hyperparameters have been found by maximization of the marginal likelihood during the fit process.
 \\
 \\
 In the second phase of the algorithm we have used the values from the learned model to solve the problem of finding the best budget allocation to be set for the current day.
-In the \textit{Optimizer.py} class we have implemented a modified version of the dynamic programming algorithm used for solving the knapsack problem.
-More precisely,we have used a matrix in which each row represents the fact that at each step a new sub-campaign enters the problem, while for the columns we have discretized the whole budget in 20 possible uniformly distributed combinations of the budget allocation.
+In the \textit{Optimizer} class we have implemented a modified version of the dynamic programming algorithm used for solving the knapsack problem.
+More precisely,we have used a matrix in which each row represents the fact that at each step a new sub-campaign enters the problem, while for the columns we have discretized the whole budget in uniformly distributed combinations of the budget allocation\footnote{in our specific implementation the budget was divided in 20 uniformly distributed combinations} .
 
 Each cell of the matrix contains the value of the best allocation for the considered row and column.
 The result is given by the maximization of the sum of the values provided by the best solution of the problem solved in the previous row (i.e. without considering the new entered sub-campaign) and 
