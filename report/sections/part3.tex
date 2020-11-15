@@ -5,9 +5,9 @@ For addressing this assignment \ref{assPart3} we started from the simplified cas
 
 \section{What is an abrupt phase}
 Abrupt changes are a specific case of non stationary environment.
-In non stationary environments the probability distribution of the random variable associaetd with the reward of every arm can change during time.
-Abrupt changes are tipcally associated to new products enter in the market. In this scenario the interests of the cutomers toward the previous towards can decrease abruptly.
-In this particular environment the total time horizon is divided in phases and in evey phase the reward function is costant while it changes abruptly between the end of a phase and the beginning of the next one.\\ In Figure \ref{abruptFigure} we can se an example of three different curves generating  the number of clicks, one for each phase, associated to a specific sub-campaign.
+In non stationary environments the probability distribution of the random variable associated with the reward of every arm can change during time.
+Abrupt changes are typically associated to new products enter in the market. In this scenario the interests of the customers toward the previous towards can decrease abruptly.
+In this particular environment the total time horizon is divided in phases and in every phase the reward function is constant while it changes abruptly between the end of a phase and the beginning of the next one.\\ In Figure \ref{abruptFigure} we can see an example of three different curves generating  the number of clicks, one for each phase, associated to a specific sub-campaign.
 \begin{figure}[!htb]
 	\centering
 
@@ -30,14 +30,14 @@ In this particular environment the total time horizon is divided in phases and i
 For this purpose we have implemented the \textit{AbruptBiddingEnvironment.py} class which extends the \textit{BiddingEnvironment.py} class. This class works in a scenario of multiple abrupt phases by returning, for each sub-campaign, the reward of a given pulled arm, depending on the phase we are in.
 
 In this case, the functions generating  the number of clicks given a bid value can change dynamically, according the phase we are in.
-The curves differ from the previous definitions only for the dependence to the phase we are in. As follows the mathematical defintion of the three curve functions:
+The curves differ from the previous definitions only for the dependence to the phase we are in. As follows the mathematical definition of the three curve functions:
 
 \begin{equation}
 	n(x) = c_{M}[phase] \cdot (v_{M}[phase] - e^{-\alpha x})
 \end{equation}
 
 We have to remark that the learner is completely transparent with respect to the actually phase we are in and in order to learn the three curves in the case of multiple abrupt phases, we have implemented the \textit{DynamicLerner.py} class as an extension of the standard GP\_Learner.
-It implements a \textit{sliding window} mechanism in which we pull a new arm and add the collected rewards until the length of the window is reached. When the window is full, for each new pulled arm we get, we delete the last recent value and add the new one to the collected rewards.\\ Before comparing the performance of this implementation with respect to the one of the standard GP\_Learner, we did a validation in order to understand what is the best length of the window to be adopted. In Figure \ref{winLenValidationFig} the regret associated to three different example of executions of the algorithm with a different windows length. In particular in the plots we can se the regrets in which the length has been set to 33, 67 and 133, i.e. rispectively $\frac{1}{6}$, $\frac{1}{3}$ and $\frac{2}{3}$ of the whole time horizon T = 200 days.
+It implements a \textit{sliding window} mechanism in which we pull a new arm and add the collected rewards until the length of the window is reached. When the window is full, for each new pulled arm we get, we delete the last recent value and add the new one to the collected rewards.\\ Before comparing the performance of this implementation with respect to the one of the standard GP\_Learner, we did a validation in order to understand what is the best length of the window to be adopted. In Figure \ref{winLenValidationFig} the regret associated to three different example of executions of the algorithm with a different windows length. In particular in the plots we can se the regrets in which the length has been set to 33, 67 and 133, i.e. respectively $\frac{1}{6}$, $\frac{1}{3}$ and $\frac{2}{3}$ of the whole time horizon T = 200 days.
 \begin{figure}[!htb]
 	\centering
 
@@ -80,8 +80,8 @@ If the point doesn't belong to that distribution the hypothesis test should reje
 
 We have that the critical z-score when using a 99\% confidence level are $\pm 2.58$ standard deviations.\\
 
-In the \textit{DLChangeDetect.py} class, we have implemented such change detector. When an arm is pulled more than '\textbf{min\_len}' \footnote{min\_len indicates the minimum number of data we need to have in an arm in order to considere reasonable to run the test} times, for each pull we run the statistical test. When the test reject $H_0$, it means that the point doesn't belong to that distribution and so it means that it is changed. In this case we reset the arm.\\ 
-As we did for the sliding window case, also for this algorithm we performed some validation, in order to understand how to properly set the value of the \textit{min\_len}. As follows the plots of the regrets associated to three different example of executions of the algorithm by changing the value of the hyperparameter, i.e. with min\_len equal to 3, 6 and 10 rispectively in Fig \ref{minlen3}, \ref{minlen6}, \ref{minlen10}
+In the \textit{DLChangeDetect.py} class, we have implemented such change detector. When an arm is pulled more than '\textbf{min\_len}' \footnote{min\_len indicates the minimum number of data we need to have in an arm in order to consider reasonable to run the test} times, for each pull we run the statistical test. When the test reject $H_0$, it means that the point doesn't belong to that distribution and so it means that it is changed. In this case we reset the arm.\\ 
+As we did for the sliding window case, also for this algorithm we performed some validation, in order to understand how to properly set the value of the \textit{min\_len}. As follows the plots of the regrets associated to three different example of executions of the algorithm by changing the value of the hyperparameter, i.e. with min\_len equal to 3, 6 and 10 respectively in Fig \ref{minlen3}, \ref{minlen6}, \ref{minlen10}
 
 \begin{figure}[!htb]
 	\centering
@@ -111,7 +111,7 @@ Different from before, in this case the performance is not affected from the cho
 \section{Performance evaluation}
 
 This section aims to compare and describe the performance of the three described algorithms.
-It is important to remark that in light of the validation we have performed, the comparison are between the standard version of the GP\_Learner, the Dynamic Learnear implementing the sliding window mechanism with window length equal to 33, i.e. on third of the total time horizon of 200 days and the DL\_ChangeDetect learner with min\_len set to 10.
+It is important to remark that in light of the validation we have performed, the comparison are between the standard version of the GP\_Learner, the Dynamic Learner implementing the sliding window mechanism with window length equal to 33, i.e. on third of the total time horizon of 200 days and the DL\_ChangeDetect learner with min\_len set to 10.
 In particular three scenario have been tested:
 
 \begin{enumerate}

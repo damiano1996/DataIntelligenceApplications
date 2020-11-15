@@ -25,7 +25,7 @@ where:
 \end{itemize}
 
 
-The Environment, given the index of the bid chosen by the Learner, returns the collection of rewards associated to each sub-campaign in a completely transparant way to the learning algorithm.
+The Environment, given the index of the bid chosen by the Learner, returns the collection of rewards associated to each sub-campaign in a completely transparent way to the learning algorithm.
 How the learner works and its implementation will be described in the following section.
 
 
@@ -44,7 +44,7 @@ In this way, for each new collected sample, the function estimated by the GP app
 
 
 In order to properly used a GP regressor, we had to normalize the data. The bid space was already defined in range [0,1] and so the input variable has not to be normalized. So, we only needed to normalize the target and we have done it in the construction of the gaussian process.\\
-A Gaussian proccess is completely defined by its mean and its covariance.Since we don't have any prior information we assumed to have zero mean and the covariance given by the squared exponential kernel function \textbf{k(x,x')}:
+A Gaussian process is completely defined by its mean and its covariance.Since we don't have any prior information we assumed to have zero mean and the covariance given by the squared exponential kernel function \textbf{k(x,x')}:
 \begin{equation}
 	k(x,x') = \theta^{2} e^{-\frac{(x-x')^2}{2 l^2}}
 \end{equation}
@@ -53,7 +53,7 @@ where:
 	\item \textit{l}: is the \textit{lengthscale};
 	\item $\theta$: is the \textit{scale factor}
 \end{itemize}
-The optimal value of the two hyperparameters have been found by maximiziation of the marginal likelihood during the fit proccess.
+The optimal value of the two hyperparameters have been found by maximization of the marginal likelihood during the fit process.
 \\
 \\
 In the second phase of the algorithm we have used the values from the learned model to solve the problem of finding the best budget allocation to be set for the current day.
