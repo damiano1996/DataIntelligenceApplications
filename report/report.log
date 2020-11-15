@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019/Debian) (preloaded format=pdflatex 2020.10.8)  15 NOV 2020 14:40
+This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019/Debian) (preloaded format=pdflatex 2020.10.8)  15 NOV 2020 15:19
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -838,13 +838,13 @@ Package rerunfilecheck Info: File `report.out' has not changed.
 Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 125.
  ) 
 Here is how much of TeX's memory you used:
- 11392 strings out of 483140
- 185245 string characters out of 5965151
+ 11388 strings out of 483140
+ 185196 string characters out of 5965151
  596340 words of memory out of 5000000
- 25862 multiletter control sequences out of 15000+600000
- 603968 words of font info for 204 fonts, out of 8000000 for 9000
+ 25861 multiletter control sequences out of 15000+600000
+ 603743 words of font info for 202 fonts, out of 8000000 for 9000
  36 hyphenation exceptions out of 8191
- 41i,11n,49p,921b,460s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 41i,11n,49p,922b,460s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/share/texlive/texmf-dist/fonts/enc/dvips/base/8r.enc} </home/damiano/.t
 exlive2019/texmf-var/fonts/pk/ljfour/jknappen/ec/ectt1000.600pk></usr/share/tex
 live/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/share/texlive/t
@@ -861,7 +861,7 @@ share/texlive/texmf-dist/fonts/type1/urw/times/utmb8a.pfb></usr/share/texlive/t
 exmf-dist/fonts/type1/urw/times/utmbi8a.pfb></usr/share/texlive/texmf-dist/font
 s/type1/urw/times/utmr8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/tim
 es/utmri8a.pfb>
-Output written on report.pdf (24 pages, 1900754 bytes).
+Output written on report.pdf (24 pages, 1900276 bytes).
 PDF statistics:
  477 PDF objects out of 1000 (max. 8388607)
  368 compressed objects within 4 object streams
