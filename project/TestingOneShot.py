@@ -185,9 +185,11 @@ if __name__ == '__main__':
                            artificial_noise_ADV=artificial_noise_ADV,
                            artificial_noise_CR=artificial_noise_CR,
                            results_chart_path=f'{charts_path}/part7_binomial_'
-                                              f'ADV_noise{artificial_noise_ADV}_.png',
+                                              f'ADV_noise{artificial_noise_ADV}_'
+                                              f'CR_noise{artificial_noise_CR}.png',
                            results_chart_title=f'Part 7 ['
-                                               f'ADV_noise:{artificial_noise_ADV}] ')
+                                               f'ADV_noise:{artificial_noise_ADV} '
+                                               f'CR_noise:{artificial_noise_CR}] ')
             print_(f'Sub-test completed.\n'
                    f'Time: {datetime.now()}\n')
 
