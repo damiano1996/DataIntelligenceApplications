@@ -1,4 +1,4 @@
-from project.part_2.GPTS_Learner import GP_Learner
+from project.part_2.GPTS_Learner import GPTS_Learner as GP_Learner
 from project.part_2.Utils import compute_clairvoyant, get_idx_arm_from_allocation
 
 

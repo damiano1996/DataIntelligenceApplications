@@ -5,7 +5,7 @@ import numpy as np
 
 from project.dia_pckg.Config import *
 from project.dia_pckg.plot_style.cb91visuals import *
-from project.part_2.GPTS_Learner import GP_Learner as Learner
+from project.part_2.GPTS_Learner import GPTS_Learner as Learner
 from project.part_2.Learning_experiment import execute_experiment
 from project.part_2.Utils import compute_clairvoyant
 from project.part_3.AbruptBiddingEnvironment import AbruptBiddingEnvironment
