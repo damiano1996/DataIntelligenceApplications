@@ -58,7 +58,7 @@ The optimal value of the two hyperparameters have been found by maximization of 
 \\
 In the second phase of the algorithm we have used the values from the learned model to solve the problem of finding the best budget allocation to be set for the current day.
 In the \textit{Optimizer} class we have implemented a modified version of the dynamic programming algorithm used for solving the knapsack problem.
-More precisely,we have used a matrix in which each row represents the fact that at each step a new sub-campaign enters the problem, while for the columns we have discretized the whole budget in 20 possible uniformly distributed combinations of the budget allocation.
+More precisely,we have used a matrix in which each row represents the fact that at each step a new sub-campaign enters the problem, while for the columns we have discretized the whole budget in uniformly distributed combinations of the budget allocation\footnote{in our specific implementation the budget was divided in 20 uniformly distributed combinations} .
 
 Each cell of the matrix contains the value of the best allocation for the considered row and column.
 The result is given by the maximization of the sum of the values provided by the best solution of the problem solved in the previous row (i.e. without considering the new entered sub-campaign) and 
