@@ -91,8 +91,7 @@ def test_part7(n_experiments=10,
 
     print('\n\nMEAN LOSS:', np.mean(percentage_loss_per_experiment))
 
-    plt.title(results_chart_title + f"{execution_type} "
-                                    f"REGRET: {int(np.mean(percentage_loss_per_experiment) * 10000) / 100.0}%",
+    plt.title(results_chart_title + f"{execution_type} REGRET: {int(np.mean(percentage_loss_per_experiment) * 10000) / 100}%",
               fontsize=20)
 
     for regret in regret_per_experiment:

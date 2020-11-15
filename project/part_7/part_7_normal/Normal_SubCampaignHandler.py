@@ -1,6 +1,6 @@
 import numpy as np
 
-from project.part_2.GP_Learner import GP_Learner
+from project.part_2.GPTS_Learner import GP_Learner
 from project.part_7.SubCampaignHandler import SubCampaignHandler as subh
 
 
