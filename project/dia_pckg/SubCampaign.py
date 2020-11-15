@@ -1,6 +1,7 @@
 import numpy as np
 
 from project.dia_pckg.Config import *
+from project.dia_pckg.plot_style.cb91visuals import *
 
 
 class SubCampaign:
@@ -38,8 +39,6 @@ class SubCampaign:
 if __name__ == '__main__':
     x = np.arange(0, 1, 0.01)
     sc = SubCampaign(x, 5, 1000)
-
-    import matplotlib.pyplot as plt
 
     for phase in range(3):
         plt.plot(x, sc.means[f'phase_{phase}'])

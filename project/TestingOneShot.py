@@ -11,7 +11,7 @@ from project.part_5.Testing_Env_5 import test_part5
 from project.part_6.Testing_Env_6 import test_part6
 from project.part_7.Testing_Env_7 import test_part7
 
-n_experiment = 20
+n_experiment = 25
 np.random.seed(0)
 
 testing_setup = {
