@@ -62,8 +62,9 @@ def test_part7(n_experiments=10,
         args = [{
             'multiclasshandler': mch,
             'bidding_environment': BiddingEnvironment(bids),
-            'artificial_noise_ADV': artificial_noise_ADV}
-            for idx in range(n_experiments)]
+            'artificial_noise_ADV': artificial_noise_ADV,
+            'artificial_noise_CR': artificial_noise_CR
+        }for idx in range(n_experiments)]
     elif execution_type == "normal":
         execute_experiment = execute_experiment_normal
         args = [{
@@ -109,8 +110,11 @@ def execute_experiment_binomial(args):
     mch = args['multiclasshandler']
     bidding_environment = args['bidding_environment']
     artificial_noise_adv = args['artificial_noise_ADV']
+    artificial_noise_cr = args['artificial_noise_CR']
+
 
     fix_price_budget_allocator = PBAbinomial(artificial_noise_ADV=artificial_noise_adv,
+                                             artificial_noise_CR=artificial_noise_cr,
                                              multiclasshandler=mch)
 
     done = False

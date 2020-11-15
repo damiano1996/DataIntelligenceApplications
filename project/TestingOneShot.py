@@ -174,17 +174,20 @@ if __name__ == '__main__':
         print_('PART 7 BINOMIAL')
 
         artificial_noise_ADVs = [0.0, 0.005, 0.01, 0.02]
+        artificial_noise_CRs = [0.0, 0.005, 0.01, 0.02]
 
         for artificial_noise_ADV in artificial_noise_ADVs:
-            test_part7(n_experiments=n_experiment,
-                       execution_type="binomial",
-                       demand_chart_path=demand_curves_chart_path,
-                       demand_chart_title=demand_curves_title,
-                       artificial_noise_ADV=artificial_noise_ADV,
-                       results_chart_path=f'{charts_path}/part7_binomial_'
-                                          f'ADV_noise{artificial_noise_ADV}_.png',
-                       results_chart_title=f'Part 7 ['
-                                           f'ADV_noise:{artificial_noise_ADV}] ')
+            for artificial_noise_CR in artificial_noise_CRs:
+                test_part7(n_experiments=n_experiment,
+                           execution_type="binomial",
+                           demand_chart_path=demand_curves_chart_path,
+                           demand_chart_title=demand_curves_title,
+                           artificial_noise_ADV=artificial_noise_ADV,
+                           artificial_noise_CR=artificial_noise_CR,
+                           results_chart_path=f'{charts_path}/part7_binomial_'
+                                              f'ADV_noise{artificial_noise_ADV}_.png',
+                           results_chart_title=f'Part 7 ['
+                                               f'ADV_noise:{artificial_noise_ADV}] ')
             print_(f'Sub-test completed.\n'
                    f'Time: {datetime.now()}\n')
 

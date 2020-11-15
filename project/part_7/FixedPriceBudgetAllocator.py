@@ -5,13 +5,14 @@ from project.part_7.SubCampaignHandler import SubCampaignHandler
 
 class FixedPriceBudgetAllocator:
 
-    def __init__(self, artificial_noise_ADV, multiclasshandler):
+    def __init__(self, artificial_noise_ADV, artificial_noise_CR, multiclasshandler):
         """
         @param artificial_noise_ADV: how much exploration on the advertising learners
         @param multiclasshandler: classes information
         """
 
         self.artificial_noise_ADV = artificial_noise_ADV
+        self.artificial_noise_CR = artificial_noise_CR
         self.mch = multiclasshandler
         self.n_updates = 0
         self.subcampaignHandlers = []
@@ -60,7 +61,7 @@ class FixedPriceBudgetAllocator:
                                     dtype=np.float32)
 
         for subh in self.subcampaignHandlers:
-            estimated_cr = subh.get_estimated_cr(arm_price)
+            estimated_cr = subh.get_estimated_cr(arm_price, self.artificial_noise_CR)
             estimated_clicks = subh.get_estimated_clicks(self.artificial_noise_ADV)
             estimated_purchases = estimated_clicks * estimated_cr
             table_all_subs = np.append(table_all_subs, np.atleast_2d(estimated_purchases.T), 0)
