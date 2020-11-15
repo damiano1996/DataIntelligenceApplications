@@ -10,9 +10,9 @@ In particular, given the assignments~\ref{assPart4}, we are going to design an a
 
 In the following steps, we are going to:
 \begin{itemize}
-	\item define the demand curves of the users;
-	\item describe the environment setup;
-	\item explain the algorithm that has been chosen; and
+	\item define the demand curves of the users.
+	\item describe the environment setup.
+	\item explain the algorithm that has been chosen.
 	\item comment the results obtained in the end of the campaign.
 \end{itemize}
 
@@ -24,8 +24,8 @@ It is a function that maps the price to a certain probability. In other words, g
 
 In our simulated scenario, we defined three classes of users with the corresponding demand curves. The shapes of the curves are motivated by the intrinsic behaviors of the classes:
 \begin{itemize}
-	\item \textit{Elegant}: they are rich, thus they will buy the product with high probability whatever is the proposed price;
-	\item \textit{Casual}: they are students, thus they are able to buy the product only if the price is relatively low; and
+	\item \textit{Elegant}: they are rich, thus they will buy the product with high probability whatever is the proposed price.
+	\item \textit{Casual}: they are students, thus they are able to buy the product only if the price is relatively low.
 	\item \textit{Sports}: they are workers, but without a particular interest on the shoes, therefore the price is relatively irrelevant and the probability is low.
 \end{itemize}
 
@@ -43,8 +43,8 @@ Moreover, points representing the theoretical optimum are reported. The area bel
 	\caption{\textbf{Demand Curves}.\\
 		They are used to model the probability (\textit{conversion rate}) that a certain class, of customers, will buy or not the product w.r.t. a proposed price.\\
 		The dashed lines represent the demand curves of the corresponding classes:
-		\textit{blue} for the \textit{Elegant} class;
-		\textit{pink} for the \textit{Casual} class; and
+		\textit{blue} for the \textit{Elegant} class.
+		\textit{pink} for the \textit{Casual} class.
 		\textit{light green} for the \textit{Sports} class.\\
 		The \textit{orange} curve is the mean between the others and it is used to study the \textit{aggregate} model.\\
 		The points are displayed to show the optimal price w.r.t. the conversion rate: the area below them is maximum.}
@@ -66,7 +66,7 @@ This context of application can be solved in different ways, but the most common
 
 We mainly tested two algorithms:
 \begin{itemize}
-	\item \textbf{Thompson Sampling (TS)} algorithm; and
+	\item \textbf{Thompson Sampling (TS)} algorithm.
 	\item \textbf{Thompson Sampling with Sliding Window (SWTS)} algorithm.
 \end{itemize}
 
@@ -85,7 +85,7 @@ a_t \leftarrow \argmax_{a \in A} \{\tilde{\theta}_a \cdot price_a\}
 Where $price_a$ is the price targeted by the arm $a$.\\
 This allow us to maximize the area under the demand curve.
 
-\section{Experiments}
+\section{Performance Evaluation}
 
 Summarizing, we have to learn the best price to propose, to the users, to maximize the total revenue.\\
 We have discussed about the environment, that generates incoming users and allows us to iterate over the days of the campaign, and finally, we presented the learner adopted.\\
@@ -93,7 +93,7 @@ At this point we can explain how the tests have been initialized.
 
 The experiments has been configured in two ways:
 \begin{itemize}
-	\item keeping a fixed daily price: we pulled an arm only for the first user of the day; for the other users we proposed always the same price. This means that for the entire day we pull and update always the same arm of the TS;
+	\item keeping a fixed daily price: we pulled an arm only for the first user of the day, for the other users we proposed always the same price. This means that for the entire day we pull and update always the same arm of the TS.
 	\item one price for each user: maybe, this is an unpractical option in a real world scenario, but it allows to obtain a total revenue outperforming the previous configuration.
 \end{itemize}
 

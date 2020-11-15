@@ -16,18 +16,18 @@ By using contexts instead of classes, we are able to drastically reduce the numb
 \section{Environment, Learner and Demand Curves}\label{sec:environment,-learner-and-demand-curves}
 The environment is fairly similar to the one used in Chapter 4, the only difference is that it keeps track of how many days have passed since the collected data has been analyzed, so that we know when we have enough to consider generating the new contexts.
 This is possible because we know how many users will visit our website every day, so we know exactly how much data we have after each day.
-We used the same demand curves as in Chapter 4, on the other hand, since we want to learn different prices now, we don't use a single learner anymore, but we create one with each new context.
+We used the same demand curves as in Chapter 4, on the other hand, since we want to learn different prices now, we don't use a single learner anymore, but we create a new SWTS one with each new context.
 
 \section{Campaign Scheduler}\label{sec:campaign-scheduler}
 The class Campaign Scheduler acts as the main interface for our algorithm.
-It stores the contexts we are currently using for the week and the information collected by our website so far in a structure indexed using the classes we have chosen.
-These information are updated after each user visits the website and will then be used in the Context Generator class to decide whether to create new contexts or not.
+It stores the contexts we are currently using for the week and the information collected by our website so far in the following structure, indexed using the classes we have chosen.
 \begin{itemize}
-	\item \textit{Total Reward}: The sum of all the rewards we have obtained so far;
-	\item \textit{Number of purchases}: The number of products we have actually sold;
-	\item \textit{Number of users}: The number of users who have visited our website;
+	\item \textit{Total Reward}: The sum of all the rewards we have obtained so far.
+	\item \textit{Number of purchases}: The number of products we have actually sold.
+	\item \textit{Number of users}: The number of users who have visited our website.
     \item \textit{Rewards}: An array that contains all the rewards collected so far.
 \end{itemize}
+These information are updated after each user visits the website and will then be used in the Context Generator class to decide whether to create new contexts or not.
 
 \section{Our Approach to Context generation}\label{sec:our-approach-to-context-generation}
 When we first approached the problem, we used a algorithm similar to that presented in class, with a greedy approach.
@@ -72,7 +72,7 @@ Since we have only two features with binary values, this process is not computat
 We always start with the aggregate model to collect data, but when the time to split arrives, we evaluate all possible partitions of our feature space, using the above formulas.
 This way we can either obtain the aggregate model, two or three contexts, by not splitting, splitting according to only one or both features (we would obtain four contexts, but we only have three classes).
 
-\section{Results}\label{sec:our-result}
+\section{Performance Evaluation}\label{sec:performance-evaluation-5}
 
 As in Chapter 4, we configured the experiment to both keep the same price for the day and not to and this is the reason of the two graphs.
 Moreover we used the same two optimal models, the Aggregate Model, which does not know the classes of the users, and the True Evaluation, which does and chooses a single price for each of them.
