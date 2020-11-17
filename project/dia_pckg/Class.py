@@ -65,8 +65,6 @@ class Class:
             x, y = design_function(x_interval=[self.product.base_price, self.product.max_price],
                                    y_interval=[0, 1],  # probability
                                    density=1,
-                                   poly_apprx=True,
-                                   rank=10,
                                    plot_result=True)
             save_function(x, y, path_file)
         return {'prices': x, 'probabilities': y}
