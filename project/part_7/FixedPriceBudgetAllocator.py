@@ -126,4 +126,3 @@ class FixedPriceBudgetAllocator:
                 best_price = arm_price
                 optimal_reward = purch_atprice * self.prices[arm_price]
         return optimal_reward, best_price
-

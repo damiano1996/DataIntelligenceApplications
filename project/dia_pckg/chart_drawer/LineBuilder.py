@@ -1,11 +1,13 @@
-from matplotlib import pyplot as plt
-
 """
+    Class to draw lines on matplotlib figures.
+
     source: https://matplotlib.org/3.1.1/users/event_handling.html
 """
 
+from matplotlib import pyplot as plt
 
-class LineBuilder():
+
+class LineBuilder:
     def __init__(self, line):
         self.line = line
         self.xs = list(line.get_xdata())

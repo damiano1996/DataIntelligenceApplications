@@ -1,4 +1,3 @@
-import copy
 from multiprocessing import Pool
 
 import numpy as np
@@ -10,8 +9,8 @@ from project.dia_pckg.plot_style.cb91visuals import *
 from project.part_2.BiddingEnvironment import BiddingEnvironment
 from project.part_4.MultiClassHandler import MultiClassHandler
 from project.part_7.FixedPriceBudgetAllocator import FixedPriceBudgetAllocator as PBAbinomial
-from project.part_7.part_7_normal.Normal_FixedPriceBudgetAllocator import Normal_FixedPriceBudgetAllocator as PBAnormal
 from project.part_7.part_7_normal.Env_7 import Env7
+from project.part_7.part_7_normal.Normal_FixedPriceBudgetAllocator import Normal_FixedPriceBudgetAllocator as PBAnormal
 
 
 def test_part7(n_experiments=10,
@@ -91,8 +90,9 @@ def test_part7(n_experiments=10,
 
     print('\n\nMEAN LOSS:', np.mean(percentage_loss_per_experiment))
 
-    plt.title(results_chart_title + f"{execution_type} REGRET: {int(np.mean(percentage_loss_per_experiment) * 10000) / 100}%",
-              fontsize=20)
+    plt.title(
+        results_chart_title + f"{execution_type} REGRET: {int(np.mean(percentage_loss_per_experiment) * 10000) / 100}%",
+        fontsize=20)
 
     for regret in regret_per_experiment:
         plt.plot(np.cumsum(regret), alpha=0.2, c='C2')

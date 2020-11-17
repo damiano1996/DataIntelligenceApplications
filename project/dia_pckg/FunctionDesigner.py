@@ -1,3 +1,7 @@
+"""
+    This class is used to design functions by hand on the matplotlib figures.
+"""
+
 import matplotlib.pyplot as plt
 import numpy as np
 

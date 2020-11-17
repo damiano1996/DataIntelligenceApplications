@@ -1,3 +1,8 @@
+"""
+    This class is a container of Class objects.
+    It is used to compute the aggregate model and to handle the demand curves of the classes.
+"""
+
 import numpy as np
 
 from project.dia_pckg.Config import *

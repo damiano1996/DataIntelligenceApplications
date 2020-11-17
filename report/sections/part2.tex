@@ -5,29 +5,29 @@ The goal of this part is to optimize the budget allocation over the three sub-ca
 In particular given the assignment~\ref{assPart2} we have designed a combinatorial bandit algorithm for addressing this task.\\
 In the following chapter we are going to:
 \begin{itemize}
-	\item describe the environment setup.
-	\item explain the algorithm design choice.
-	\item comment the obtained results.
+    \item describe the environment setup.
+    \item explain the algorithm design choice.
+    \item comment the obtained results.
 \end{itemize}
+
 
 \section{Environment}
 The \textbf{Environment} returns the reward associated to each sub-campaign, by iterating over the days for the entire time horizon.
-In our setting, it computes the optimal number of clicks knowing the real functions, one for each sub-campaign, generating  the number of clicks given a bid value \textbf{\textit{n(x)}}:\\
+In our setting, it computes the optimal number of clicks knowing the real functions, one for each sub-campaign, generating the number of clicks given a bid value \textbf{\textit{n(x)}}:\\
 
 \begin{equation}
-	n(x) = c_{M} \cdot (v_{M} - e^{-\alpha x})
+    n(x) = c_{M} \cdot (v_{M} - e^{-\alpha x})
 \end{equation}
 
 where:
 \begin{itemize}
-	\item $c_{M}$: is the maximum number of clicks the considered sub-campaign can reach in a day.
-	\item $v_{M}$ and $\alpha$: are values associated to each sub-campaign defining the actual bidding curve.
+    \item $c_{M}$: is the maximum number of clicks the considered sub-campaign can reach in a day.
+    \item $v_{M}$ and $\alpha$: are values associated to each sub-campaign defining the actual bidding curve.
 \end{itemize}
 
 
 The Environment, given the index of the bid chosen by the Learner, returns the collection of rewards associated to each sub-campaign in a completely transparent way to the learning algorithm.
 How the learner works and its implementation will be described in the following section.
-
 
 
 \section{Algorithm Design Choices}
@@ -46,12 +46,12 @@ In this way, for each new collected sample, the function estimated by the GP app
 In order to properly used a GP regressor, we had to normalize the data. The bid space was already defined in range [0,1] and so the input variable has not to be normalized. So, we only needed to normalize the target and we have done it in the construction of the gaussian process.\\
 A Gaussian process is completely defined by its mean and its covariance. Since we don't have any prior information we assumed to have zero mean and the covariance given by the squared exponential kernel function \textbf{k(x, x')}:
 \begin{equation}
-	k(x,x') = \theta^{2} e^{-\frac{(x-x')^2}{2 l^2}}
+    k(x,x') = \theta^{2} e^{-\frac{(x-x')^2}{2 l^2}}
 \end{equation}
 where:
 \begin{itemize}
-	\item \textit{l}: is the \textit{lengthscale}.
-	\item $\theta$: is the \textit{scale factor}.
+    \item \textit{l}: is the \textit{lengthscale}.
+    \item $\theta$: is the \textit{scale factor}.
 \end{itemize}
 The optimal value of the two hyperparameters have been found by maximization of the marginal likelihood during the fit process.
 \\
@@ -61,41 +61,40 @@ In the \textit{Optimizer} class we have implemented a modified version of the dy
 More precisely,we have used a matrix in which each row represents the fact that at each step a new sub-campaign enters the problem, while for the columns we have discretized the whole budget in uniformly distributed combinations of the budget allocation\footnote{in our specific implementation the budget was divided in 20 uniformly distributed combinations} .
 
 Each cell of the matrix contains the value of the best allocation for the considered row and column.
-The result is given by the maximization of the sum of the values provided by the best solution of the problem solved in the previous row (i.e. without considering the new entered sub-campaign) and 
+The result is given by the maximization of the sum of the values provided by the best solution of the problem solved in the previous row (i.e. without considering the new entered sub-campaign) and
 the value of the new considered sub-campaign (considered singularly) s.t. the daily budget over the three sub-campaigns sums to the total daily budget.
 Once we have filled the entire table, we have the best solution in the last row, i.e. when all the 3 sub-campaigns are considered.
 In figure ~\ref{curve2Fig} we can see, for each sub-campaign, the real function generating the number of clicks n(x), the function learned by GP regressor and its associated uncertainty.
 \begin{figure}[!htb]
-	\centering
+    \centering
 
-	\minipage{0.48\textwidth}
-  		\includegraphics[width=\linewidth]{images/part2_bidding_curve_subcamaign_0.png}
-  		\caption{First sub-campaign}  		
-	\endminipage\hfill
-	\minipage{0.48\textwidth}
-  		\includegraphics[width=\linewidth]{images/part2_bidding_curve_subcamaign_1.png}
-  		\caption{Second sub-campaign} 
-	\endminipage\hfill
-		\minipage{0.48\textwidth}
-  		\includegraphics[width=\linewidth]{images/part2_bidding_curve_subcamaign_2.png}
-  		\caption{Third sub-campaign}
-	\endminipage\hfill
-	
-	\caption{Functions generating the number of clicks}
-	\label{curve2Fig}
+    \minipage{0.48\textwidth}
+    \includegraphics[width=\linewidth]{images/part2_bidding_curve_subcamaign_0.png}
+    \caption{First sub-campaign}
+    \endminipage\hfill
+    \minipage{0.48\textwidth}
+    \includegraphics[width=\linewidth]{images/part2_bidding_curve_subcamaign_1.png}
+    \caption{Second sub-campaign}
+    \endminipage\hfill
+    \minipage{0.48\textwidth}
+    \includegraphics[width=\linewidth]{images/part2_bidding_curve_subcamaign_2.png}
+    \caption{Third sub-campaign}
+    \endminipage\hfill
+
+    \caption{Functions generating the number of clicks}
+    \label{curve2Fig}
 \end{figure}
-
 
 
 \section{Performance evaluation}
 In order to evaluate the performance of the implemented algorithm, we have computed the \emph{cumulative regret} as the difference between the expected reward of the \textit{Clairvoyant algorithm} and the expected reward of our combinatorial bandit algorithm.\\
 In \ref{regret2Fig} the plot of the regret we obtain:
 \begin{figure}[!htb]
-	\centering
-	%\captionsetup{justification=centering,margin=1cm}
-		\includegraphics[width=\textwidth]{images/part2.png}
-	\caption{Cumulative regret of the combinatorial bandit algorithm}
-	\label{regret2Fig}
+    \centering
+    %\captionsetup{justification=centering,margin=1cm}
+    \includegraphics[width=\textwidth]{images/part2.png}
+    \caption{Cumulative regret of the combinatorial bandit algorithm}
+    \label{regret2Fig}
 \end{figure}
 
 

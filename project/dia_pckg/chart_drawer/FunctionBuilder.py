@@ -1,12 +1,15 @@
+"""
+    This class extends LineBuilder to draw function on matplotlib figures.
+
+    !!!!! Disclaimer !!!!!
+    To draw on the matplotlib window you have to disable SciView on PyCharm:
+    File -> Settings -> Tools -> Python Scientific -> deselect option
+"""
+
 import numpy as np
 from matplotlib import pyplot as plt
 
 from project.dia_pckg.chart_drawer.LineBuilder import LineBuilder
-
-"""
-    To draw on the matplotlib window you have to disable SciView on PyCharm:
-    File -> Settings -> Tools -> Python Scientific -> deselect option
-"""
 
 
 class FunctionBuilder(LineBuilder):

@@ -1,3 +1,8 @@
+"""
+    This class extend the base Environment.
+    It is used to iterate over the days of the campaign and to compute the reward obtained by the incoming users.
+"""
+
 import numpy as np
 
 from project.dia_pckg.Environment import Environment

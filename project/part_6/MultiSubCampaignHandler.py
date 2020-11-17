@@ -10,6 +10,7 @@ class MultiSubCampaignHandler:
     """
     This class is used as an interface between the three sub-campaigns and the budget allocator
     """
+
     def __init__(self,
                  multi_class_handler,
                  n_arms_pricing,

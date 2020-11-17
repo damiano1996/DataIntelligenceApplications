@@ -1,3 +1,7 @@
+"""
+    This class is used to handle the user's "class". Here we load/create the demand curve.
+"""
+
 import os
 
 import matplotlib.pyplot as plt
@@ -13,7 +17,7 @@ class Class:
     def __init__(self, class_name, class_config, product, n_abrupt_phases, summary=True):
         """
         :param class_name: name of the class
-        :param class_features: binary features of the class
+        :param class_config: configurations of the class
         :param product: Product object
         :param n_abrupt_phases: number of abrupt phases
         :param summary: boolean to print the summary of the information of the class

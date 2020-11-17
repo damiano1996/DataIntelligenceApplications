@@ -1,3 +1,8 @@
+"""
+    This class is used to handle a sub-campaign.
+    Here we generate the clicks over budgets curves, one for each abrupt phase.
+"""
+
 import numpy as np
 
 from project.dia_pckg.Config import *
@@ -10,9 +15,12 @@ class SubCampaign:
                  bids, sigma, max_n_clicks,
                  class_obj=None, product=None, campaign=None):
         """
-        :param class_obj: Class object
-        :param product: Product object
-        :param campaign: Campaign object
+        @param bids:
+        @param sigma: sigma of the curve
+        @param max_n_clicks: maximum number of clicks
+        @param class_obj: Class object
+        @param product: Product object
+        @param campaign: Campaign object
         """
         # np.random.seed(0)
 

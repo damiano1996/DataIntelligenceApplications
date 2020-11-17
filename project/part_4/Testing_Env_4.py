@@ -1,3 +1,7 @@
+"""
+    In this script we test the learner on the defined environment.
+"""
+
 import copy
 from multiprocessing import Pool
 

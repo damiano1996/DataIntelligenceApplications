@@ -12,13 +12,13 @@
 \BOOKMARK [1][-]{section.4.1}{Demand Curves}{chapter.4}% 12
 \BOOKMARK [1][-]{section.4.2}{Environment}{chapter.4}% 13
 \BOOKMARK [1][-]{section.4.3}{Learner Algorithm Selection}{chapter.4}% 14
-\BOOKMARK [1][-]{section.4.4}{Experiments}{chapter.4}% 15
+\BOOKMARK [1][-]{section.4.4}{Performance Evaluation}{chapter.4}% 15
 \BOOKMARK [0][-]{chapter.5}{Pricing: Context Generation}{}% 16
 \BOOKMARK [1][-]{section.5.1}{What is a Context?}{chapter.5}% 17
 \BOOKMARK [1][-]{section.5.2}{Environment, Learner and Demand Curves}{chapter.5}% 18
 \BOOKMARK [1][-]{section.5.3}{Campaign Scheduler}{chapter.5}% 19
 \BOOKMARK [1][-]{section.5.4}{Our Approach to Context generation}{chapter.5}% 20
-\BOOKMARK [1][-]{section.5.5}{Results}{chapter.5}% 21
+\BOOKMARK [1][-]{section.5.5}{Performance Evaluation}{chapter.5}% 21
 \BOOKMARK [0][-]{chapter.6}{Adverting and Pricing Integration}{}% 22
 \BOOKMARK [1][-]{section.6.1}{Proposed Integration}{chapter.6}% 23
 \BOOKMARK [2][-]{subsection.6.1.1}{Budget Allocator}{section.6.1}% 24

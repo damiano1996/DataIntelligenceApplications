@@ -1,3 +1,7 @@
+"""
+    Thompson Sampling algorithm.
+"""
+
 from project.dia_pckg.Learner import *
 
 

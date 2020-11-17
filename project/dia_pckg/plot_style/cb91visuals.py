@@ -1,4 +1,6 @@
 """
+    To improve the quality of the plots!
+
     source: https://towardsdatascience.com/making-matplotlib-beautiful-by-default-d0d41e3534fd
 """
 

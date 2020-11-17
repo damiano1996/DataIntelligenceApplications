@@ -1,3 +1,7 @@
+"""
+    Thompson Sampling Sliding Window algorithm.
+"""
+
 import numpy as np
 
 from project.part_4.TS_Learner import TS_Learner

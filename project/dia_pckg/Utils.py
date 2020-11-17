@@ -1,3 +1,7 @@
+"""
+    Here we have general functions that are used in different classes.
+"""
+
 import os
 
 import numpy as np

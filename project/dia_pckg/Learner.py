@@ -1,3 +1,7 @@
+"""
+    Basic Learner.
+"""
+
 import numpy as np
 
 

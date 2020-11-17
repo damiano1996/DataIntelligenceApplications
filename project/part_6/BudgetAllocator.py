@@ -10,6 +10,7 @@ class BudgetAllocator:
     This class decides how much budget to allocate to each sub-campaign, using information collected in the past and
     solving the updated Knapsack problem
     """
+
     def __init__(self,
                  multi_class_handler,
                  n_arms_pricing,

@@ -35,4 +35,3 @@ class Normal_FixedPriceBudgetAllocator(fp_binomial):
             subh.comlete_daily_update(price, allocation[subh.class_name], click_per_class[idx],
                                       purchases_per_class[subh.class_name])
         self.n_updates += 1
-
