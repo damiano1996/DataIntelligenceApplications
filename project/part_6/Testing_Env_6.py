@@ -12,10 +12,10 @@ from project.part_4.MultiClassHandler import MultiClassHandler
 from project.part_6.BudgetAllocator import BudgetAllocator
 
 
-def test_part6(n_experiments=50,
+def test_part6(n_experiments=25,
                enable_pricing=True,
                plot_advertising=False,
-               keep_daily_price=False,
+               keep_daily_price=True,
                demand_chart_path='project/part_6/other_files/testing_part6_demandcurves.png',
                demand_chart_title='Part 6 - Demand Curves',
                results_chart_path='project/part_6/other_files/testing_part6_regrets.png',
@@ -75,16 +75,19 @@ def test_part6(n_experiments=50,
         agnostic_regret_per_experiment.append(result['agnostic_regret'])
         regret_per_experiment.append(result['regret'])
         final_loss_per_experiment.append(result['loss'])
-    print('\n\nFINAL LOSS:', np.mean(final_loss_per_experiment))
 
+    mean_loss = float("{:.2f}".format(np.mean(final_loss_per_experiment) * 100))
+    print('\n\nFINAL LOSS:', mean_loss)
+
+    results_chart_title = results_chart_title + " , Loss: " + str(mean_loss) + "%"
     plt.title(results_chart_title, fontsize=20)
     # for agnostic_regret in agnostic_regret_per_experiment:
     #     plt.plot(np.cumsum(agnostic_regret), alpha=0.1, c='C2')
-    plt.plot(np.cumsum(np.mean(agnostic_regret_per_experiment, axis=0)),
-             c='C1', label='Agnostic Regret')
+    #plt.plot(np.cumsum(np.mean(agnostic_regret_per_experiment, axis=0)),
+            #c='C1', label='Agnostic Regret')
 
-    # for regret in regret_per_experiment:
-    # plt.plot(np.cumsum(regret), alpha=0.2, c='C2')
+    for regret in regret_per_experiment:
+        plt.plot(np.cumsum(regret), alpha=0.2, c='C2')
     plt.plot(np.cumsum(np.mean(regret_per_experiment, axis=0)),
              c='C2', label='Real Regret')  # (Advertising <==> Pricing)')
 
@@ -138,7 +141,7 @@ def execute_experiment(args):
     print(str(index) + ' has ended')
 
     return {'agnostic_regret': budget_allocator.msh.regret, 'regret': budget_allocator.regret,
-            'loss': sum(budget_allocator.regret) / budget_allocator.msh.total_revenue}
+            'loss': sum(budget_allocator.regret) / (budget_allocator.msh.total_revenue + sum(budget_allocator.regret))}
 
 
 if __name__ == '__main__':
