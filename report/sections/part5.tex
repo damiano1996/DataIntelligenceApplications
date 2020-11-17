@@ -34,10 +34,10 @@ These information are updated after each user visits the website and will then b
 
 
 \section{Our Approach to Context generation}\label{sec:our-approach-to-context-generation}
-When we first approached the problem, we used a algorithm similar to that presented in class, with a greedy approach.
+When we first approached the problem, we used a algorithm with a greedy approach.
 We start with the aggregate model, so we have only one price for all the classes, and we use it to collect data for the first week.
 At the end of the week, we use this data to evaluate the features and decide if we want to split and generate new contexts.
-For each feature we have yet to use to split, we compute the lower bound of the probability of the context to occur and of the expected reward.
+For each feature that we have yet to use to split, we compute the lower bound of the probability of the context to occur and of the expected reward.
 This is because when we create a new context, we have to learn a different model, which will surely have more uncertainty with respect to the one used so far.
 The lower bound is a measure of how much we are guaranteed to gain, the reward we collect in the end might be higher.
 

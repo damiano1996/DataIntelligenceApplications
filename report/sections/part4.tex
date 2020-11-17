@@ -91,13 +91,13 @@ This allow us to maximize the area under the demand curve.
 \section{Performance Evaluation}
 
 Summarizing, we have to learn the best price to propose, to the users, to maximize the total revenue.\\
-We have discussed about the environment, that generates incoming users and allows us to iterate over the days of the campaign, and finally, we presented the learner adopted.\\
+We have discussed about the environment, that generates incoming users and allows us to iterate over the days of the campaign, and finally, we presented the learner adopted.
 At this point we can explain how the tests have been initialized.
 
 The experiments has been configured in two ways:
 \begin{itemize}
     \item keeping a fixed daily price: we pulled an arm only for the first user of the day, for the other users we proposed always the same price. This means that for the entire day we pull and update always the same arm of the TS.
-    \item one price for each user: maybe, this is an unpractical option in a real world scenario, but it allows to obtain a total revenue outperforming the previous configuration.
+    \item one price for each user: maybe, this is an unpractical option in a real world scenario, but it allows to obtain a total revenue outperforming the previous configuration. This method achieves better performances since the learner is updated more frequently during the campaign.
 \end{itemize}
 
 In the end of the tests, the figure \ref{regret4Fig} reports the obtained regrets. The sub figure \textit{(a)} for the first configuration and the sub figure \textit{(b)} for the second.
@@ -124,7 +124,7 @@ You will notice how the two regrets will be pushed down and the regret on the Tr
     \begin{subfigure}[!H]{0.8\textwidth}
         \centering
         \includegraphics[width=\textwidth]{images/part4_keep-daily-priceFalse.png}
-        \caption{Regret obtained proposing to the customers different prices for each visit. This method achieves better performances since the learner collects more data during the campaign.}
+        \caption{Regret obtained proposing to the customers different prices for each visit.}
     \end{subfigure}
 
     \caption{Comparison between the regrets obtained during the campaign.\\
