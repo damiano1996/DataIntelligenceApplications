@@ -12,6 +12,8 @@
 
 .DS_Store
 .idea
+.idea\
+.idea/
 .idea/*.iml
 .idea/*.xml
 venv
