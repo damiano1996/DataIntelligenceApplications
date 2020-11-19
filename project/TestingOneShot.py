@@ -22,11 +22,11 @@ np.random.seed(0)
 testing_setup = {
     'part2': False,
     'part3': False,
-    'part4': True,
-    'part5': True,
+    'part4': False,
+    'part5': False,
     'part6': False,
-    'part7_binomial': False,
-    'part7_normal': False
+    'part7_binomial': True,
+    'part7_normal': True
 
 }
 
@@ -178,8 +178,8 @@ if __name__ == '__main__':
         # PART 7
         print_('PART 7 BINOMIAL')
 
-        artificial_noise_ADVs = [0.0, 0.005, 0.01, 0.02]
-        artificial_noise_CRs = [0.0, 0.005, 0.01, 0.02]
+        artificial_noise_ADVs = [0.0, 0.05, 0.1, 0.2]
+        artificial_noise_CRs = [0.0, 0.05, 0.1, 0.2]
 
         for artificial_noise_ADV in artificial_noise_ADVs:
             for artificial_noise_CR in artificial_noise_CRs:
@@ -207,8 +207,8 @@ if __name__ == '__main__':
             # PART 7
             print_('PART 7 NORMAL')
 
-            artificial_noise_ADVs = [0.0, 0.005, 0.01, 0.02]
-            artificial_noise_CRs = [0.0, 0.005, 0.01, 0.02]
+            artificial_noise_ADVs = [0.0, 0.05, 0.1, 0.2]
+            artificial_noise_CRs = [0.0, 0.05, 0.1, 0.2]
 
             for artificial_noise_ADV in artificial_noise_ADVs:
                 for artificial_noise_CR in artificial_noise_CRs:

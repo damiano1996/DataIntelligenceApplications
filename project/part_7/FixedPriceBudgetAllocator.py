@@ -61,8 +61,8 @@ class FixedPriceBudgetAllocator:
                                     dtype=np.float32)
 
         for subh in self.subcampaignHandlers:
-            estimated_cr = subh.get_estimated_cr(arm_price, self.artificial_noise_CR)
-            estimated_clicks = subh.get_estimated_clicks(self.artificial_noise_ADV)
+            estimated_cr = subh.get_estimated_cr(arm_price, self.artificial_noise_CR / self.n_updates)
+            estimated_clicks = subh.get_estimated_clicks(self.artificial_noise_ADV / self.n_updates)
             estimated_purchases = estimated_clicks * estimated_cr
             table_all_subs = np.append(table_all_subs, np.atleast_2d(estimated_purchases.T), 0)
 
