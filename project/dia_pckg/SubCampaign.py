@@ -32,7 +32,7 @@ class SubCampaign:
         self.product = product
         self.campaign = campaign
 
-        self.param_for_phase = np.random.choice(np.arange(2, 10, 1), n_abrupts_phases)
+        self.param_for_phase = np.random.choice(np.arange(4, 10, 1), n_abrupts_phases)
         self.max_value_phase = np.random.choice(np.arange(0.3, 1, 0.1), n_abrupts_phases)
 
         self.means = {f'phase_{i}': self.phase_curve(bids, phase=i) for i in range(n_abrupts_phases)}
@@ -46,8 +46,11 @@ class SubCampaign:
 
 if __name__ == '__main__':
     x = np.arange(0, 1, 0.01)
-    sc = SubCampaign(x, 5, 1000)
+    sc = SubCampaign(x, 5, max_n_clicks)
 
-    for phase in range(3):
-        plt.plot(x, sc.means[f'phase_{phase}'])
+    for phase in range(n_subcamp):
+
+        plt.plot(x*seller_max_budget, sc.means[f'phase_{phase}'])
+        plt.ylabel('n(x)')
+        plt.xlabel('Budget allocation [$]')
         plt.show()

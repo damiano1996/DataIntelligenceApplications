@@ -5,9 +5,9 @@
 \contentsline {section}{\numberline {2.3}Performance evaluation}{7}{section.2.3}%
 \contentsline {chapter}{\numberline {3}Advertising: Handling Abrupt Phases}{8}{chapter.3}%
 \contentsline {section}{\numberline {3.1}What is an abrupt phase}{8}{section.3.1}%
-\contentsline {section}{\numberline {3.2}Sliding window mechanism}{8}{section.3.2}%
-\contentsline {section}{\numberline {3.3}Changes Detection mechanism}{9}{section.3.3}%
-\contentsline {section}{\numberline {3.4}Performance evaluation}{10}{section.3.4}%
+\contentsline {section}{\numberline {3.2}Sliding window mechanism}{9}{section.3.2}%
+\contentsline {section}{\numberline {3.3}Changes Detection mechanism}{10}{section.3.3}%
+\contentsline {section}{\numberline {3.4}Performance evaluation}{11}{section.3.4}%
 \contentsline {chapter}{\numberline {4}Pricing: Learning the Best Price}{13}{chapter.4}%
 \contentsline {section}{\numberline {4.1}Demand Curves}{13}{section.4.1}%
 \contentsline {section}{\numberline {4.2}Environment}{14}{section.4.2}%

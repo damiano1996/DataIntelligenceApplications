@@ -6,7 +6,7 @@
 initial_date = '20200101'
 
 # Seller wallet and ambitions
-seller_max_budget = 20000  # $
+seller_max_budget = 5000  # $
 max_n_clicks = 1000
 avg_users_per_day = 100  # this param must be changed after budget allocation available!
 

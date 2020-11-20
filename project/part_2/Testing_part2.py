@@ -11,9 +11,9 @@ from project.part_2.Learning_experiment import execute_experiment
 from project.part_2.Utils import compute_clairvoyant
 
 
-def test_part2(n_experiments=10,
+def test_part2(n_experiments=25,
                chart_path='other_files/testing_part2.png',
-               title='Part 2 - Regret GPTS'):
+               title='Part 2 - Regret'):
     np.random.seed(0)
 
     bids = np.linspace(0, max_bid, n_arms_advertising)
@@ -58,3 +58,4 @@ def test_part2(n_experiments=10,
 
 if __name__ == '__main__':
     test_part2()
+
