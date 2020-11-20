@@ -25,7 +25,7 @@ testing_setup = {
     'part4': False,
     'part5': False,
     'part6': False,
-    'part7_binomial': True,
+    'part7_binomial': False,
     'part7_normal': True
 
 }
@@ -193,9 +193,6 @@ if __name__ == '__main__':
     if testing_setup['part7_normal']:
         # PART 7
         print_('PART 7 NORMAL')
-
-        artificial_noise_ADVs = [0.0]  # , 0.05, 0.1, 0.2]
-        artificial_noise_CRs = [0.0]  # , 0.05, 0.1, 0.2]
 
         for artificial_noise_ADV in artificial_noise_ADVs:
             for artificial_noise_CR in artificial_noise_CRs:
