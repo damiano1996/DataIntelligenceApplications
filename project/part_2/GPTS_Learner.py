@@ -9,6 +9,9 @@ from project.dia_pckg.plot_style.cb91visuals import *
 class GPTS_Learner(Learner):
 
     def __init__(self, arms):
+        """
+        @param arms: possible bids
+        """
         super().__init__(len(arms))
 
         alpha = 15.0
@@ -24,10 +27,18 @@ class GPTS_Learner(Learner):
                                            n_restarts_optimizer=9)
 
     def update_observations(self, arm_idx, reward):
+        """
+        add new information
+        @param arm_idx: pulled arm
+        @param reward: collected reward with the pulled arm
+        """
         super().update_observations(arm_idx, reward)
         self.pulled_arms.append(self.arms[arm_idx])
 
     def update_model(self):
+        """
+        fit the gaussian process learner with the new informations
+        """
         x = np.atleast_2d(self.pulled_arms).T
         y = self.collected_rewards
         self.gp.fit(x, y)
@@ -35,19 +46,38 @@ class GPTS_Learner(Learner):
         self.sigmas = np.maximum(self.sigmas, 1e-2)
 
     def update(self, pulled_arm, reward):
+        """
+        add new information and update the model
+        @param pulled_arm: pulled arm
+        @param reward: collected reward with the pulled arm
+        """
         self.t += 1
         self.update_observations(pulled_arm, reward)
         self.update_model()
 
     def pull_arm(self, arm):
+        """
+        Thompson sampling from the selected arm
+        @param arm: arm from which to pull the expected reward
+        @return: pulled reward
+        """
         sampled_value = np.random.normal(self.means[arm], self.sigmas[arm])
         return sampled_value
 
     def pull_arm_sequence(self):
+        """
+        Thompson sampling from all the possible arms
+        @return: array of pulled rewards
+        """
         sampled_values = np.random.normal(self.means, self.sigmas)
         return sampled_values
 
     def plot(self, unknown_function, sigma_scale_factor=20):
+        """
+        plot the curve to learn and the one learned so far
+        @param unknown_function: curve to learn
+        @param sigma_scale_factor: reduce the sigma of the learner to better visualize it
+        """
         x_pred = np.atleast_2d(self.arms).T
         y_pred, sigma = self.gp.predict(x_pred, return_std=True)
 

@@ -2,6 +2,11 @@ import numpy as np
 
 
 def fit_table(table_all_subs):
+    """
+    @param table_all_subs: table composed of one row for each sub campaign and
+    one possible bid for column. The cell values are the corresponding expected rewards
+    @return: the array of best allocations and the expected total reward
+    """
     rows, cols = table_all_subs.shape
 
     algorithm_table = np.zeros(shape=table_all_subs.shape)

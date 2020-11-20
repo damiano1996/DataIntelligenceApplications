@@ -6,6 +6,13 @@ from project.part_2.Optimizer import fit_table
 
 # CLAIRVOYANT REWARD
 def compute_clairvoyant(env, phase=0, verbose=False):
+    """
+    compute the best allocation and the optimal reward with the real campaign curves
+    @param env: environment object that contains the information of the curves for each sub campaign
+    @param phase: current abrupt phase
+    @param verbose: boolean for printing or not the result
+    @return: optimal allocations and optimal reward
+    """
     all_optimal_subs = np.ndarray(shape=(0, len(env.bids)), dtype=np.float32)
     for i in range(0, len(env.subs)):
         all_optimal_subs = np.append(all_optimal_subs,
