@@ -1,7 +1,8 @@
 import numpy as np
+from sklearn.exceptions import ConvergenceWarning
 from sklearn.gaussian_process import GaussianProcessRegressor
 from sklearn.gaussian_process.kernels import RBF, ConstantKernel as C
-
+import warnings
 from project.dia_pckg.Learner import Learner
 from project.dia_pckg.plot_style.cb91visuals import *
 
@@ -39,8 +40,10 @@ class GPTS_Learner(Learner):
         """
         fit the gaussian process learner with the new informations
         """
+
         x = np.atleast_2d(self.pulled_arms).T
         y = self.collected_rewards
+        warnings.simplefilter(action='ignore', category=ConvergenceWarning)
         self.gp.fit(x, y)
         self.means, self.sigmas = self.gp.predict(np.atleast_2d(self.arms).T, return_std=True)
         self.sigmas = np.maximum(self.sigmas, 1e-2)
