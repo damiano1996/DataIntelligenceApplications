@@ -84,8 +84,11 @@ def test_part4(n_experiments=10,
 
     # Regret computed UN-knowing the class of the users
     area_aggregate = mch.aggregate_opt['price'] * mch.aggregate_opt['probability']
+    max_ylim = 0
     for rewards in rewards_per_experiment:
-        plt.plot(np.cumsum(np.asarray(area_aggregate) - np.asarray(rewards)), alpha=0.2, c='C0')
+        curve = np.cumsum(np.asarray(area_aggregate) - np.asarray(rewards))
+        max_ylim = max(max_ylim, np.max(curve))
+        plt.plot(curve, alpha=0.2, c='C0')
     plt.plot(np.cumsum(np.mean(area_aggregate - rewards_per_experiment, axis=0)),
              label='Mean Regret of the Aggregate Model', c='C0')
 
@@ -95,6 +98,8 @@ def test_part4(n_experiments=10,
     plt.plot(np.cumsum(np.mean(optimals_per_experiment, axis=0) - np.mean(rewards_per_experiment, axis=0)),
              label='Mean Regret of the True Evaluation', c='C1')
 
+    # plt.yscale('log')
+    plt.ylim([0, max_ylim])
     plt.xlabel('Time')
     plt.ylabel('Regret')
     plt.legend()
@@ -132,4 +137,4 @@ def execute_experiment(args):
 
 
 if __name__ == '__main__':
-    test_part4()
+    test_part4(keep_daily_price=True)

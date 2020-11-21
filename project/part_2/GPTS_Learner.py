@@ -1,8 +1,10 @@
+import warnings
+
 import numpy as np
 from sklearn.exceptions import ConvergenceWarning
 from sklearn.gaussian_process import GaussianProcessRegressor
 from sklearn.gaussian_process.kernels import RBF, ConstantKernel as C
-import warnings
+
 from project.dia_pckg.Learner import Learner
 from project.dia_pckg.plot_style.cb91visuals import *
 
