@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.21 (MiKTeX 20.10) (preloaded format=pdflatex 2020.10.21)  22 NOV 2020 03:13
+This is pdfTeX, Version 3.14159265-2.6-1.40.21 (MiKTeX 20.10) (preloaded format=pdflatex 2020.10.21)  22 NOV 2020 16:17
 entering extended mode
 **./report.tex
 (report.tex
@@ -831,55 +831,44 @@ File: images/part7_binomial_regret.png Graphic file (type png)
 Package pdftex.def Info: images/part7_binomial_regret.png  used on input line 3
 6.
 (pdftex.def)             Requested size: 469.75499pt x 234.87808pt.
-
-
-LaTeX Warning: Reference `fig:RegretsPart7Normal' on page 24 undefined on input
- line 41.
-
-<images/part7_normal_regret_noise00.png, id=406, 1003.75pt x 501.875pt>
+<images/part7_normal_regret_noise00.png, id=407, 1003.75pt x 501.875pt>
 File: images/part7_normal_regret_noise00.png Graphic file (type png)
 <use images/part7_normal_regret_noise00.png>
 Package pdftex.def Info: images/part7_normal_regret_noise00.png  used on input 
 line 48.
 (pdftex.def)             Requested size: 375.80542pt x 187.90399pt.
-<images/part7_normal_regret_noise01.jpeg, id=407, 1003.75pt x 501.875pt>
+<images/part7_normal_regret_noise01.jpeg, id=408, 1003.75pt x 501.875pt>
 File: images/part7_normal_regret_noise01.jpeg Graphic file (type jpg)
 <use images/part7_normal_regret_noise01.jpeg>
 Package pdftex.def Info: images/part7_normal_regret_noise01.jpeg  used on input
  line 54.
 (pdftex.def)             Requested size: 375.80542pt x 187.90399pt.
-<images/part7_normal_regret_noise02.png, id=408, 1003.75pt x 501.875pt>
+<images/part7_normal_regret_noise02.png, id=409, 1003.75pt x 501.875pt>
 File: images/part7_normal_regret_noise02.png Graphic file (type png)
 <use images/part7_normal_regret_noise02.png>
 Package pdftex.def Info: images/part7_normal_regret_noise02.png  used on input 
 line 60.
 (pdftex.def)             Requested size: 375.80542pt x 187.90399pt.
-) [24] (sections/assignments.tex [25 <./images/part7_binomial_regret.png (PNG c
-opy)>] [26 <./images/part7_normal_regret_noise00.png (PNG copy)> <./images/part
-7_normal_regret_noise01.jpeg> <./images/part7_normal_regret_noise02.png (PNG co
-py)>]
+)
+[24] (sections/assignments.tex [25 <./images/part7_binomial_regret.png (PNG cop
+y)>] [26 <./images/part7_normal_regret_noise00.png (PNG copy)> <./images/part7_
+normal_regret_noise01.jpeg> <./images/part7_normal_regret_noise02.png (PNG copy
+)>]
 Chapter 8.
 ) [27
 
 ] (report.aux)
 Package rerunfilecheck Info: File `report.out' has not changed.
 (rerunfilecheck)             Checksum: 28273A8A4C0537A6CC553FCEFB22183E;2288.
-
-
-LaTeX Warning: There were undefined references.
-
-
-LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
-
  ) 
 Here is how much of TeX's memory you used:
- 11182 strings out of 480236
- 180603 string characters out of 2890421
+ 11181 strings out of 480236
+ 180583 string characters out of 2890421
  624011 words of memory out of 3000000
- 27152 multiletter control sequences out of 15000+200000
+ 27151 multiletter control sequences out of 15000+200000
  607238 words of font info for 217 fonts, out of 3000000 for 9000
  1141 hyphenation exceptions out of 8191
- 72i,11n,77p,1376b,462s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 72i,11n,77p,1380b,462s stack positions out of 5000i,500n,10000p,200000b,50000s
 {C:/Program Files/MiKTeX/fonts/enc/dvips/base/8r.enc} <C:\Users\Antonio_2\App
 Data\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ectt1000.pk><C:/Program Fi
 les/MiKTeX/fonts/type1/public/amsfonts/cm/cmex10.pfb><C:/Program Files/MiKTeX/f
@@ -895,9 +884,9 @@ m10.pfb><C:/Program Files/MiKTeX/fonts/type1/urw/times/utmb8a.pfb><C:/Program F
 iles/MiKTeX/fonts/type1/urw/times/utmbi8a.pfb><C:/Program Files/MiKTeX/fonts/ty
 pe1/urw/times/utmr8a.pfb><C:/Program Files/MiKTeX/fonts/type1/urw/times/utmri8a
 .pfb>
-Output written on report.pdf (27 pages, 2519543 bytes).
+Output written on report.pdf (27 pages, 2519789 bytes).
 PDF statistics:
- 523 PDF objects out of 1000 (max. 8388607)
+ 524 PDF objects out of 1000 (max. 8388607)
  98 named destinations out of 1000 (max. 500000)
  32661 words of extra memory for PDF output out of 35830 (max. 10000000)
 
