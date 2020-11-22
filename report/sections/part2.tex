@@ -64,7 +64,7 @@ Each cell of the matrix contains the value of the best allocation for the consid
 The result is given by the maximization of the sum of the values provided by the best solution of the problem solved in the previous row (i.e. without considering the new entered sub-campaign) and
 the value of the new considered sub-campaign (considered singularly) s.t. the daily budget over the three sub-campaigns sums to the total daily budget.
 Once we have filled the entire table, we have the best solution in the last row, i.e. when all the 3 sub-campaigns are considered.
-In figure ~\ref{curve2Fig} we can see, for each sub-campaign, the real function generating the number of clicks n(x), the function learned by GP regressor and its associated uncertainty.
+In figure ~\ref{curve2Fig} we can see, for each sub-campaign, the real function generating the number of clicks n(x), the function learned by GP regressor and its associated uncertainty. As we can notice the algorithm focuses on the optimal arm which will be pulled more.
 \begin{figure}[!htb]
     \centering
 

@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.21 (MiKTeX 20.10) (preloaded format=pdflatex 2020.10.21)  20 NOV 2020 02:46
+This is pdfTeX, Version 3.14159265-2.6-1.40.21 (MiKTeX 20.10) (preloaded format=pdflatex 2020.10.21)  22 NOV 2020 02:54
 entering extended mode
 **./report.tex
 (report.tex
@@ -617,25 +617,25 @@ Underfull \hbox (badness 10000) in paragraph at lines 56--62
 
  []
 
-<images/part2_bidding_curve_subcamaign_0.png, id=184, 1003.75pt x 501.875pt>
+<images/part2_bidding_curve_subcamaign_0.png, id=204, 1003.75pt x 501.875pt>
 File: images/part2_bidding_curve_subcamaign_0.png Graphic file (type png)
 <use images/part2_bidding_curve_subcamaign_0.png>
 Package pdftex.def Info: images/part2_bidding_curve_subcamaign_0.png  used on i
 nput line 72.
 (pdftex.def)             Requested size: 225.48038pt x 112.74086pt.
-<images/part2_bidding_curve_subcamaign_1.png, id=185, 1003.75pt x 501.875pt>
+<images/part2_bidding_curve_subcamaign_1.png, id=205, 1003.75pt x 501.875pt>
 File: images/part2_bidding_curve_subcamaign_1.png Graphic file (type png)
 <use images/part2_bidding_curve_subcamaign_1.png>
 Package pdftex.def Info: images/part2_bidding_curve_subcamaign_1.png  used on i
 nput line 76.
 (pdftex.def)             Requested size: 225.48038pt x 112.74086pt.
-<images/part2_bidding_curve_subcamaign_2.png, id=186, 1003.75pt x 501.875pt>
+<images/part2_bidding_curve_subcamaign_2.png, id=206, 1003.75pt x 501.875pt>
 File: images/part2_bidding_curve_subcamaign_2.png Graphic file (type png)
 <use images/part2_bidding_curve_subcamaign_2.png>
 Package pdftex.def Info: images/part2_bidding_curve_subcamaign_2.png  used on i
 nput line 80.
 (pdftex.def)             Requested size: 225.48038pt x 112.74086pt.
-<images/Part2_regret.png, id=188, 1003.75pt x 501.875pt>
+<images/Part2_regret.png, id=208, 1003.75pt x 501.875pt>
 File: images/Part2_regret.png Graphic file (type png)
 <use images/Part2_regret.png>
 Package pdftex.def Info: images/Part2_regret.png  used on input line 95.
@@ -650,17 +650,17 @@ Underfull \hbox (badness 10000) in paragraph at lines 3--5
 
  []
 
-<images/phase0.png, id=208, 1003.75pt x 501.875pt>
+<images/phase0.png, id=228, 1003.75pt x 501.875pt>
 File: images/phase0.png Graphic file (type png)
 <use images/phase0.png>
 Package pdftex.def Info: images/phase0.png  used on input line 16.
 (pdftex.def)             Requested size: 225.48038pt x 112.74086pt.
-<images/phase1.png, id=209, 1003.75pt x 501.875pt>
+<images/phase1.png, id=229, 1003.75pt x 501.875pt>
 File: images/phase1.png Graphic file (type png)
 <use images/phase1.png>
 Package pdftex.def Info: images/phase1.png  used on input line 19.
 (pdftex.def)             Requested size: 225.48038pt x 112.74086pt.
-<images/phase2.png, id=210, 1003.75pt x 501.875pt>
+<images/phase2.png, id=230, 1003.75pt x 501.875pt>
 File: images/phase2.png Graphic file (type png)
 <use images/phase2.png>
 Package pdftex.def Info: images/phase2.png  used on input line 22.
@@ -669,17 +669,17 @@ Package pdftex.def Info: images/phase2.png  used on input line 22.
 
  <./images/phase0.png (PNG copy)> <./images/phase1.png (PNG copy)> <./images/ph
 ase2.png (PNG copy)>]
-<images/win_length33.png, id=217, 1003.75pt x 501.875pt>
+<images/win_length33.png, id=237, 1003.75pt x 501.875pt>
 File: images/win_length33.png Graphic file (type png)
 <use images/win_length33.png>
 Package pdftex.def Info: images/win_length33.png  used on input line 46.
 (pdftex.def)             Requested size: 225.48038pt x 112.74086pt.
-<images/win_length67.png, id=218, 1003.75pt x 501.875pt>
+<images/win_length67.png, id=238, 1003.75pt x 501.875pt>
 File: images/win_length67.png Graphic file (type png)
 <use images/win_length67.png>
 Package pdftex.def Info: images/win_length67.png  used on input line 50.
 (pdftex.def)             Requested size: 225.48038pt x 112.74086pt.
-<images/win_length133.png, id=219, 1003.75pt x 501.875pt>
+<images/win_length133.png, id=239, 1003.75pt x 501.875pt>
 File: images/win_length133.png Graphic file (type png)
 <use images/win_length133.png>
 Package pdftex.def Info: images/win_length133.png  used on input line 54.
@@ -693,19 +693,19 @@ Underfull \hbox (badness 10000) in paragraph at lines 82--83
 
  []
 
-<images/part3_min-len3_z_score2_58.png, id=230, 722.7pt x 361.35pt>
+<images/part3_min-len3_z_score2_58.png, id=250, 722.7pt x 361.35pt>
 File: images/part3_min-len3_z_score2_58.png Graphic file (type png)
 <use images/part3_min-len3_z_score2_58.png>
 Package pdftex.def Info: images/part3_min-len3_z_score2_58.png  used on input l
 ine 91.
 (pdftex.def)             Requested size: 225.48038pt x 112.73964pt.
-<images/part3_min-len6_z_score2_58.png, id=232, 722.7pt x 361.35pt>
+<images/part3_min-len6_z_score2_58.png, id=252, 722.7pt x 361.35pt>
 File: images/part3_min-len6_z_score2_58.png Graphic file (type png)
 <use images/part3_min-len6_z_score2_58.png>
 Package pdftex.def Info: images/part3_min-len6_z_score2_58.png  used on input l
 ine 95.
 (pdftex.def)             Requested size: 225.48038pt x 112.73964pt.
-<images/part3_min-len10_z_score2_58.png, id=233, 722.7pt x 361.35pt>
+<images/part3_min-len10_z_score2_58.png, id=253, 722.7pt x 361.35pt>
 File: images/part3_min-len10_z_score2_58.png Graphic file (type png)
 <use images/part3_min-len10_z_score2_58.png>
 Package pdftex.def Info: images/part3_min-len10_z_score2_58.png  used on input 
@@ -713,18 +713,18 @@ line 99.
 (pdftex.def)             Requested size: 225.48038pt x 112.73964pt.
 [10 <./images/part3_min-len3_z_score2_58.png> <./images/part3_min-len6_z_score2
 _58.png> <./images/part3_min-len10_z_score2_58.png>]
-<images/CompleteThreeDifferentPhases.jpeg, id=247, 1003.75pt x 501.875pt>
+<images/CompleteThreeDifferentPhases.jpeg, id=267, 1003.75pt x 501.875pt>
 File: images/CompleteThreeDifferentPhases.jpeg Graphic file (type jpg)
 <use images/CompleteThreeDifferentPhases.jpeg>
 Package pdftex.def Info: images/CompleteThreeDifferentPhases.jpeg  used on inpu
 t line 130.
 (pdftex.def)             Requested size: 469.75499pt x 234.87808pt.
-<images/ThreeSamePhase.jpeg, id=250, 1003.75pt x 501.875pt>
+<images/ThreeSamePhase.jpeg, id=270, 1003.75pt x 501.875pt>
 File: images/ThreeSamePhase.jpeg Graphic file (type jpg)
 <use images/ThreeSamePhase.jpeg>
 Package pdftex.def Info: images/ThreeSamePhase.jpeg  used on input line 143.
 (pdftex.def)             Requested size: 375.80542pt x 187.90399pt.
-<images/FourAbrupt.jpeg, id=251, 1003.75pt x 501.875pt>
+<images/FourAbrupt.jpeg, id=271, 1003.75pt x 501.875pt>
 File: images/FourAbrupt.jpeg Graphic file (type jpg)
 <use images/FourAbrupt.jpeg>
 Package pdftex.def Info: images/FourAbrupt.jpeg  used on input line 150.
@@ -732,7 +732,7 @@ Package pdftex.def Info: images/FourAbrupt.jpeg  used on input line 150.
 ) [11 <./images/CompleteThreeDifferentPhases.jpeg>] (sections/part4.tex [12 <./
 images/ThreeSamePhase.jpeg> <./images/FourAbrupt.jpeg>]
 Chapter 4.
-<images/demand_curves.png, id=268, 722.7pt x 361.35pt>
+<images/demand_curves.png, id=288, 722.7pt x 361.35pt>
 File: images/demand_curves.png Graphic file (type png)
 <use images/demand_curves.png>
 Package pdftex.def Info: images/demand_curves.png  used on input line 42.
@@ -740,13 +740,13 @@ Package pdftex.def Info: images/demand_curves.png  used on input line 42.
 [13
 
 ] [14 <./images/demand_curves.png>]
-<images/part4_keep-daily-priceTrue.png, id=283, 722.7pt x 361.35pt>
+<images/part4_keep-daily-priceTrue.png, id=303, 722.7pt x 361.35pt>
 File: images/part4_keep-daily-priceTrue.png Graphic file (type png)
 <use images/part4_keep-daily-priceTrue.png>
 Package pdftex.def Info: images/part4_keep-daily-priceTrue.png  used on input l
 ine 120.
 (pdftex.def)             Requested size: 375.80542pt x 187.90308pt.
-<images/part4_keep-daily-priceFalse.png, id=284, 722.7pt x 361.35pt>
+<images/part4_keep-daily-priceFalse.png, id=304, 722.7pt x 361.35pt>
 File: images/part4_keep-daily-priceFalse.png Graphic file (type png)
 <use images/part4_keep-daily-priceFalse.png>
 Package pdftex.def Info: images/part4_keep-daily-priceFalse.png  used on input 
@@ -758,13 +758,13 @@ Chapter 5.
 [17
 
 ] [18]
-<images/part5_keep-daily-priceTrue.png, id=311, 722.7pt x 361.35pt>
+<images/part5_keep-daily-priceTrue.png, id=331, 722.7pt x 361.35pt>
 File: images/part5_keep-daily-priceTrue.png Graphic file (type png)
 <use images/part5_keep-daily-priceTrue.png>
 Package pdftex.def Info: images/part5_keep-daily-priceTrue.png  used on input l
 ine 97.
 (pdftex.def)             Requested size: 375.80542pt x 187.90308pt.
-<images/part5_keep-daily-priceFalse.png, id=312, 722.7pt x 361.35pt>
+<images/part5_keep-daily-priceFalse.png, id=332, 722.7pt x 361.35pt>
 File: images/part5_keep-daily-priceFalse.png Graphic file (type png)
 <use images/part5_keep-daily-priceFalse.png>
 Package pdftex.def Info: images/part5_keep-daily-priceFalse.png  used on input 
@@ -775,7 +775,7 @@ eFalse.png>] (sections/part6.tex
 Chapter 6.
 Package hyperref Info: bookmark level for unknown equ defaults to 0 on input li
 ne 29.
-<images/part6_schema.pdf, id=326, 598.15468pt x 845.07718pt>
+<images/part6_schema.pdf, id=346, 598.15468pt x 845.07718pt>
 File: images/part6_schema.pdf Graphic file (type pdf)
 <use images/part6_schema.pdf>
 Package pdftex.def Info: images/part6_schema.pdf  used on input line 42.
@@ -800,7 +800,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 52--54
 
  []
 
-<images/part6_enable-pricingTrue_keep-daily-priceTrue.png, id=367, 752.8125pt x
+<images/part6_enable-pricingTrue_keep-daily-priceTrue.png, id=387, 752.8125pt x
  376.40625pt>
 File: images/part6_enable-pricingTrue_keep-daily-priceTrue.png Graphic file (ty
 pe png)
@@ -808,7 +808,7 @@ pe png)
 Package pdftex.def Info: images/part6_enable-pricingTrue_keep-daily-priceTrue.p
 ng  used on input line 60.
 (pdftex.def)             Requested size: 375.80542pt x 187.90973pt.
-<images/part6_enable-pricingTrue_keep-daily-priceFalse.png, id=368, 752.8125pt 
+<images/part6_enable-pricingTrue_keep-daily-priceFalse.png, id=388, 752.8125pt 
 x 376.40625pt>
 File: images/part6_enable-pricingTrue_keep-daily-priceFalse.png Graphic file (t
 ype png)
@@ -819,24 +819,68 @@ png  used on input line 66.
 ) [22 <./images/part6_enable-pricingTrue_keep-daily-priceTrue.png> <./images/pa
 rt6_enable-pricingTrue_keep-daily-priceFalse.png>] (sections/part7.tex
 Chapter 7.
-) [23
 
-] (sections/assignments.tex
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [23
+
+]
+<images/part7_binomial_regret.png, id=405, 1003.75pt x 501.875pt>
+File: images/part7_binomial_regret.png Graphic file (type png)
+<use images/part7_binomial_regret.png>
+Package pdftex.def Info: images/part7_binomial_regret.png  used on input line 3
+6.
+(pdftex.def)             Requested size: 469.75499pt x 234.87808pt.
+
+
+Package caption Warning: \label without proper reference on input line 59.
+See the caption package documentation for explanation.
+
+
+LaTeX Warning: Reference `RegretPart7Normal' on page 24 undefined on input line
+ 41.
+
+<images/part7_normal_regret_noise00.png, id=407, 1003.75pt x 501.875pt>
+File: images/part7_normal_regret_noise00.png Graphic file (type png)
+<use images/part7_normal_regret_noise00.png>
+Package pdftex.def Info: images/part7_normal_regret_noise00.png  used on input 
+line 47.
+(pdftex.def)             Requested size: 375.80542pt x 187.90399pt.
+<images/part7_normal_regret_noise01.jpeg, id=408, 1003.75pt x 501.875pt>
+File: images/part7_normal_regret_noise01.jpeg Graphic file (type jpg)
+<use images/part7_normal_regret_noise01.jpeg>
+Package pdftex.def Info: images/part7_normal_regret_noise01.jpeg  used on input
+ line 51.
+(pdftex.def)             Requested size: 375.80542pt x 187.90399pt.
+<images/part7_normal_regret_noise02.png, id=409, 1003.75pt x 501.875pt>
+File: images/part7_normal_regret_noise02.png Graphic file (type png)
+<use images/part7_normal_regret_noise02.png>
+Package pdftex.def Info: images/part7_normal_regret_noise02.png  used on input 
+line 55.
+(pdftex.def)             Requested size: 375.80542pt x 187.90399pt.
+) [24] (sections/assignments.tex [25 <./images/part7_binomial_regret.png (PNG c
+opy)>] [26 <./images/part7_normal_regret_noise00.png (PNG copy)> <./images/part
+7_normal_regret_noise01.jpeg> <./images/part7_normal_regret_noise02.png (PNG co
+py)>]
 Chapter 8.
-) [24
+) [27
 
 ] (report.aux)
 Package rerunfilecheck Info: File `report.out' has not changed.
-(rerunfilecheck)             Checksum: BFA890D3714D821123F4E835E526F19C;1954.
+(rerunfilecheck)             Checksum: 28273A8A4C0537A6CC553FCEFB22183E;2288.
+
+
+LaTeX Warning: There were undefined references.
+
  ) 
 Here is how much of TeX's memory you used:
- 11122 strings out of 480236
- 179265 string characters out of 2890421
+ 11181 strings out of 480236
+ 180578 string characters out of 2890421
  624011 words of memory out of 3000000
- 27125 multiletter control sequences out of 15000+200000
- 606493 words of font info for 207 fonts, out of 3000000 for 9000
+ 27151 multiletter control sequences out of 15000+200000
+ 607238 words of font info for 217 fonts, out of 3000000 for 9000
  1141 hyphenation exceptions out of 8191
- 72i,11n,77p,928b,462s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 72i,11n,77p,1376b,462s stack positions out of 5000i,500n,10000p,200000b,50000s
 {C:/Program Files/MiKTeX/fonts/enc/dvips/base/8r.enc} <C:\Users\Antonio_2\App
 Data\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ectt1000.pk><C:/Program Fi
 les/MiKTeX/fonts/type1/public/amsfonts/cm/cmex10.pfb><C:/Program Files/MiKTeX/f
@@ -852,9 +896,9 @@ m10.pfb><C:/Program Files/MiKTeX/fonts/type1/urw/times/utmb8a.pfb><C:/Program F
 iles/MiKTeX/fonts/type1/urw/times/utmbi8a.pfb><C:/Program Files/MiKTeX/fonts/ty
 pe1/urw/times/utmr8a.pfb><C:/Program Files/MiKTeX/fonts/type1/urw/times/utmri8a
 .pfb>
-Output written on report.pdf (24 pages, 2106938 bytes).
+Output written on report.pdf (27 pages, 2440577 bytes).
 PDF statistics:
- 472 PDF objects out of 1000 (max. 8388607)
- 84 named destinations out of 1000 (max. 500000)
- 32609 words of extra memory for PDF output out of 35830 (max. 10000000)
+ 524 PDF objects out of 1000 (max. 8388607)
+ 98 named destinations out of 1000 (max. 500000)
+ 32661 words of extra memory for PDF output out of 35830 (max. 10000000)
 
