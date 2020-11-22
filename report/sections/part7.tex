@@ -38,24 +38,29 @@ This section aims to compare and describe the performances of the above describe
     \label{regretPart7Binomial}
 \end{figure}
 
-In Figure \ref{RegretPart7Normal} we show the regret associated to the second implementation, that is in the case in which the Environment collects the information from an approximated Normal distriution. In the figure we can also see how, in this scenario, the performance changes varying the value of the artificial noises.
+In Figure \ref{fig:RegretsPart7Normal} we show the regret associated to the second implementation, that is in the case in which the Environment collects the information from an approximated Normal distriution. In the figure we can also see how, in this scenario, the performance changes varying the value of the artificial noises.
 
 \begin{figure}[!htb]
     \centering
 
-    \minipage{0.8\textwidth}
-    \includegraphics[width=\linewidth]{images/part7_normal_regret_noise00.png}
-    \caption{Regret without artificial noise}
-    \endminipage\hfill
-    \minipage{0.8\textwidth}
-    \includegraphics[width=\linewidth]{images/part7_normal_regret_noise01.jpeg}
-    \caption{Regret with artificial noise equal to 0.1}
-    \endminipage\hfill
-    \minipage{0.8\textwidth}
-    \includegraphics[width=\linewidth]{images/part7_normal_regret_noise02.png}
-    \caption{Regret with artificial noise equal to 0.2}
-    \endminipage\hfill
+    \begin{subfigure}[!H]{0.8\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{images/part7_normal_regret_noise00.png}
+    	\caption{Regret without artificial noise}
+    \end{subfigure}
 
-	\label{RegretPart7Normal}    
+    \begin{subfigure}[!H]{0.8\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{images/part7_normal_regret_noise01.jpeg}
+    	\caption{Regret with artificial noise equal to 0.1}
+    \end{subfigure}
+    
+    \begin{subfigure}[!H]{0.8\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{images/part7_normal_regret_noise02.png}
+    	\caption{Regret with artificial noise equal to 0.2}
+    \end{subfigure}
+    
     \caption{Comparison between the regrets with and without the artificial noises when we consider an Environment based on a Normal distribution}
+    \label{fig:RegretsPart7Normal}
 \end{figure}
