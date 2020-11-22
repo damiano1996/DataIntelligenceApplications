@@ -49,8 +49,7 @@ if __name__ == '__main__':
     sc = SubCampaign(x, 5, max_n_clicks)
 
     for phase in range(n_subcamp):
-
-        plt.plot(x*seller_max_budget, sc.means[f'phase_{phase}'])
+        plt.plot(x * seller_max_budget, sc.means[f'phase_{phase}'])
         plt.ylabel('n(x)')
         plt.xlabel('Budget allocation [$]')
         plt.show()

@@ -1,5 +1,7 @@
-import numpy as np
 import warnings
+
+import numpy as np
+
 from project.part_2.GPTS_Learner import GPTS_Learner as GP_Learner
 
 
@@ -21,7 +23,6 @@ class DLChangeDetect(GP_Learner):
         @param reward: number of clicks collected on the past day
         """
         warnings.simplefilter(action='ignore', category=FutureWarning)
-
 
         if len(self.rewards_per_arm[pulled_arm]) > self.min_len:
 

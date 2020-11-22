@@ -13,7 +13,7 @@ class Normal_FixedPriceBudgetAllocator(fp_binomial):
         @param artificial_noise_CR: how much exploration on the conversion rates learners
         @param multiclasshandler: classes information
         """
-        super().__init__(artificial_noise_ADV,artificial_noise_CR, multiclasshandler)
+        super().__init__(artificial_noise_ADV, artificial_noise_CR, multiclasshandler)
         self.artificial_noise_CR = artificial_noise_CR
 
         self.n_updates = 0

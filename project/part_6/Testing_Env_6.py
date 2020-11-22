@@ -16,11 +16,11 @@ def test_part6(n_experiments=25,
                enable_pricing=True,
                plot_advertising=False,
                keep_daily_price=True,
-               demand_chart_path='project/part_6/other_files/testing_part6_demandcurves.png',
+               demand_chart_path='other_files/testing_part6_demandcurves.png',
                demand_chart_title='Part 6 - Demand Curves',
-               results_chart_path='project/part_6/other_files/testing_part6_regrets.png',
+               results_chart_path='other_files/testing_part6_regrets.png',
                results_chart_title='Part 6 - Regret',
-               advertising_chart_root_path='project/part_6/other_files/testing_part6_'):
+               advertising_chart_root_path='other_files/testing_part6_'):
     # one product to sell
     product = Product(product_config=product_config)
 
@@ -83,8 +83,8 @@ def test_part6(n_experiments=25,
     plt.title(results_chart_title, fontsize=20)
     # for agnostic_regret in agnostic_regret_per_experiment:
     #     plt.plot(np.cumsum(agnostic_regret), alpha=0.1, c='C2')
-    #plt.plot(np.cumsum(np.mean(agnostic_regret_per_experiment, axis=0)),
-            #c='C1', label='Agnostic Regret')
+    # plt.plot(np.cumsum(np.mean(agnostic_regret_per_experiment, axis=0)),
+    # c='C1', label='Agnostic Regret')
 
     for regret in regret_per_experiment:
         plt.plot(np.cumsum(regret), alpha=0.2, c='C2')

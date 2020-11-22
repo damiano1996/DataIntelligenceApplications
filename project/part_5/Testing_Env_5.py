@@ -137,4 +137,4 @@ def execute_experiment(args):
 
 
 if __name__ == '__main__':
-    test_part5()
+    test_part5(keep_daily_price=False)
