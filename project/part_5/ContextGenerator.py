@@ -61,16 +61,16 @@ class ContextGenerator:
                     self.report += '3 contexts '
 
                 else:
-                    # split feature 1 -> no split feature 2
+                    # split feature 1 and no split feature 2
                     if best_son_low_bound == son1_low_bound:
                         new_context_features = [[[0, 0]], [[0, 1]], [[1, 1]]]
                         self.report += '2 contexts '
-                    # split feature 2 -> no split feature 1
+                    # split feature 2 and no split feature 1
                     else:
                         new_context_features = [[[0, 0], [0, 1]], [[1, 1]]]
                         self.report += '2 contexts '
 
-            # no split feature 1 or 2
+            # no split feature 1 or 2 -> aggregate model
             else:
                 new_context_features = [[[0, 0], [0, 1], [1, 1]]]
                 self.report += 'aggregate '
@@ -90,7 +90,6 @@ class ContextGenerator:
             prob_low_bound = self.get_bernoullian_low_bound(rewards,
                                                             delta)  # Lower bound on the probability of the context
             expected_low_bound += prob_low_bound * reward_low_bound
-            # print(prob_low_bound, reward_low_bound)
         return expected_low_bound
 
     def get_bernoullian_low_bound(self, rewards, delta):
@@ -136,14 +135,12 @@ class ContextGenerator:
         """
         new_contexts = {}
 
-        # Non capisco perchè, ma sembra che quando cambi i contexts è meglio resettare tutto
         if (len(last_contexts) != len(new_context_features)):
             for i in range(len(new_context_features)):
                 new_contexts['context_' + str(i)] = Context(features=new_context_features[i],
                                                             mab_algorithm=self.mab_algorithm,
                                                             mab_args=self.mab_args)
 
-        # Non funziona bene se si diminuisce il numero di contexts tra una settimana e l'altra
         else:
             for i in range(len(new_context_features)):
                 for comb in new_context_features[i]:
