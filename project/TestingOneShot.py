@@ -88,7 +88,7 @@ if __name__ == '__main__':
 
         test_part3(n_experiments=n_experiment,
                    chart_path=f'{charts_path}/part3_min-len{min_len}_z_score{z_score}.png',
-                   title=f'Part 3 - Regret with {n_abrupts_phases} Abrupt Phases [min_len:{min_len} z_score:{z_score} window_length:{lw}]',
+                   title=f'Part 3 - Regret with {n_abrupts_phases} Abrupt Phases [min_len:{min_len} z_score:{z_score} window_length:{window_length}]',
                    win_length=window_length,
                    dl_change_detect_min_len=min_len,
                    dl_change_detect_test_stat=z_score)
