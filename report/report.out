@@ -1,0 +1,33 @@
+\BOOKMARK [0][-]{chapter.1}{Introduction: Scenario Setup}{}% 1
+\BOOKMARK [0][-]{chapter.2}{Advertising: Clicks Maximization}{}% 2
+\BOOKMARK [1][-]{section.2.1}{Environment}{chapter.2}% 3
+\BOOKMARK [1][-]{section.2.2}{Algorithm Design Choices}{chapter.2}% 4
+\BOOKMARK [1][-]{section.2.3}{Performance evaluation}{chapter.2}% 5
+\BOOKMARK [0][-]{chapter.3}{Advertising: Handling Abrupt Phases}{}% 6
+\BOOKMARK [1][-]{section.3.1}{What is an abrupt phase}{chapter.3}% 7
+\BOOKMARK [1][-]{section.3.2}{Sliding window mechanism}{chapter.3}% 8
+\BOOKMARK [1][-]{section.3.3}{Changes Detection mechanism}{chapter.3}% 9
+\BOOKMARK [1][-]{section.3.4}{Performance evaluation}{chapter.3}% 10
+\BOOKMARK [0][-]{chapter.4}{Pricing: Learning the Best Price}{}% 11
+\BOOKMARK [1][-]{section.4.1}{Demand Curves}{chapter.4}% 12
+\BOOKMARK [1][-]{section.4.2}{Environment}{chapter.4}% 13
+\BOOKMARK [1][-]{section.4.3}{Learner Algorithm Selection}{chapter.4}% 14
+\BOOKMARK [1][-]{section.4.4}{Performance Evaluation}{chapter.4}% 15
+\BOOKMARK [0][-]{chapter.5}{Pricing: Context Generation}{}% 16
+\BOOKMARK [1][-]{section.5.1}{What is a Context?}{chapter.5}% 17
+\BOOKMARK [1][-]{section.5.2}{Environment, Learner and Demand Curves}{chapter.5}% 18
+\BOOKMARK [1][-]{section.5.3}{Campaign Scheduler}{chapter.5}% 19
+\BOOKMARK [1][-]{section.5.4}{Our Approach to Context generation}{chapter.5}% 20
+\BOOKMARK [1][-]{section.5.5}{Performance Evaluation}{chapter.5}% 21
+\BOOKMARK [0][-]{chapter.6}{Adverting and Pricing Integration}{}% 22
+\BOOKMARK [1][-]{section.6.1}{Proposed Integration}{chapter.6}% 23
+\BOOKMARK [2][-]{subsection.6.1.1}{Budget Allocator}{section.6.1}% 24
+\BOOKMARK [2][-]{subsection.6.1.2}{Advertising}{section.6.1}% 25
+\BOOKMARK [2][-]{subsection.6.1.3}{Pricing}{section.6.1}% 26
+\BOOKMARK [1][-]{section.6.2}{Performance Evaluation}{chapter.6}% 27
+\BOOKMARK [0][-]{chapter.7}{Advertising and Pricing: Fixed Prices}{}% 28
+\BOOKMARK [1][-]{section.7.1}{Proposed Integration}{chapter.7}% 29
+\BOOKMARK [1][-]{section.7.2}{First implementation: based on Bernoulli distribution}{chapter.7}% 30
+\BOOKMARK [1][-]{section.7.3}{Second implementation: based on Normal distribution}{chapter.7}% 31
+\BOOKMARK [1][-]{section.7.4}{Performance Evaluation}{chapter.7}% 32
+\BOOKMARK [0][-]{chapter.8}{Assignments}{}% 33

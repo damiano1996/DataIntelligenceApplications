@@ -1,66 +1,55 @@
-import matplotlib.pyplot as plt
+"""
+    This class is used to handle a sub-campaign.
+    Here we generate the clicks over budgets curves, one for each abrupt phase.
+"""
+
 import numpy as np
-from matplotlib.figure import figaspect
+
+from project.dia_pckg.Config import *
+from project.dia_pckg.plot_style.cb91visuals import *
 
 
 class SubCampaign:
 
-    def __init__(self, class_obj, product, campaign):
+    def __init__(self,
+                 bids, sigma, max_n_clicks,
+                 class_obj=None, product=None, campaign=None):
         """
-        :param class_obj: Class object
-        :param product: Product object
-        :param campaign: Campaign object
+        @param bids:
+        @param sigma: sigma of the curve
+        @param max_n_clicks: maximum number of clicks
+        @param class_obj: Class object
+        @param product: Product object
+        @param campaign: Campaign object
         """
+        # np.random.seed(0)
+
+        self.bids = bids
+        self.sigma = sigma
+        self.max_n_clicks = max_n_clicks
+
         self.my_class = class_obj
         self.product = product
         self.campaign = campaign
 
-        # similarly to Class, but in this case we don't need the three curves for the abrupt phases
-        # Modify if necessary
-        self.cob_curve = self.get_clicks_over_budget(self.campaign.max_budget,
-                                                     self.campaign.max_n_clicks,
-                                                     random_params=True)
+        self.param_for_phase = np.random.choice(np.arange(4, 10, 1), n_abrupts_phases)
+        self.max_value_phase = np.random.choice(np.arange(0.3, 1, 0.1), n_abrupts_phases)
 
-    def get_clicks_over_budget(self, max_budget, max_n_clicks, m=1, q=0, random_params=False):
-        """
-            This function generates a clicks over budget curve
-        :param max_budget: max budget allocated
-        :param max_n_clicks: max number of clicks
-        :param m: m-coefficient of the line
-        :param q: q-coefficient of the line
-        :param random_params: boolean to randomize m and q
-        :return:
-        """
-        if random_params:
-            m = np.random.uniform(0.9, 1.1)
-            q = -np.random.randint(int(max_budget / 2 * 0.25), int(max_budget / 2 * 0.75))
+        self.means = {f'phase_{i}': self.phase_curve(bids, phase=i) for i in range(n_abrupts_phases)}
+        self.sigmas = {f'phase_{i}': np.multiply(self.means[f'phase_{i}'], sigma) for i in range(n_abrupts_phases)}
 
-        budget = np.linspace(0, max_budget)
-        clicks = m * budget + q
+    def phase_curve(self, x, phase=0):
+        curve = self.max_n_clicks * (self.max_value_phase[phase] - np.exp(-self.param_for_phase[phase] * x))
+        curve[np.where(curve < 0)] = 0
+        return curve
 
-        first_positive = np.where(clicks >= 0)[0]
-        if first_positive.shape[0] > 0:
-            clicks[:first_positive[0]] = 0
-        first_n_clicks = np.where(clicks >= max_n_clicks)[0]
-        if first_n_clicks.shape[0] > 0:
-            clicks[first_n_clicks[0]:] = max_n_clicks
 
-        return {'budget': np.asarray(budget), 'clicks': np.asarray(clicks)}
+if __name__ == '__main__':
+    x = np.arange(0, 1, 0.01)
+    sc = SubCampaign(x, 5, max_n_clicks)
 
-    def plot_cob_curve(self):
-        """
-            To plot the curve
-        :return:
-        """
-        w, h = figaspect(0.7)
-
-        fig, ax = plt.subplots(1, 1, figsize=(w, h))
-        fig.suptitle(f'Clicks over Budget Curve - Class name: {self.my_class.name}', y=1.)
-
-        # ax.set_ylim(0, 1)
-        ax.plot(self.cob_curve['budget'],
-                self.cob_curve['clicks'])
-        ax.set_xlabel('Budget')
-        ax.set_ylabel('Number of Clicks')
-
-        fig.show()
+    for phase in range(n_subcamp):
+        plt.plot(x * seller_max_budget, sc.means[f'phase_{phase}'])
+        plt.ylabel('n(x)')
+        plt.xlabel('Budget allocation [$]')
+        plt.show()

@@ -1,0 +1,99 @@
+50 experiments for 100 days
+
+-Window_size=10:
+loss=0.0409
+Curva_real=sopra, si alza tanto (1.03e^6)
+Curva_agnostic=sotto, si alza poco(0.74e^6)
+
+-Window_size=20:
+loss=0.0397
+Curva_real=sopra, si alza tanto (1e^6)
+Curva_agnostic=sotto, si alza meno(0.67e^6)
+
+-Window_size=30:
+loss=0.0396
+Curva_real=sopra, si alza tanto (1e^6)
+Curva_agnostic=sotto, si abbassa poco(0.47e^6)
+
+-Window_size=40:
+loss=0.0395
+Curva_real=sopra, si alza tanto (1e^6)
+Curva_agnostic=sotto, si stabilizza(0.62e^6)
+
+-Window_size=50:
+loss=0.0424
+Curva_real=sopra, si alza tanto (1.09e^6)
+Curva_agnostic=sotto, si alza poco(0.70e^6)
+
+
+-------------------------------------------
+50 experiments for 200 days
+
+-Window_size=2:
+loss=0.0440
+Curva_real=sopra, si alza tanto (1.66e^6)
+Curva_agnostic=sotto, si alza poco(0.89e^6)
+
+-Window_size=5:
+loss=0.0271
+Curva_real=sopra, si alza tanto (1.5e^6)
+Curva_agnostic=sotto, si alza poco(0.69e^6)
+
+-Window_size=5 & V=1:
+loss=0.0443
+Curva_real=sopra, si alza tanto (2.18e^6)
+Curva_agnostic=sotto, si alza tanto(1.46e^6)
+
+-Window_size=10:
+loss=0.0278
+Curva_real=sopra, si alza tanto (1.34e^6)
+Curva_agnostic=sotto, si alza poco(0.78e^6)
+
+-Window_size=20:
+loss=0.0336
+Curva_real=sopra, si alza di più (1.652e^6)
+Curva_agnostic=sotto, si alza poco(0.79e^6)
+
+-Window_size=30:
+loss=0.0296
+Curva_real=sopra, si alza di più (1.45e^6)
+Curva_agnostic=sotto, si alza poco(0.79e^6)
+
+-Window_size=40:
+loss=0.0317
+Curva_real=sopra, si alza di più (1.51e^6)
+Curva_agnostic=sotto, si alza poco(0.84e^6)
+
+-Window_size=50:
+loss=0.0278
+Curva_real=sopra, si alza tanto (1.43e^6)
+Curva_agnostic=sotto, si stabilizza(0.58e^6)
+
+-Window_size=60:
+loss=0.0292
+Curva_real=sopra, si alza tanto (1.44e^6)
+Curva_agnostic=sotto, si abbassa(0.49e^6)
+
+-Window_size=70:
+loss=0.0294
+Curva_real=sopra, si alza tanto (1.50e^6)
+Curva_agnostic=sotto, si alza poco(0.73e^6)
+
+-Window_size=200:
+loss=0.0317
+Curva_real=sopra, si alza tanto (1.62e^6)
+Curva_agnostic=sotto, si alza poco(0.81e^6)
+
+-------------------------------------------
+10 experiments for 200 days
+
+-keep_price
+loss=0.0477
+Curva_real=sopra, si alza tanto (2.24e^6)
+Curva_agnostic=sotto, si alza poco(1.41e^6)
+
+-no_keep_price
+loss=0.0320
+Curva_real=sopra, si alza tanto (1.49e^6)
+Curva_agnostic=sotto, si alza poco(0.09e^6)
+

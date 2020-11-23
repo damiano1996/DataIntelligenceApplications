@@ -1,3 +1,4 @@
+@ -1,16 +0,0 @@
 # Default ignored files
 /shelf/
 /workspace.xml
@@ -11,6 +12,11 @@
 
 .DS_Store
 .idea
+.idea\
+.idea/
+.idea/*.iml
+.idea/*.xml
 venv
+
 
 *.pyc

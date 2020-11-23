@@ -1,0 +1,125 @@
+\documentclass{report}
+
+
+\usepackage{style/arxiv}
+
+\usepackage[utf8]{inputenc} % allow utf-8 input
+\usepackage[T1]{fontenc}    % use 8-bit T1 fonts
+\usepackage{hyperref}       % hyperlinks
+\usepackage{url}            % simple URL typesetting
+\usepackage{booktabs}       % professional-quality tables
+\usepackage{amsfonts}       % blackboard math symbols
+\usepackage{nicefrac}       % compact symbols for 1/2, etc.
+\usepackage{microtype}      % microtypography
+\usepackage{lipsum}
+\usepackage{amssymb, amsmath}
+\DeclareMathOperator*{\argmax}{argmax} % thin space, limits underneath in displays
+
+
+% to insert images:
+\usepackage{graphicx}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{float} % Necessario per inserire immagini flottanti
+% \usepackage{subfigure} % Consente l'inserimento di sottofigure
+
+\DeclareCaptionType{equ}[][]
+
+
+\newenvironment*{emptyenv}{}{}
+
+
+
+\title{Data Intelligence Applications \\
+Pricing \& Advertising}
+
+
+\author{
+Andrea Bionda \\
+Department of Computer Science and Engineering\\
+Politecnico di Milano\\
+\texttt{andrea.bionda@mail.polimi.it} \\
+\And
+Damiano Derin \\
+Department of Computer Science and Engineering\\
+Politecnico di Milano\\
+\texttt{damiano.derin@mail.polimi.it} \\
+\And
+Andrea Diecidue \\
+Department of Computer Science and Engineering\\
+Politecnico di Milano\\
+\texttt{andrea.diecidue@mail.polimi.it} \\
+\And
+Antonio Urbano \\
+Department of Computer Science and Engineering\\
+Politecnico di Milano\\
+\texttt{antonio.urbano@mail.polimi.it} \\
+\And
+Enrico Voltan \\
+Department of Computer Science and Engineering\\
+Politecnico di Milano\\
+\texttt{enrico.voltan@mail.polimi.it} \\
+%% \AND
+%% Coauthor \\
+%% Affiliation \\
+%% Address \\
+%% \texttt{email} \\
+%% \And
+%% Coauthor \\
+%% Affiliation \\
+%% Address \\
+%% \texttt{email} \\
+%% \And
+%% Coauthor \\
+%% Affiliation \\
+%% Address \\
+%% \texttt{email} \\
+}
+
+\begin{document}
+    \maketitle
+
+
+    \input{sections/abstract}
+% keywords can be removed
+% \keywords{First keyword \and Second keyword \and More}
+
+    \newpage
+
+    \tableofcontents
+    \newpage
+
+    \input{sections/part1} % Introduction
+    \newpage
+    \input{sections/part2}
+    \newpage
+    \input{sections/part3}
+    \newpage
+    \input{sections/part4}
+    \newpage
+    \input{sections/part5}
+    \newpage
+    \input{sections/part6}
+    \newpage
+    \input{sections/part7}
+    \newpage
+    \input{sections/assignments}
+
+%\bibliographystyle{unsrt}  
+%\bibliography{references}  %%% Remove comment to use the external .bib file (using bibtex).
+%%% and comment out the ``thebibliography'' section.
+
+
+%%% Comment out this section when you \bibliography{references} is enabled.
+% \begin{thebibliography}{1}
+
+% \bibitem{kour2014real}
+% George Kour and Raid Saabne.
+% \newblock Real-time segmentation of on-line handwritten arabic script.
+% \newblock In {\em Frontiers in Handwriting Recognition (ICFHR), 2014 14th
+%   International Conference on}, pages 417--422. IEEE, 2014.
+
+% \end{thebibliography}
+
+
+\end{document}document}

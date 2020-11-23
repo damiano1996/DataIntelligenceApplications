@@ -1,7 +1,11 @@
+"""
+    Definition of the Environment. This is the base class. It is used to iterate over the days of the campaign.
+"""
+
 import pandas as pd
 
 
-class Environment():
+class Environment:
 
     def __init__(self, initial_date, n_days):
         """

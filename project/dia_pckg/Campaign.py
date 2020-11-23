@@ -1,3 +1,8 @@
+"""
+    Definition of the campaign.
+"""
+
+
 class Campaign():
 
     def __init__(self, max_budget, max_n_clicks):
