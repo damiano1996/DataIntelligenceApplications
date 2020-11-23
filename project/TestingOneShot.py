@@ -5,7 +5,7 @@
 import os
 import sys
 from datetime import datetime
-
+import argparse
 import numpy as np
 
 from project.dia_pckg.Config import *
@@ -16,20 +16,41 @@ from project.part_5.Testing_Env_5 import test_part5
 from project.part_6.Testing_Env_6 import test_part6
 from project.part_7.Testing_Env_7 import test_part7
 
-n_experiment = 25
-np.random.seed(0)
 
-testing_setup = {
-    'part2': False,
-    'part3': False,
-    'part4': True,
-    'part5': True,
-    'part6': False,
-    'part7_binomial': False,
-    'part7_normal': False
 
-}
+def parse_arguments ():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-p', action="store", help='Number of part to start (2, 3, 4, 5, 6, 7_b or 7_n), type \'all\' to start them all', dest="part", type=check_part, required=True)
+    parser.add_argument('-e', action="store", help='Number of different experiment per part to perform', dest="experiments", type=check_experiments, required=True)
+    parser.add_argument('-s', action="store", help='Seed of experiments', dest="seed", type=check_experiments, default='0')
+    args = parser.parse_args()
+    return build_setup(args)
 
+def check_part(value):
+    if value != "2" and value != "3" and value != "4" and value != "5" and value != "6" and value != "7_b" and value != "7_n" and value != "all" :
+        raise argparse.ArgumentTypeError("Invalid part argument")
+    return value
+
+def check_experiments(value):
+    try:
+        return int(value)
+    except ValueError:
+        argparse.ArgumentTypeError("Invalid number of experiments argument")
+
+def build_setup(args):
+    n_experiment = args.experiments
+    seed = args.seed
+    testing_setup = {
+        'part2': True if args.part == "2" or args.part == "all" else False,
+        'part3': True if args.part == "3" or args.part == "all" else False,
+        'part4': True if args.part == "4" or args.part == "all" else False,
+        'part5': True if args.part == "5" or args.part == "all" else False,
+        'part6': True if args.part == "6" or args.part == "all" else False,
+        'part7_binomial': True if args.part == "7_b" or args.part == "all" else False,
+        'part7_normal': True if args.part == "7_n" or args.part == "all" else False,           
+        }
+    return n_experiment, seed, testing_setup
+    
 
 def block_print():
     sys.stdout = open(os.devnull, 'w')
@@ -54,6 +75,9 @@ def read_configs():
 
 
 if __name__ == '__main__':
+    n_experiment, seed, testing_setup = parse_arguments()
+    np.random.seed(seed)
+
     dt_now = datetime.now()
     charts_path = os.path.join('results_charts', 'test_' + str(dt_now.strftime('%Y-%m-%d_%H-%M')))
     os.mkdir(charts_path)
@@ -142,28 +166,22 @@ if __name__ == '__main__':
         # PART 6
         print_('PART 6')
 
-        enable_pricings = [True, False]
         keep_daily_prices = [True, False]
 
-        for enable_pricing in enable_pricings:
-            for keep_daily_price in keep_daily_prices:
-                test_part6(n_experiments=n_experiment,
-                           enable_pricing=enable_pricing,
-                           plot_advertising=True,
-                           keep_daily_price=keep_daily_price,
-                           demand_chart_path=demand_curves_chart_path,
-                           demand_chart_title=demand_curves_title,
-                           results_chart_path=f'{charts_path}/part6_'
-                                              f'enable-pricing{enable_pricing}_'
-                                              f'keep-daily-price{keep_daily_price}.png',
-                           results_chart_title=f'Part 6 - Regret ['
-                                               f'enable_pricing:{enable_pricing} '
-                                               f'keep_daily_price:{keep_daily_price}]',
-                           advertising_chart_root_path=f'{charts_path}/part6_'
-                                                       f'enable-pricing{enable_pricing}_'
-                                                       f'keep-daily-price{keep_daily_price}_')
-                print_(f'Sub-test completed.\n'
-                       f'Time: {datetime.now()}\n')
+        for keep_daily_price in keep_daily_prices:
+            test_part6(n_experiments=n_experiment,
+                        plot_advertising=True,
+                        keep_daily_price=keep_daily_price,
+                        demand_chart_path=demand_curves_chart_path,
+                        demand_chart_title=demand_curves_title,
+                        results_chart_path=f'{charts_path}/part6_'
+                                            f'keep-daily-price{keep_daily_price}.png',
+                        results_chart_title=f'Part 6 - Regret ['
+                                            f'keep_daily_price:{keep_daily_price}]',
+                        advertising_chart_root_path=f'{charts_path}/part6_'
+                                                    f'keep-daily-price{keep_daily_price}_')
+            print_(f'Sub-test completed.\n'
+                    f'Time: {datetime.now()}\n')
 
         print_(f'Test completed.\n'
                f'Time: {datetime.now()}\n')

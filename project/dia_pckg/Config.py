@@ -3,14 +3,14 @@
 ##########################################
 
 # campaign
-initial_date = '20200101'
+initial_date = '20200101' # Initial day of the campaign
 
 # Seller wallet and ambitions
-seller_max_budget = 5000  # $
-max_n_clicks = 1000
-avg_users_per_day = 100  # this param must be changed after budget allocation available!
+seller_max_budget = 5000    # Necessary(?)
+max_n_clicks = 1000         # Max number of clicks in a single day        
+avg_users_per_day = 100     # Number of users in the system when advertising section is not present (part 4 and 5)
 
-# one product to sell
+# Product configuration
 product_config = {
     'name': 'shoes',
     'base_price': 100,
@@ -18,22 +18,20 @@ product_config = {
     'production_cost': 0
 }
 
-# features space
+# Features space
 features_space = {
     'age': ['<30', '>30'],
     'profession': ['student', 'worker']
 }
 
-# three classes of users
+# Users' classes
 classes_config = {
     'elegant': [1, 1],  # >30, worker
     'casual': [0, 0],  # <30, student
     'sports': [0, 1]  # <30, worker
 }
 
-# number of abrupt phases
-
-# directory to store the curves
+# Directory where to store the Conversion Rate's curves
 demand_path = 'demand_curves'
 
 # PART 3 CONFIG
