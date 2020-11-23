@@ -58,5 +58,5 @@ n_arms_pricing = 21
 noise_std = 0.05
 
 # PART 7 artificial noises
-artificial_noise_ADVs = [0.0]  # , 0.05, 0.1, 0.2]
-artificial_noise_CRs = [0.0]  # , 0.05, 0.1, 0.2]
+artificial_noise_ADV = 0.0
+artificial_noise_CR = 0.0

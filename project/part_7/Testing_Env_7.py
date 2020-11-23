@@ -13,7 +13,7 @@ from project.part_7.part_7_normal.Env_7 import Env7
 from project.part_7.part_7_normal.Normal_FixedPriceBudgetAllocator import Normal_FixedPriceBudgetAllocator as PBAnormal
 
 
-def test_part7(n_experiments=10,
+def test_part7(n_experiments=1,
                execution_type="binomial",
                demand_chart_path='other_files/testing_part7_demandcurves.png',
                demand_chart_title='Part 7 - Demand Curves',

@@ -20,13 +20,13 @@ n_experiment = 25
 np.random.seed(0)
 
 testing_setup = {
-    'part2': False,
-    'part3': False,
-    'part4': False,
-    'part5': False,
-    'part6': False,
+    'part2': True,
+    'part3': True,
+    'part4': True,
+    'part5': True,
+    'part6': True,
     'part7_binomial': True,
-    'part7_normal': False
+    'part7_normal': True
 
 }
 
@@ -194,22 +194,20 @@ if __name__ == '__main__':
         # PART 7
         print_('PART 7 NORMAL')
 
-        for artificial_noise_ADV in artificial_noise_ADVs:
-            for artificial_noise_CR in artificial_noise_CRs:
-                test_part7(n_experiments=n_experiment,
-                           execution_type="normal",
-                           demand_chart_path=demand_curves_chart_path,
-                           demand_chart_title=demand_curves_title,
-                           artificial_noise_ADV=artificial_noise_ADV,
-                           artificial_noise_CR=artificial_noise_CR,
-                           results_chart_path=f'{charts_path}/part7_normal_'
-                                              f'ADV_noise{artificial_noise_ADV}_'
-                                              f'CR_noise{artificial_noise_CR}.png',
-                           results_chart_title=f'Part 7 ['
-                                               f'ADV_noise:{artificial_noise_ADV} '
-                                               f'CR_noise:{artificial_noise_CR}] ')
-                print_(f'Sub-test completed.\n'
-                       f'Time: {datetime.now()}\n')
+        test_part7(n_experiments=n_experiment,
+                   execution_type="normal",
+                   demand_chart_path=demand_curves_chart_path,
+                   demand_chart_title=demand_curves_title,
+                   artificial_noise_ADV=artificial_noise_ADV,
+                   artificial_noise_CR=artificial_noise_CR,
+                   results_chart_path=f'{charts_path}/part7_normal_'
+                                      f'ADV_noise{artificial_noise_ADV}_'
+                                      f'CR_noise{artificial_noise_CR}.png',
+                   results_chart_title=f'Part 7 ['
+                                       f'ADV_noise:{artificial_noise_ADV} '
+                                       f'CR_noise:{artificial_noise_CR}] ')
+        print_(f'Sub-test completed.\n'
+               f'Time: {datetime.now()}\n')
 
         print_(f'Test completed.\n'
                f'Time: {datetime.now()}\n')
