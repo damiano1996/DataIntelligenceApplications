@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.21 (MiKTeX 20.10) (preloaded format=pdflatex 2020.10.21)  22 NOV 2020 16:17
+This is pdfTeX, Version 3.14159265-2.6-1.40.21 (MiKTeX 20.10) (preloaded format=pdflatex 2020.10.21)  23 NOV 2020 14:55
 entering extended mode
 **./report.tex
 (report.tex
@@ -862,13 +862,13 @@ Package rerunfilecheck Info: File `report.out' has not changed.
 (rerunfilecheck)             Checksum: 28273A8A4C0537A6CC553FCEFB22183E;2288.
  ) 
 Here is how much of TeX's memory you used:
- 11181 strings out of 480236
- 180583 string characters out of 2890421
+ 11187 strings out of 480236
+ 180640 string characters out of 2890421
  624011 words of memory out of 3000000
  27151 multiletter control sequences out of 15000+200000
- 607238 words of font info for 217 fonts, out of 3000000 for 9000
+ 607688 words of font info for 221 fonts, out of 3000000 for 9000
  1141 hyphenation exceptions out of 8191
- 72i,11n,77p,1380b,462s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 72i,11n,77p,1354b,462s stack positions out of 5000i,500n,10000p,200000b,50000s
 {C:/Program Files/MiKTeX/fonts/enc/dvips/base/8r.enc} <C:\Users\Antonio_2\App
 Data\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ectt1000.pk><C:/Program Fi
 les/MiKTeX/fonts/type1/public/amsfonts/cm/cmex10.pfb><C:/Program Files/MiKTeX/f
@@ -884,7 +884,7 @@ m10.pfb><C:/Program Files/MiKTeX/fonts/type1/urw/times/utmb8a.pfb><C:/Program F
 iles/MiKTeX/fonts/type1/urw/times/utmbi8a.pfb><C:/Program Files/MiKTeX/fonts/ty
 pe1/urw/times/utmr8a.pfb><C:/Program Files/MiKTeX/fonts/type1/urw/times/utmri8a
 .pfb>
-Output written on report.pdf (27 pages, 2519789 bytes).
+Output written on report.pdf (27 pages, 2514416 bytes).
 PDF statistics:
  524 PDF objects out of 1000 (max. 8388607)
  98 named destinations out of 1000 (max. 500000)
