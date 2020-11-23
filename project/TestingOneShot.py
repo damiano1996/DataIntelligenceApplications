@@ -87,7 +87,7 @@ if __name__ == '__main__':
         print_('PART 3')
 
         test_part3(n_experiments=n_experiment,
-                   chart_path=f'{charts_path}/part3_min-len{min_len}_z_score{z_score}.png',
+                   chart_path=f'{charts_path}/part3_regret.png',
                    title=f'Part 3 - Regret with {n_abrupts_phases} Abrupt Phases [min_len:{min_len} z_score:{z_score} window_length:{window_length}]',
                    win_length=window_length,
                    dl_change_detect_min_len=min_len,
@@ -178,7 +178,7 @@ if __name__ == '__main__':
                    execution_type="binomial",
                    demand_chart_path=demand_curves_chart_path,
                    demand_chart_title=demand_curves_title,
-                   results_chart_path=f'{charts_path}/part7_binomial_.png',
+                   results_chart_path=f'{charts_path}/part7_binomial.png',
                    results_chart_title=f'Part 7 ')
 
         print_(f'Test completed.\n'

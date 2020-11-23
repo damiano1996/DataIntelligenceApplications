@@ -102,7 +102,7 @@ def test_part3(n_experiments=25,
 
 if __name__ == '__main__':
     test_part3(n_experiments=1,
-               chart_path=f'other_files/part3_min-len{min_len}_test-stat{z_score}_window_length{window_length}.png',
+               chart_path=f'other_files/part3_regret.png',
                title=f'Part 3 - Regret with {n_abrupts_phases} Abrupt Phases [min_len:{min_len} z_score:{z_score} window_length:{window_length}]',
                win_length=window_length,
                dl_change_detect_min_len=min_len,
