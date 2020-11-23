@@ -16,7 +16,7 @@ from project.part_5.Testing_Env_5 import test_part5
 from project.part_6.Testing_Env_6 import test_part6
 from project.part_7.Testing_Env_7 import test_part7
 
-n_experiment = 25
+n_experiment = 1
 np.random.seed(0)
 
 testing_setup = {
@@ -86,16 +86,14 @@ if __name__ == '__main__':
         # PART 3
         print_('PART 3')
 
-        for min_len in min_lens:
-            for lw in multiple_len_window:
-                test_part3(n_experiments=n_experiment,
-                           chart_path=f'{charts_path}/part3_min-len{min_len}_z_score{z_score}.png',
-                           title=f'Part 3 - Regret with {n_abrupts_phases} Abrupt Phases [min_len:{min_len} z_score:{z_score} window_length:{lw}]',
-                           win_length=lw,
-                           dl_change_detect_min_len=min_len,
-                           dl_change_detect_test_stat=z_score)
-            print_(f'Sub-test completed.\n'
-                   f'Time: {datetime.now()}\n')
+        test_part3(n_experiments=n_experiment,
+                   chart_path=f'{charts_path}/part3_min-len{min_len}_z_score{z_score}.png',
+                   title=f'Part 3 - Regret with {n_abrupts_phases} Abrupt Phases [min_len:{min_len} z_score:{z_score} window_length:{lw}]',
+                   win_length=window_length,
+                   dl_change_detect_min_len=min_len,
+                   dl_change_detect_test_stat=z_score)
+        print_(f'Sub-test completed.\n'
+               f'Time: {datetime.now()}\n')
         print_(f'Test completed.\n'
                f'Time: {datetime.now()}\n')
         print_('-' * 60)

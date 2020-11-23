@@ -37,17 +37,13 @@ classes_config = {
 demand_path = 'demand_curves'
 
 # PART 3 CONFIG
-min_lens = [5]
+min_len = 10
 z_score = 2.58
-phase_lens = [60, 60, 80]  # n_days // n_abrupts_phases
+phase_lens = [15, 10, 20]  # n_days // n_abrupts_phases
 n_abrupts_phases = len(phase_lens)
 n_days = sum(phase_lens)
 
-multiple_len_window = [round(n_days / 6)]  # , round(n_days/3), round(2*n_days/3)]
-
-# Since n_abrupts_phases is odd and n_days could be even we add 1 to obtain equal phases
-# phase_len = phase_len + 1 if n_days % 2 == 0 else phase_len
-
+window_length = round(n_days / 6)
 
 n_subcamp = 3
 
@@ -58,5 +54,5 @@ n_arms_pricing = 21
 noise_std = 0.05
 
 # PART 7 artificial noises
-artificial_noise_ADV = 0.0
-artificial_noise_CR = 0.0
+artificial_noise_ADV = 0.2
+artificial_noise_CR = 0.2
