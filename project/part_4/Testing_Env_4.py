@@ -88,14 +88,17 @@ def test_part4(n_experiments=10,
     for rewards in rewards_per_experiment:
         curve = np.cumsum(np.asarray(area_aggregate) - np.asarray(rewards))
         max_ylim = max(max_ylim, np.max(curve))
-        plt.plot(curve, alpha=0.2, c='C0')
-    plt.plot(np.cumsum(np.mean(area_aggregate - rewards_per_experiment, axis=0)),
+        plt.plot(np.linspace(0, n_days, curve.shape[0]), curve, alpha=0.2, c='C0')
+    plt.plot(np.linspace(0, n_days, curve.shape[0]),
+             np.cumsum(np.mean(area_aggregate - rewards_per_experiment, axis=0)),
              label='Mean Regret of the Aggregate Model', c='C0')
 
     # Below the regret computed knowing the optimal for each user
     for opt, rewards in zip(optimals_per_experiment, rewards_per_experiment):
-        plt.plot(np.cumsum(np.asarray(opt) - np.asarray(rewards)), alpha=0.2, c='C1')
-    plt.plot(np.cumsum(np.mean(optimals_per_experiment, axis=0) - np.mean(rewards_per_experiment, axis=0)),
+        plt.plot(np.linspace(0, n_days, curve.shape[0]), np.cumsum(np.asarray(opt) - np.asarray(rewards)), alpha=0.2,
+                 c='C1')
+    plt.plot(np.linspace(0, n_days, curve.shape[0]),
+             np.cumsum(np.mean(optimals_per_experiment, axis=0) - np.mean(rewards_per_experiment, axis=0)),
              label='Mean Regret of the True Evaluation', c='C1')
 
     # plt.yscale('log')

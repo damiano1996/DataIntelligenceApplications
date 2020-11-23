@@ -22,10 +22,10 @@ np.random.seed(0)
 testing_setup = {
     'part2': False,
     'part3': False,
-    'part4': False,
-    'part5': False,
+    'part4': True,
+    'part5': True,
     'part6': False,
-    'part7_binomial': True,
+    'part7_binomial': False,
     'part7_normal': False
 
 }

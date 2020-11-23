@@ -78,7 +78,7 @@ def test_part5(n_experiments=10,
 
     # to plot every 7 days a vertical line
     # note: the lines may not match with the generation of a new context since the generation depends by the week day
-    idx = np.arange(0, int(n_days * avg_users_per_day), int(7 * avg_users_per_day))
+    idx = np.linspace(0, n_days, n_days // 7)
     for i in idx:
         plt.axvline(i, 0, 1, alpha=0.1, color='k')
 
@@ -91,14 +91,18 @@ def test_part5(n_experiments=10,
     # Regret computed UN-knowing the class of the users
     area_aggregate = mch.aggregate_opt['price'] * mch.aggregate_opt['probability']
     for rewards in rewards_per_experiment:
-        plt.plot(np.cumsum(np.asarray(area_aggregate) - np.asarray(rewards)), alpha=0.2, c='C0')
-    plt.plot(np.cumsum(np.mean(area_aggregate - rewards_per_experiment, axis=0)),
+        curve = np.cumsum(np.asarray(area_aggregate) - np.asarray(rewards))
+        plt.plot(np.linspace(0, n_days, curve.shape[0]), curve, alpha=0.2, c='C0')
+    plt.plot(np.linspace(0, n_days, curve.shape[0]),
+             np.cumsum(np.mean(area_aggregate - rewards_per_experiment, axis=0)),
              label='Mean Regret of the Aggregate Model', c='C0')
 
     # Below the regret computed knowing the optimal for each user
     for opt, rewards in zip(optimals_per_experiment, rewards_per_experiment):
-        plt.plot(np.cumsum(np.asarray(opt) - np.asarray(rewards)), alpha=0.2, c='C1')
-    plt.plot(np.cumsum(np.mean(optimals_per_experiment, axis=0) - np.mean(rewards_per_experiment, axis=0)),
+        plt.plot(np.linspace(0, n_days, curve.shape[0]), np.cumsum(np.asarray(opt) - np.asarray(rewards)), alpha=0.2,
+                 c='C1')
+    plt.plot(np.linspace(0, n_days, curve.shape[0]),
+             np.cumsum(np.mean(optimals_per_experiment, axis=0) - np.mean(rewards_per_experiment, axis=0)),
              label='Mean Regret of the True Evaluation', c='C1')
 
     plt.xlabel('Time')
