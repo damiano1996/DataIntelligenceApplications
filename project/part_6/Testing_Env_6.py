@@ -12,7 +12,7 @@ from project.part_4.MultiClassHandler import MultiClassHandler
 from project.part_6.BudgetAllocator import BudgetAllocator
 
 
-def test_part6(n_experiments=25,
+def test_part6(n_experiments=1,
                enable_pricing=True,
                plot_advertising=False,
                keep_daily_price=True,
