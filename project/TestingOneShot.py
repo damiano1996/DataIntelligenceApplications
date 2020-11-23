@@ -86,16 +86,12 @@ if __name__ == '__main__':
         # PART 3
         print_('PART 3')
 
-        for min_len in min_lens:
-            for lw in multiple_len_window:
-                test_part3(n_experiments=n_experiment,
-                           chart_path=f'{charts_path}/part3_min-len{min_len}_z_score{z_score}.png',
-                           title=f'Part 3 - Regret with {n_abrupts_phases} Abrupt Phases [min_len:{min_len} z_score:{z_score} window_length:{lw}]',
-                           win_length=lw,
-                           dl_change_detect_min_len=min_len,
-                           dl_change_detect_test_stat=z_score)
-            print_(f'Sub-test completed.\n'
-                   f'Time: {datetime.now()}\n')
+        test_part3(n_experiments=n_experiment,
+                   chart_path=f'{charts_path}/part3_min-len{min_len}_z_score{z_score}.png',
+                   title=f'Part 3 - Regret with {n_abrupts_phases} Abrupt Phases [min_len:{min_len} z_score:{z_score} window_length:{window_length}]',
+                   win_length=window_length,
+                   dl_change_detect_min_len=min_len,
+                   dl_change_detect_test_stat=z_score)
         print_(f'Test completed.\n'
                f'Time: {datetime.now()}\n')
         print_('-' * 60)
@@ -194,22 +190,20 @@ if __name__ == '__main__':
         # PART 7
         print_('PART 7 NORMAL')
 
-        for artificial_noise_ADV in artificial_noise_ADVs:
-            for artificial_noise_CR in artificial_noise_CRs:
-                test_part7(n_experiments=n_experiment,
-                           execution_type="normal",
-                           demand_chart_path=demand_curves_chart_path,
-                           demand_chart_title=demand_curves_title,
-                           artificial_noise_ADV=artificial_noise_ADV,
-                           artificial_noise_CR=artificial_noise_CR,
-                           results_chart_path=f'{charts_path}/part7_normal_'
-                                              f'ADV_noise{artificial_noise_ADV}_'
-                                              f'CR_noise{artificial_noise_CR}.png',
-                           results_chart_title=f'Part 7 ['
-                                               f'ADV_noise:{artificial_noise_ADV} '
-                                               f'CR_noise:{artificial_noise_CR}] ')
-                print_(f'Sub-test completed.\n'
-                       f'Time: {datetime.now()}\n')
+        test_part7(n_experiments=n_experiment,
+                   execution_type="normal",
+                   demand_chart_path=demand_curves_chart_path,
+                   demand_chart_title=demand_curves_title,
+                   artificial_noise_ADV=artificial_noise_ADV,
+                   artificial_noise_CR=artificial_noise_CR,
+                   results_chart_path=f'{charts_path}/part7_normal_'
+                                      f'ADV_noise{artificial_noise_ADV}_'
+                                      f'CR_noise{artificial_noise_CR}.png',
+                   results_chart_title=f'Part 7 ['
+                                       f'ADV_noise:{artificial_noise_ADV} '
+                                       f'CR_noise:{artificial_noise_CR}] ')
+        print_(f'Sub-test completed.\n'
+               f'Time: {datetime.now()}\n')
 
         print_(f'Test completed.\n'
                f'Time: {datetime.now()}\n')
