@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019/Debian) (preloaded format=pdflatex 2020.10.8)  23 NOV 2020 15:49
+This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019/Debian) (preloaded format=pdflatex 2020.10.8)  23 NOV 2020 16:07
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -835,25 +835,25 @@ Underfull \vbox (badness 10000) has occurred while \output is active []
 File: images/part7_binomial_regret.png Graphic file (type png)
 <use images/part7_binomial_regret.png>
 Package pdftex.def Info: images/part7_binomial_regret.png  used on input line 3
-6.
+8.
 (pdftex.def)             Requested size: 469.75499pt x 234.87808pt.
 <images/part7_normal_regret_noise00.png, id=410, 1003.75pt x 501.875pt>
 File: images/part7_normal_regret_noise00.png Graphic file (type png)
 <use images/part7_normal_regret_noise00.png>
 Package pdftex.def Info: images/part7_normal_regret_noise00.png  used on input 
-line 48.
+line 50.
 (pdftex.def)             Requested size: 375.80542pt x 187.90399pt.
 <images/part7_normal_regret_noise01.jpeg, id=411, 1003.75pt x 501.875pt>
 File: images/part7_normal_regret_noise01.jpeg Graphic file (type jpg)
 <use images/part7_normal_regret_noise01.jpeg>
 Package pdftex.def Info: images/part7_normal_regret_noise01.jpeg  used on input
- line 54.
+ line 56.
 (pdftex.def)             Requested size: 375.80542pt x 187.90399pt.
 <images/part7_normal_regret_noise02.png, id=412, 1003.75pt x 501.875pt>
 File: images/part7_normal_regret_noise02.png Graphic file (type png)
 <use images/part7_normal_regret_noise02.png>
 Package pdftex.def Info: images/part7_normal_regret_noise02.png  used on input 
-line 60.
+line 62.
 (pdftex.def)             Requested size: 375.80542pt x 187.90399pt.
 )
 [24] (./sections/assignments.tex [25 <./images/part7_binomial_regret.png (PNG c
