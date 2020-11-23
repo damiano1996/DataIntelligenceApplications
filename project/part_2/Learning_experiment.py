@@ -37,7 +37,7 @@ def execute_experiment(args):
 
             first_day = False
         else:
-            # uso l'algoritmo della tabella per selezionare gli arm che mi danno un reward massimo
+            # We use the algorithm in the Optimizer to select the optimal arm (the arm maximizing the reward)
             table_all_subs = np.ndarray(shape=(0, len(bids)), dtype=float)
             for l in learners:
                 table_all_subs = np.append(table_all_subs, np.atleast_2d(l.means.T), 0)
