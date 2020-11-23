@@ -130,9 +130,7 @@ def execute_experiment(args):
         for idx, subcampaign_handler in enumerate(budget_allocator.msh.subcampaigns_handlers):
             unknown_clicks_curve = \
                 subcampaign_handler.advertising.env.subs[subcampaign_handler.advertising.sub_idx].means['phase_0']
-            subcampaign_handler.advertising.learner.plot(unknown_clicks_curve, sigma_scale_factor=10,
-                                                         chart_path=advertising_chart_root_path + 'subcamaign_' + str(
-                                                             idx))
+            subcampaign_handler.advertising.learner.plot(unknown_clicks_curve, sigma_scale_factor=10)
 
     print('Total revenue:', int(budget_allocator.msh.total_revenue),
           'Cumulative regret:', int(sum(budget_allocator.regret)),

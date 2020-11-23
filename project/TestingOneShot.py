@@ -20,13 +20,13 @@ n_experiment = 1
 np.random.seed(0)
 
 testing_setup = {
-    'part2': True,
-    'part3': True,
-    'part4': True,
+    'part2': False,
+    'part3': False,
+    'part4': False,
     'part5': True,
-    'part6': True,
-    'part7_binomial': True,
-    'part7_normal': True
+    'part6': False,
+    'part7_binomial': False,
+    'part7_normal': False
 
 }
 
