@@ -27,7 +27,7 @@ Execute the project
 
 ```sh
 cd DataIntelligenceApplications
-python TestingOneShot.py -p PART -e EXPERIMENTS -s SEED
+python TestingOneShot.py -p PART -e EXPERIMENTS
 ```
 It is possible to configure other implementation parameters in [Config.py](project/dia_pckg/Config.py).
 
