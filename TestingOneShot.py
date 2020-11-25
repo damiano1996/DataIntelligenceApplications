@@ -72,7 +72,7 @@ def print_(text):
     print(text)
     with open(logs_path, "a") as file:
         file.write(text + '\n')
-    # block_print()
+    block_print()
 
 
 def read_configs():
