@@ -14,8 +14,9 @@
 
 ## Description
 ---
-This is the implementation of the project 'Pricing + Advertising' for the year 2019/2020 of the course Data Intelligence Application held at Politecnico di Milano.
+This repository contains the implementation of the project [Pricing + Advertising](project/README.md) for the year 2019/2020 of the course Data Intelligence Application held at Politecnico di Milano.
 
+The full description of our implementation is contained in [report.pdf](report/report.pdf).
 
 ## Usage
 ---
@@ -26,14 +27,16 @@ Execute the project
 
 ```sh
 cd DataIntelligenceApplications
-TestingOneShot.py -p PART -e EXPERIMENTS -s SEED
+python TestingOneShot.py -p PART -e EXPERIMENTS -s SEED
 ```
-It is possible to configure other implementation parameters at '/dia_pckg/Config.py'
+It is possible to configure other implementation parameters in [Config.py](project/dia_pckg/Config.py).
+
+In [this](project/results_charts) directory will be saved the charts of the execution.
 
 ## Installation
 Clone and install: 
 ```sh
-https://github.com/damiano9669/DataIntelligenceApplications.git
+git clone https://github.com/damiano9669/DataIntelligenceApplications.git
 cd DataIntelligenceApplications
 pip install -r requirements.txt
 ```
