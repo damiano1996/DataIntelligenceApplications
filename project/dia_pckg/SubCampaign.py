@@ -22,7 +22,7 @@ class SubCampaign:
         @param product: Product object
         @param campaign: Campaign object
         """
-        # np.random.seed(0)
+        # np.random.seed(random_seed)
 
         self.bids = bids
         self.sigma = sigma

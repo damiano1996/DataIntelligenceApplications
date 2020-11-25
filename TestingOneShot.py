@@ -22,11 +22,9 @@ def parse_arguments():
     parser = argparse.ArgumentParser()
     parser.add_argument('-p', action="store",
                         help='Number of part to start (2, 3, 4, 5, 6, 7_b or 7_n), type \'all\' to start them all',
-                        dest="part", type=check_part, required=True)
+                        dest="part", type=check_part, default='all')
     parser.add_argument('-e', action="store", help='Number of different experiment per part to perform',
-                        dest="experiments", type=check_experiments, required=True)
-    parser.add_argument('-s', action="store", help='Seed of experiments', dest="seed", type=check_experiments,
-                        default='0')
+                        dest="experiments", type=check_experiments, default='4')
     args = parser.parse_args()
     return build_setup(args)
 
@@ -46,7 +44,6 @@ def check_experiments(value):
 
 def build_setup(args):
     n_experiment = args.experiments
-    seed = args.seed
     testing_setup = {
         'part2': True if args.part == "2" or args.part == "all" else False,
         'part3': True if args.part == "3" or args.part == "all" else False,
@@ -56,7 +53,7 @@ def build_setup(args):
         'part7_binomial': True if args.part == "7_b" or args.part == "all" else False,
         'part7_normal': True if args.part == "7_n" or args.part == "all" else False,
     }
-    return n_experiment, seed, testing_setup
+    return n_experiment, testing_setup
 
 
 def block_print():
@@ -82,8 +79,8 @@ def read_configs():
 
 
 if __name__ == '__main__':
-    n_experiment, seed, testing_setup = parse_arguments()
-    np.random.seed(seed)
+    n_experiment, testing_setup = parse_arguments()
+    np.random.seed(random_seed)
 
     dt_now = datetime.now()
     charts_path = os.path.join('project/results_charts', 'test_' + str(dt_now.strftime('%Y-%m-%d_%H-%M')))
@@ -177,7 +174,7 @@ if __name__ == '__main__':
 
         for keep_daily_price in keep_daily_prices:
             test_part6(n_experiments=n_experiment,
-                       plot_advertising=True,
+                       plot_advertising=False,
                        keep_daily_price=keep_daily_price,
                        demand_chart_path=demand_curves_chart_path,
                        demand_chart_title=demand_curves_title,

@@ -1,11 +1,14 @@
 import numpy as np
 import pandas as pd
 
+from project.dia_pckg.Config import random_seed
 from project.part_2.Optimizer import fit_table
 from project.part_2.Utils import get_idx_arm_from_allocation
 
 
 def execute_experiment(args):
+    np.random.seed(random_seed)
+
     learner = args['learner']
     env = args['environment']
     bids = args['bids']

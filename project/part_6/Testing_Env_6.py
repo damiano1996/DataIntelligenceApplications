@@ -14,13 +14,15 @@ from project.part_6.BudgetAllocator import BudgetAllocator
 
 def test_part6(n_experiments=1,
                enable_pricing=True,
-               plot_advertising=False,
+               plot_advertising=True,
                keep_daily_price=True,
                demand_chart_path='other_files/testing_part6_demandcurves.png',
                demand_chart_title='Part 6 - Demand Curves',
                results_chart_path='other_files/testing_part6_regrets.png',
                results_chart_title='Part 6 - Regret',
                advertising_chart_root_path='other_files/testing_part6_'):
+    np.random.seed(random_seed)
+
     # one product to sell
     product = Product(product_config=product_config)
 
@@ -130,7 +132,9 @@ def execute_experiment(args):
         for idx, subcampaign_handler in enumerate(budget_allocator.msh.subcampaigns_handlers):
             unknown_clicks_curve = \
                 subcampaign_handler.advertising.env.subs[subcampaign_handler.advertising.sub_idx].means['phase_0']
-            subcampaign_handler.advertising.learner.plot(unknown_clicks_curve, sigma_scale_factor=10)
+            subcampaign_handler.advertising.learner.plot(unknown_clicks_curve,
+                                                         sigma_scale_factor=10,
+                                                         path=advertising_chart_root_path + f'click_over_budget_subcampaign_{idx}.png')
 
     print('Total revenue:', int(budget_allocator.msh.total_revenue),
           'Cumulative regret:', int(sum(budget_allocator.regret)),

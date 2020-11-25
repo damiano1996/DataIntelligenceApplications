@@ -21,6 +21,8 @@ def test_part7(n_experiments=1,
                artificial_noise_CR=0.0,
                results_chart_path='other_files/testing_part7_regrets.png',
                results_chart_title='Part 7'):
+    np.random.seed(random_seed)
+
     # one product to sell
     product = Product(product_config=product_config)
 

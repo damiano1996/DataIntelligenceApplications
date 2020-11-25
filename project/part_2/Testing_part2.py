@@ -14,7 +14,7 @@ from project.part_2.Utils import compute_clairvoyant
 def test_part2(n_experiments=25,
                chart_path='other_files/testing_part2.png',
                title='Part 2 - Regret'):
-    np.random.seed(0)
+    np.random.seed(random_seed)
 
     bids = np.linspace(0, max_bid, n_arms_advertising)
     args = []

@@ -23,7 +23,7 @@ def test_part4(n_experiments=10,
                demand_chart_title='Part 4 - Demand Curves',
                results_chart_path='other_files/testing_part4_regrets.png',
                results_chart_title='Part 4 - Regret'):
-    np.random.seed(0)
+    np.random.seed(random_seed)
 
     # one product to sell
     product = Product(product_config=product_config)

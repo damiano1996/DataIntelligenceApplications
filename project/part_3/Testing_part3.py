@@ -19,7 +19,7 @@ def test_part3(n_experiments=25,
                win_length=30,
                dl_change_detect_min_len=3,
                dl_change_detect_test_stat=2.58):
-    np.random.seed(0)
+    np.random.seed(random_seed)
 
     bids = np.linspace(0, max_bid, n_arms_advertising)
     args = []

@@ -77,7 +77,7 @@ class GPTS_Learner(Learner):
         sampled_values = np.random.normal(self.means, self.sigmas)
         return sampled_values
 
-    def plot(self, unknown_function, sigma_scale_factor=20):
+    def plot(self, unknown_function, sigma_scale_factor=20, path=None):
         """
         plot the curve to learn and the one learned so far
         @param unknown_function: curve to learn
@@ -98,4 +98,6 @@ class GPTS_Learner(Learner):
         plt.xlabel('% Of Allocated Budget')
         plt.ylabel('$n(x)$')
         plt.legend(loc='lower right')
+        if path is not None:
+            plt.savefig(path)
         plt.show()
