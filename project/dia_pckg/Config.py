@@ -37,11 +37,11 @@ demand_path = 'demand_curves'
 # PART 3 CONFIG
 min_len = 10
 z_score = 2.58
-phase_lens = [70, 40, 90]  # n_days // n_abrupts_phases
+phase_lens = [50, 70, 80]  # n_days // n_abrupts_phases
 n_abrupts_phases = len(phase_lens)
 n_days = sum(phase_lens)
 
-window_length = round(n_days / 6)
+window_length = 80#round(n_days / 3)
 
 n_subcamp = 3
 
