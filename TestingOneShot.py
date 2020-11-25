@@ -69,7 +69,7 @@ def print_(text):
 
 
 def read_configs():
-    with open('dia_pckg/Config.py', 'r') as file:
+    with open('project/dia_pckg/Config.py', 'r') as file:
         data = file.read()
     return data
 
@@ -79,7 +79,7 @@ if __name__ == '__main__':
     np.random.seed(seed)
 
     dt_now = datetime.now()
-    charts_path = os.path.join('results_charts', 'test_' + str(dt_now.strftime('%Y-%m-%d_%H-%M')))
+    charts_path = os.path.join('project/results_charts', 'test_' + str(dt_now.strftime('%Y-%m-%d_%H-%M')))
     os.mkdir(charts_path)
 
     logs_path = os.path.join(charts_path, 'logs.txt')
