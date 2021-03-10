@@ -14,7 +14,7 @@
 
 ## Description
 ---
-This repository contains the implementation of the project [Pricing + Advertising](project/README.md) for the year 2019/2020 of the course Data Intelligence Application held at Politecnico di Milano.
+This repository contains the implementation of the project [Pricing + Advertising](project/README.md) for the year 2019/2020 of the course Data Intelligence Applications held at Politecnico di Milano.
 
 The full description of our implementation is contained in [report.pdf](report/report.pdf).
 
